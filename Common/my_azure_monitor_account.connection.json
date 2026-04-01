@@ -1,0 +1,5 @@
+{
+  "name": "My Azure Monitor account",
+  "provider": "azure_monitor",
+  "root_folder": false
+}

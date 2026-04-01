@@ -1,0 +1,146 @@
+{
+  "name": "Recipe Ops - Get Account details",
+  "description": "",
+  "version": 3,
+  "private": true,
+  "concurrency": 1,
+  "code": {
+    "number": 0,
+    "provider": "clock",
+    "name": "scheduled_event",
+    "as": "25dd5fe4",
+    "keyword": "trigger",
+    "input": {
+      "time_unit": "minutes",
+      "trigger_every": "5"
+    },
+    "extended_input_schema": [
+      {
+        "control_type": "integer",
+        "default": "5",
+        "enforce_template_mode": true,
+        "extends_schema": true,
+        "hint": "Define repeating schedule. Enter whole numbers only.\n                        This field can be set to a minimum of 5 minutes.",
+        "label": "Trigger every",
+        "name": "trigger_every",
+        "optional": false,
+        "suffix": {
+          "text": "minutes"
+        },
+        "type": "string"
+      },
+      {
+        "control_type": "select",
+        "hint": "Select the timezone to use. Leave it blank to use <b>{{authUser.account_timezone}}</b>",
+        "label": "Timezone",
+        "name": "timezone",
+        "optional": true,
+        "pick_list": "timezone_id_global_pick_list",
+        "pick_list_connection_less": true,
+        "type": "string"
+      },
+      {
+        "control_type": "date_time",
+        "enforce_template_mode": true,
+        "extends_schema": true,
+        "hint": "Set date and time to start or leave blank to start immediately. <b>Once recipe has been run or tested, value cannot be changed.</b>",
+        "label": "Start after",
+        "name": "start_after",
+        "optional": true,
+        "parse_output": "date_time_conversion",
+        "since_field": true,
+        "type": "date_time",
+        "ignore_timezone": true,
+        "render_input": "date_time_conversion"
+      }
+    ],
+    "block": [
+      {
+        "number": 1,
+        "provider": "workato_app",
+        "name": "summary_status",
+        "as": "3da6f0cc",
+        "keyword": "action",
+        "input": {
+        },
+        "uuid": "049f91ea-f5b9-4420-bd92-40bc76cad16d"
+      },
+      {
+        "number": 2,
+        "provider": "logger",
+        "name": "log_message",
+        "as": "4f592f33",
+        "keyword": "action",
+        "input": {
+          "user_logs_enabled": true,
+          "log_level": "INFO",
+          "message": "Alloted Transaction  : #{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_app\",\"line\":\"3da6f0cc\",\"path\":[\"alloted_tx_count\"]}')}\nAvailable Transaction  :#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_app\",\"line\":\"3da6f0cc\",\"path\":[\"available_tx_count\"]}')}\nActive Recipe :#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_app\",\"line\":\"3da6f0cc\",\"path\":[\"active\"]}')}\nInactive Recipe :#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_app\",\"line\":\"3da6f0cc\",\"path\":[\"inactive\"]}')}\nConnection Count :#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_app\",\"line\":\"3da6f0cc\",\"path\":[\"connection_count\"]}')}\nAlloted Task :#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_app\",\"line\":\"3da6f0cc\",\"path\":[\"alloted_task_count\"]}')}\nAvailable Task :#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_app\",\"line\":\"3da6f0cc\",\"path\":[\"available_task_count\"]}')}\nAlloted Task Adjustement :#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_app\",\"line\":\"3da6f0cc\",\"path\":[\"alloted_task_count_adjustment\"]}')}"
+        },
+        "extended_input_schema": [
+          {
+            "control_type": "select",
+            "default": "INFO",
+            "disable_formula": true,
+            "hint": "Flag your message with a log level to easily find the right entry in the Workato logs.",
+            "label": "Log level",
+            "name": "log_level",
+            "ngIf": "input.user_logs_enabled == true",
+            "optional": false,
+            "pick_list": [
+              [
+                "INFO",
+                "INFO"
+              ],
+              [
+                "WARN",
+                "WARN"
+              ],
+              [
+                "ERROR",
+                "ERROR"
+              ]
+            ],
+            "type": "string"
+          },
+          {
+            "control_type": "switch",
+            "default": false,
+            "disable_formula": true,
+            "extends_schema": true,
+            "hint": "Send a copy of the message to Workato logs.\n<a href=\"https://docs.workato.com/features/logging-service.html\" target=\"_blank\" class=\"ng-scope\">\n  Learn more\n</a>\n",
+            "label": "Send to Workato log service",
+            "name": "user_logs_enabled",
+            "optional": true,
+            "type": "string"
+          }
+        ],
+        "uuid": "5a9c6ddf-84db-4bdc-a528-8dd75e2fa159"
+      }
+    ],
+    "uuid": "32af52bc-e6f9-458e-93e1-eabd0f8d7173"
+  },
+  "config": [
+    {
+      "keyword": "application",
+      "provider": "clock",
+      "skip_validation": false,
+      "account_id": null
+    },
+    {
+      "keyword": "application",
+      "provider": "workato_app",
+      "skip_validation": false,
+      "account_id": {
+        "zip_name": "Common/Connections/my_recipeops_by_workato_account.connection.json",
+        "name": "My RecipeOps by Workato account",
+        "folder": "Common/Connections"
+      }
+    },
+    {
+      "keyword": "application",
+      "provider": "logger",
+      "skip_validation": false,
+      "account_id": null
+    }
+  ]
+}

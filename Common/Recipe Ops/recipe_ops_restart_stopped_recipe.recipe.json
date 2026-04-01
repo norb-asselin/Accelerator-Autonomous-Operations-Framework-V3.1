@@ -1,0 +1,153 @@
+{
+  "name": "Recipe Ops - Restart Stopped Recipe",
+  "description": "",
+  "version": 4,
+  "private": true,
+  "concurrency": 1,
+  "code": {
+    "number": 0,
+    "provider": "workato_app",
+    "name": "recipe_stopped",
+    "as": "c20f61c2",
+    "keyword": "trigger",
+    "dynamicPickListSelection": {
+      "mode": "Selected"
+    },
+    "input": {
+      "mode": "selected",
+      "recipe_id": [
+        {
+          "zip_name": "Common/Recipe Ops/recipe_ops_get_account_details.recipe.json",
+          "name": "Recipe Ops - Get Account details",
+          "folder": "Common/Recipe Ops"
+        }
+      ]
+    },
+    "extended_input_schema": [
+      {
+        "control_type": "text",
+        "hint": "One or more recipe IDs separated by commas. The recipe ID is the number found after www.workato.com/recipes/ in the recipe URL, e.g. if the recipe URL is <b>workato.com/recipes/362905-timekeeper</b>, then recipe ID is <b>362905</b>.",
+        "label": "Recipe IDs",
+        "name": "recipe_id",
+        "optional": true,
+        "sticky": true,
+        "type": "string"
+      }
+    ],
+    "block": [
+      {
+        "number": 1,
+        "provider": "workato_app",
+        "name": "get_recipe",
+        "as": "6b22dfbe",
+        "keyword": "action",
+        "toggleCfg": {
+          "recipe_id": false
+        },
+        "input": {
+          "recipe_id": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_app\",\"line\":\"c20f61c2\",\"path\":[\"id\"]}')}"
+        },
+        "uuid": "5a1b425f-4a81-4c00-a103-9446dfdec3ea"
+      },
+      {
+        "number": 2,
+        "provider": "workato_app",
+        "name": "start_recipe",
+        "as": "cb4fd2fc",
+        "keyword": "action",
+        "toggleCfg": {
+          "recipe_id": false
+        },
+        "input": {
+          "recipe_id": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_app\",\"line\":\"6b22dfbe\",\"path\":[\"id\"]}')}"
+        },
+        "uuid": "1d557b8b-a207-4756-a8a6-ee972e6986b2"
+      },
+      {
+        "number": 3,
+        "provider": "logger",
+        "name": "log_message",
+        "as": "51427555",
+        "keyword": "action",
+        "input": {
+          "user_logs_enabled": true,
+          "message": "Recipe : #{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_app\",\"line\":\"6b22dfbe\",\"path\":[\"id\"]}')} - #{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_app\",\"line\":\"6b22dfbe\",\"path\":[\"name\"]}')} \nStopped by user#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_app\",\"line\":\"c20f61c2\",\"path\":[\"user\",\"user_id\"]}')} - #{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_app\",\"line\":\"c20f61c2\",\"path\":[\"user\",\"user_name\"]}')}\n\n",
+          "log_level": "WARN"
+        },
+        "extended_input_schema": [
+          {
+            "control_type": "select",
+            "default": "INFO",
+            "disable_formula": true,
+            "hint": "Flag your message with a log level to easily find the right entry in the Workato logs.",
+            "label": "Log level",
+            "name": "log_level",
+            "ngIf": "input.user_logs_enabled == true",
+            "optional": false,
+            "pick_list": [
+              [
+                "INFO",
+                "INFO"
+              ],
+              [
+                "WARN",
+                "WARN"
+              ],
+              [
+                "ERROR",
+                "ERROR"
+              ]
+            ],
+            "type": "string"
+          },
+          {
+            "control_type": "switch",
+            "default": false,
+            "disable_formula": true,
+            "extends_schema": true,
+            "hint": "Send a copy of the message to Workato logs.\n<a href=\"https://docs.workato.com/features/logging-service.html\" target=\"_blank\" class=\"ng-scope\">\n  Learn more\n</a>\n",
+            "label": "Send to Workato log service",
+            "name": "user_logs_enabled",
+            "optional": true,
+            "type": "string"
+          }
+        ],
+        "uuid": "cd447c84-c07b-466c-8a6c-89e4545f44bc"
+      }
+    ],
+    "comment": "Build a recipe to monitor/ manage other recipes, jobs, or this account",
+    "job_report_schema": [
+      {
+        "name": "custom_column_0",
+        "label": "Stopped Recipe Name"
+      },
+      {
+        "name": "custom_column_1",
+        "label": "User that stop the Recipe"
+      }
+    ],
+    "job_report_config": {
+      "custom_column_0": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_app\",\"line\":\"c20f61c2\",\"path\":[\"name\"]}')}",
+      "custom_column_1": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_app\",\"line\":\"c20f61c2\",\"path\":[\"user\",\"user_name\"]}')}"
+    },
+    "uuid": "df8ee5cf-a6ea-4533-a4a9-b06d03c0b0ee"
+  },
+  "config": [
+    {
+      "keyword": "application",
+      "provider": "workato_app",
+      "skip_validation": false,
+      "account_id": {
+        "zip_name": "Common/Connections/my_recipeops_by_workato_account.connection.json",
+        "name": "My RecipeOps by Workato account",
+        "folder": "Common/Connections"
+      }
+    },
+    {
+      "keyword": "application",
+      "provider": "logger",
+      "skip_validation": false,
+      "account_id": null
+    }
+  ]
+}

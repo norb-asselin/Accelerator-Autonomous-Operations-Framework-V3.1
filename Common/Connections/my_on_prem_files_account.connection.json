@@ -1,0 +1,5 @@
+{
+  "name": "My On-prem files account",
+  "provider": "onprem_files",
+  "root_folder": false
+}

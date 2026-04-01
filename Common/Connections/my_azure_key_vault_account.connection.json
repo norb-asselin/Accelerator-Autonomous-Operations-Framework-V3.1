@@ -1,0 +1,5 @@
+{
+  "name": "My Azure Key Vault account",
+  "provider": "azure_key_vault",
+  "root_folder": false
+}

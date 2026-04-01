@@ -1,0 +1,5 @@
+{
+  "name": "My On-prem files secondary account",
+  "provider": "onprem_files_secondary",
+  "root_folder": false
+}
