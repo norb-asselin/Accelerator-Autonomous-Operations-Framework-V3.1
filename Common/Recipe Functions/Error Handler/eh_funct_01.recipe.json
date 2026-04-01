@@ -1,0 +1,94 @@
+{
+  "name": "EH_Funct_01",
+  "description": "",
+  "version": 2,
+  "private": true,
+  "concurrency": 1,
+  "code": {
+    "number": 0,
+    "provider": "workato_recipe_function",
+    "name": "execute",
+    "as": "649788ce",
+    "keyword": "trigger",
+    "input": {
+    },
+    "block": [
+      {
+        "number": 1,
+        "provider": "logger",
+        "name": "log_message",
+        "as": "e54e142e",
+        "keyword": "action",
+        "input": {
+          "user_logs_enabled": true,
+          "message": "Log Message",
+          "log_level": "INFO"
+        },
+        "extended_input_schema": [
+          {
+            "control_type": "select",
+            "default": "INFO",
+            "disable_formula": true,
+            "hint": "Flag your message with a log level to easily find the right entry in the Workato logs.",
+            "label": "Log level",
+            "name": "log_level",
+            "ngIf": "input.user_logs_enabled == true",
+            "optional": false,
+            "pick_list": [
+              [
+                "INFO",
+                "INFO"
+              ],
+              [
+                "WARN",
+                "WARN"
+              ],
+              [
+                "ERROR",
+                "ERROR"
+              ]
+            ],
+            "type": "string"
+          },
+          {
+            "control_type": "switch",
+            "default": false,
+            "disable_formula": true,
+            "extends_schema": true,
+            "hint": "Send a copy of the message to Workato logs.\n<a href=\"https://docs.workato.com/features/logging-service.html\" target=\"_blank\" class=\"ng-scope\">\n  Learn more\n</a>\n",
+            "label": "Send to Workato log service",
+            "name": "user_logs_enabled",
+            "optional": true,
+            "type": "string"
+          }
+        ],
+        "uuid": "9c434631-dba4-43b9-92c3-f1f8e506ad20"
+      },
+      {
+        "number": 2,
+        "provider": "workato_recipe_function",
+        "name": "return_result",
+        "as": "d1e52f67",
+        "keyword": "action",
+        "input": {
+        },
+        "uuid": "b64f166d-4c01-4500-bd95-53f126be8582"
+      }
+    ],
+    "uuid": "adc40d6b-3803-4338-81dc-7109f92c52bf"
+  },
+  "config": [
+    {
+      "keyword": "application",
+      "provider": "workato_recipe_function",
+      "skip_validation": false,
+      "account_id": null
+    },
+    {
+      "keyword": "application",
+      "provider": "logger",
+      "skip_validation": false,
+      "account_id": null
+    }
+  ]
+}

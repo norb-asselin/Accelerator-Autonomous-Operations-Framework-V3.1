@@ -1,0 +1,21 @@
+{
+  "name": "test",
+  "description": "",
+  "version": 1,
+  "private": true,
+  "concurrency": 1,
+  "code": {
+    "number": 0,
+    "keyword": "trigger",
+    "input": {
+    },
+    "block": [
+
+    ],
+    "uuid": "d3b75f44-785d-45ad-9422-f27a300cdc20",
+    "unfinished": true
+  },
+  "config": [
+
+  ]
+}

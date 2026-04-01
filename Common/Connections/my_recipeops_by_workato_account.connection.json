@@ -1,0 +1,5 @@
+{
+  "name": "My RecipeOps by Workato account",
+  "provider": "workato_app",
+  "root_folder": false
+}
