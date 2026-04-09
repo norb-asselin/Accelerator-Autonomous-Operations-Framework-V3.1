@@ -1,0 +1,677 @@
+{
+  "name": "AOF | SCH | Collation Orchestrator",
+  "description": "When there is a trigger event, do action",
+  "version": 11,
+  "private": true,
+  "concurrency": 1,
+  "code": {
+    "number": 0,
+    "provider": "clock",
+    "name": "scheduled_event",
+    "as": "648d0da8",
+    "keyword": "trigger",
+    "dynamicPickListSelection": {
+      "time_unit": "Minutes"
+    },
+    "input": {
+      "time_unit": "minutes",
+      "trigger_every": "5"
+    },
+    "extended_input_schema": [
+      {
+        "control_type": "integer",
+        "default": "5",
+        "enforce_template_mode": true,
+        "extends_schema": true,
+        "hint": "Define repeating schedule. Enter whole numbers only.\n                        This field can be set to a minimum of 5 minutes.",
+        "label": "Trigger every",
+        "name": "trigger_every",
+        "optional": false,
+        "suffix": {
+          "text": "minutes"
+        },
+        "type": "string"
+      },
+      {
+        "control_type": "select",
+        "hint": "Select the timezone to use. Leave it blank to use <b>{{authUser.account_timezone}}</b>",
+        "label": "Timezone",
+        "name": "timezone",
+        "optional": true,
+        "pick_list": "timezone_id_global_pick_list",
+        "pick_list_connection_less": true,
+        "type": "string"
+      },
+      {
+        "control_type": "date_time",
+        "enforce_template_mode": true,
+        "extends_schema": true,
+        "hint": "Set date and time to start or leave blank to start immediately. <b>Once recipe has been run or tested, value cannot be changed.</b>",
+        "label": "Start after",
+        "name": "start_after",
+        "optional": true,
+        "parse_output": "date_time_conversion",
+        "since_field": true,
+        "type": "date_time",
+        "ignore_timezone": true,
+        "render_input": "date_time_conversion"
+      }
+    ],
+    "block": [
+      {
+        "number": 1,
+        "provider": "lookup_table",
+        "name": "get_entries",
+        "as": "29fbd33b",
+        "keyword": "action",
+        "dynamicPickListSelection": {
+          "lookup_table_id": "Autonomously Handled Recipes"
+        },
+        "input": {
+          "lookup_table_id": {
+            "zip_name": "aof_lt_004_error_collation_report_scheduler.lookup_table.json",
+            "name": "AOF | LT-004 | Error Collation/Report Scheduler ",
+            "folder": ""
+          }
+        },
+        "extended_output_schema": [
+          {
+            "label": "Entries",
+            "name": "entries",
+            "of": "object",
+            "properties": [
+              {
+                "control_type": "number",
+                "label": "Entry ID",
+                "parse_output": "integer_conversion",
+                "type": "integer",
+                "name": "id"
+              },
+              {
+                "properties": [
+                  {
+                    "control_type": "text",
+                    "label": "Recipe ID",
+                    "name": "col1",
+                    "sticky": true,
+                    "type": "string"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Recipe Identifier",
+                    "name": "col2",
+                    "sticky": true,
+                    "type": "string"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Schedule  Month",
+                    "name": "col3",
+                    "sticky": true,
+                    "type": "string"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Schedule  Day",
+                    "name": "col4",
+                    "sticky": true,
+                    "type": "string"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Schedule  Weekday",
+                    "name": "col5",
+                    "sticky": true,
+                    "type": "string"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Schedule Hour",
+                    "name": "col6",
+                    "sticky": true,
+                    "type": "string"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Schedule Minutes",
+                    "name": "col7",
+                    "sticky": true,
+                    "type": "string"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Logic",
+                    "name": "col8",
+                    "sticky": true,
+                    "type": "string"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Last Run Timestamp",
+                    "name": "col9",
+                    "sticky": true,
+                    "type": "string"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Report Address",
+                    "name": "col10",
+                    "sticky": true,
+                    "type": "string"
+                  }
+                ],
+                "label": "Entry",
+                "type": "object",
+                "name": "entry"
+              }
+            ],
+            "type": "array"
+          }
+        ],
+        "uuid": "fb19f322-d6e8-4d52-a881-f3e31b670a44"
+      },
+      {
+        "number": 2,
+        "provider": "workato_variable",
+        "name": "declare_list",
+        "as": "a0ca75b6",
+        "keyword": "action",
+        "input": {
+          "name": "Admin Error List",
+          "list_item_schema_json": "[{\"name\":\"RecipeID\",\"type\":\"string\",\"optional\":false,\"control_type\":\"text\"},{\"name\":\"Error\",\"type\":\"string\",\"optional\":false,\"control_type\":\"text\"}]"
+        },
+        "extended_output_schema": [
+          {
+            "label": "Admin Error List",
+            "name": "list_items",
+            "of": "object",
+            "properties": [
+              {
+                "control_type": "text",
+                "label": "Recipe ID",
+                "name": "RecipeID",
+                "type": "string",
+                "optional": false
+              },
+              {
+                "control_type": "text",
+                "label": "Error",
+                "name": "Error",
+                "type": "string",
+                "optional": false
+              }
+            ],
+            "type": "array"
+          }
+        ],
+        "uuid": "0bf321e4-ecbe-4e59-b478-26f786e6c997"
+      },
+      {
+        "number": 3,
+        "as": "b8ffc5a4",
+        "keyword": "foreach",
+        "repeat_mode": "simple",
+        "clear_scope": "false",
+        "input": {
+        },
+        "block": [
+          {
+            "number": 4,
+            "keyword": "try",
+            "input": {
+            },
+            "block": [
+              {
+                "number": 5,
+                "keyword": "if",
+                "input": {
+                  "type": "compound",
+                  "operand": "and",
+                  "conditions": [
+                    {
+                      "operand": "present",
+                      "lhs": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"b8ffc5a4\",\"path\":[\"entry\",\"col1\"]}')}",
+                      "rhs": null,
+                      "uuid": "condition-d229bc13-532d-4af3-b064-40e7b86173a9"
+                    }
+                  ]
+                },
+                "block": [
+                  {
+                    "number": 6,
+                    "provider": "workato_variable",
+                    "name": "declare_variable",
+                    "as": "46e6eaa7",
+                    "keyword": "action",
+                    "input": {
+                      "variables": {
+                        "schema": "[{\"name\":\"clean_month\",\"type\":\"string\",\"optional\":true,\"label\":\"cleanMonth\",\"control_type\":\"text\"},{\"name\":\"clean_day\",\"type\":\"string\",\"optional\":true,\"label\":\"cleanDay\",\"control_type\":\"text\"},{\"name\":\"clean_weekday\",\"type\":\"string\",\"optional\":true,\"label\":\"cleanWeekday\",\"control_type\":\"text\"},{\"name\":\"clean_hours\",\"type\":\"string\",\"optional\":true,\"label\":\"cleanHours\",\"control_type\":\"text\"},{\"name\":\"clean_minutes\",\"type\":\"string\",\"optional\":true,\"label\":\"cleanMinutes\",\"control_type\":\"text\"}]",
+                        "data": {
+                          "clean_month": "=_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"b8ffc5a4\",\"path\":[\"entry\",\"col3\"]}').gsub(/[^0-9,*]/, \"\")",
+                          "clean_day": "=_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"b8ffc5a4\",\"path\":[\"entry\",\"col4\"]}').gsub(/[^0-9,*]/, \"\")",
+                          "clean_weekday": "=_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"b8ffc5a4\",\"path\":[\"entry\",\"col5\"]}').gsub(/[^0-9,*]/, \"\")",
+                          "clean_hours": "=_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"b8ffc5a4\",\"path\":[\"entry\",\"col6\"]}').gsub(/[^0-9,*]/, \"\")",
+                          "clean_minutes": "=_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"b8ffc5a4\",\"path\":[\"entry\",\"col7\"]}').gsub(/[^0-9,*]/, \"\")"
+                        }
+                      }
+                    },
+                    "extended_output_schema": [
+                      {
+                        "control_type": "text",
+                        "label": "cleanMonth",
+                        "name": "clean_month",
+                        "optional": true,
+                        "type": "string"
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "cleanDay",
+                        "name": "clean_day",
+                        "optional": true,
+                        "type": "string"
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "cleanWeekday",
+                        "name": "clean_weekday",
+                        "optional": true,
+                        "type": "string"
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "cleanHours",
+                        "name": "clean_hours",
+                        "optional": true,
+                        "type": "string"
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "cleanMinutes",
+                        "name": "clean_minutes",
+                        "optional": true,
+                        "type": "string"
+                      }
+                    ],
+                    "extended_input_schema": [
+                      {
+                        "control_type": "form-schema-builder",
+                        "exclude_fields": [
+                          "hint"
+                        ],
+                        "label": "Variables",
+                        "name": "variables",
+                        "optional": true,
+                        "properties": [
+                          {
+                            "control_type": "text",
+                            "label": "Schema",
+                            "extends_schema": true,
+                            "broadcast_change_event": true,
+                            "type": "string",
+                            "name": "schema"
+                          },
+                          {
+                            "properties": [
+                              {
+                                "control_type": "text",
+                                "label": "cleanMonth",
+                                "name": "clean_month",
+                                "type": "string",
+                                "optional": true,
+                                "hint": "Defaults to nil if not supplied.",
+                                "sticky": true
+                              },
+                              {
+                                "control_type": "text",
+                                "label": "cleanDay",
+                                "name": "clean_day",
+                                "type": "string",
+                                "optional": true,
+                                "hint": "Defaults to nil if not supplied.",
+                                "sticky": true
+                              },
+                              {
+                                "control_type": "text",
+                                "label": "cleanWeekday",
+                                "name": "clean_weekday",
+                                "type": "string",
+                                "optional": true,
+                                "hint": "Defaults to nil if not supplied.",
+                                "sticky": true
+                              },
+                              {
+                                "control_type": "text",
+                                "label": "cleanHours",
+                                "name": "clean_hours",
+                                "type": "string",
+                                "optional": true,
+                                "hint": "Defaults to nil if not supplied.",
+                                "sticky": true
+                              },
+                              {
+                                "control_type": "text",
+                                "label": "cleanMinutes",
+                                "name": "clean_minutes",
+                                "type": "string",
+                                "optional": true,
+                                "hint": "Defaults to nil if not supplied.",
+                                "sticky": true
+                              }
+                            ],
+                            "label": "Data",
+                            "type": "object",
+                            "name": "data"
+                          }
+                        ],
+                        "type": "object"
+                      }
+                    ],
+                    "visible_config_fields": [
+                      "variables.data.clean_month",
+                      "variables",
+                      "variables.schema",
+                      "variables.data.clean_day",
+                      "variables.data.clean_weekday",
+                      "variables.data.clean_hours",
+                      "variables.data.clean_minutes"
+                    ],
+                    "uuid": "c6f04f53-91c5-494b-8228-08fce78977e3"
+                  },
+                  {
+                    "number": 7,
+                    "keyword": "if",
+                    "input": {
+                      "type": "compound",
+                      "operand": "and",
+                      "conditions": [
+                        {
+                          "operand": "contains",
+                          "lhs": "=(_dp('{\"pill_type\":\"output\",\"provider\":\"workato_variable\",\"line\":\"46e6eaa7\",\"path\":[\"clean_month\"]}') == '*') ? '*' : _dp('{\"pill_type\":\"output\",\"provider\":\"workato_variable\",\"line\":\"46e6eaa7\",\"path\":[\"clean_month\"]}').split(\",\")",
+                          "rhs": "=(_dp('{\"pill_type\":\"output\",\"provider\":\"workato_variable\",\"line\":\"46e6eaa7\",\"path\":[\"clean_month\"]}') == '*') ? '*' : _dp('{\"pill_type\":\"job_context\",\"path\":[\"job_created_at\"]}').strftime(\"%m\").to_i.to_s",
+                          "uuid": "090a9025-6174-4bc5-ab4c-1d11132220c8"
+                        },
+                        {
+                          "operand": "contains",
+                          "lhs": "=(_dp('{\"pill_type\":\"output\",\"provider\":\"workato_variable\",\"line\":\"46e6eaa7\",\"path\":[\"clean_day\"]}') == '*') ? '*' : _dp('{\"pill_type\":\"output\",\"provider\":\"workato_variable\",\"line\":\"46e6eaa7\",\"path\":[\"clean_day\"]}').split(\",\")",
+                          "rhs": "=(_dp('{\"pill_type\":\"output\",\"provider\":\"workato_variable\",\"line\":\"46e6eaa7\",\"path\":[\"clean_day\"]}') == '*') ? '*' : _dp('{\"pill_type\":\"job_context\",\"path\":[\"job_created_at\"]}').strftime(\"%d\").to_i.to_s",
+                          "uuid": "b3f539ce-b7b0-4d9b-923c-3afe1cc5f920"
+                        },
+                        {
+                          "operand": "contains",
+                          "lhs": "=(_dp('{\"pill_type\":\"output\",\"provider\":\"workato_variable\",\"line\":\"46e6eaa7\",\"path\":[\"clean_weekday\"]}') == '*') ? '*' : _dp('{\"pill_type\":\"output\",\"provider\":\"workato_variable\",\"line\":\"46e6eaa7\",\"path\":[\"clean_weekday\"]}').split(\",\")",
+                          "rhs": "=(_dp('{\"pill_type\":\"output\",\"provider\":\"workato_variable\",\"line\":\"46e6eaa7\",\"path\":[\"clean_weekday\"]}') == '*') ? '*' : _dp('{\"pill_type\":\"job_context\",\"path\":[\"job_created_at\"]}').strftime(\"%u\").to_i.to_s",
+                          "uuid": "04aad3dc-2409-4d4f-b129-3a1e4f344814"
+                        },
+                        {
+                          "operand": "contains",
+                          "lhs": "=(_dp('{\"pill_type\":\"output\",\"provider\":\"workato_variable\",\"line\":\"46e6eaa7\",\"path\":[\"clean_hours\"]}') == '*') ? '*' : _dp('{\"pill_type\":\"output\",\"provider\":\"workato_variable\",\"line\":\"46e6eaa7\",\"path\":[\"clean_hours\"]}').split(\",\")",
+                          "rhs": "=(_dp('{\"pill_type\":\"output\",\"provider\":\"workato_variable\",\"line\":\"46e6eaa7\",\"path\":[\"clean_hours\"]}') == '*') ? '*' : _dp('{\"pill_type\":\"job_context\",\"path\":[\"job_created_at\"]}').strftime(\"%H\").to_i.to_s",
+                          "uuid": "a4f8044a-e678-4942-b218-55f5218c7ed9"
+                        },
+                        {
+                          "operand": "contains",
+                          "lhs": "=(_dp('{\"pill_type\":\"output\",\"provider\":\"workato_variable\",\"line\":\"46e6eaa7\",\"path\":[\"clean_minutes\"]}') == '*') ? '*' : _dp('{\"pill_type\":\"output\",\"provider\":\"workato_variable\",\"line\":\"46e6eaa7\",\"path\":[\"clean_minutes\"]}').split(\",\")",
+                          "rhs": "=(_dp('{\"pill_type\":\"output\",\"provider\":\"workato_variable\",\"line\":\"46e6eaa7\",\"path\":[\"clean_minutes\"]}') == '*') ? '*' : _dp('{\"pill_type\":\"job_context\",\"path\":[\"job_created_at\"]}').strftime(\"%M\").to_i.to_s",
+                          "uuid": "507c162a-4c4b-470f-b439-2e9e2d145523"
+                        }
+                      ]
+                    },
+                    "block": [
+                      {
+                        "number": 8,
+                        "keyword": "if",
+                        "input": {
+                          "type": "compound",
+                          "operand": "and",
+                          "conditions": [
+                            {
+                              "operand": "equals_to",
+                              "lhs": "=_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"b8ffc5a4\",\"path\":[\"entry\",\"col8\"]}').downcase",
+                              "rhs": "report",
+                              "uuid": "condition-396cc592-4ded-4e7b-a04f-a81c572cef09"
+                            }
+                          ]
+                        },
+                        "block": [
+                          {
+                            "number": 9,
+                            "provider": "workato_recipe_function",
+                            "name": "call_recipe_async",
+                            "as": "bd0d0345",
+                            "keyword": "action",
+                            "dynamicPickListSelection": {
+                              "flow_id": "AOF | FUNC | Periodic Job Report"
+                            },
+                            "input": {
+                              "flow_id": {
+                                "zip_name": "Accelerator - Autonomous Operations Framework V3.1/Recipes/aof_func_periodic_job_report.recipe.json",
+                                "name": "AOF | FUNC | Periodic Job Report",
+                                "folder": "Accelerator - Autonomous Operations Framework V3.1/Recipes"
+                              },
+                              "parameters": {
+                                "recipeID": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"b8ffc5a4\",\"path\":[\"entry\",\"col1\"]}')}",
+                                "lastRunTimestamp": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"b8ffc5a4\",\"path\":[\"entry\",\"col9\"]}')}",
+                                "recipientEmail": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"b8ffc5a4\",\"path\":[\"entry\",\"col10\"]}')}"
+                              }
+                            },
+                            "extended_input_schema": [
+                              {
+                                "label": "Parameters",
+                                "name": "parameters",
+                                "properties": [
+                                  {
+                                    "control_type": "text",
+                                    "label": "Recipe ID",
+                                    "name": "recipeID",
+                                    "type": "string",
+                                    "optional": false
+                                  },
+                                  {
+                                    "control_type": "text",
+                                    "label": "Last run timestamp",
+                                    "name": "lastRunTimestamp",
+                                    "type": "string",
+                                    "optional": false
+                                  },
+                                  {
+                                    "control_type": "text",
+                                    "label": "Recipient email",
+                                    "name": "recipientEmail",
+                                    "type": "string",
+                                    "optional": false
+                                  }
+                                ],
+                                "type": "object"
+                              }
+                            ],
+                            "uuid": "dfed9d16-9b4f-48f1-90da-f89f54e245e0",
+                            "skip": false
+                          },
+                          {
+                            "number": 10,
+                            "keyword": "else",
+                            "input": {
+                            },
+                            "block": [
+                              {
+                                "number": 11,
+                                "provider": "workato_recipe_function",
+                                "name": "call_recipe_async",
+                                "as": "d7c4c7d8",
+                                "keyword": "action",
+                                "dynamicPickListSelection": {
+                                  "flow_id": "AOF | FUNC | Individual Recipe Error Collation"
+                                },
+                                "input": {
+                                  "flow_id": {
+                                    "zip_name": "Accelerator - Autonomous Operations Framework V3.1/Recipes/aof_func_individual_recipe_error_collation.recipe.json",
+                                    "name": "AOF | FUNC | Individual Recipe Error Collation",
+                                    "folder": "Accelerator - Autonomous Operations Framework V3.1/Recipes"
+                                  },
+                                  "parameters": {
+                                    "recipeID": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"b8ffc5a4\",\"path\":[\"entry\",\"col1\"]}')}",
+                                    "lastRunTimestamp": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"b8ffc5a4\",\"path\":[\"entry\",\"col9\"]}')}",
+                                    "errorIdentifier": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"b8ffc5a4\",\"path\":[\"entry\",\"col8\"]}')}",
+                                    "entryID": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"b8ffc5a4\",\"path\":[\"id\"]}')}"
+                                  }
+                                },
+                                "extended_input_schema": [
+                                  {
+                                    "label": "Parameters",
+                                    "name": "parameters",
+                                    "properties": [
+                                      {
+                                        "control_type": "text",
+                                        "label": "Recipe ID",
+                                        "name": "recipeID",
+                                        "type": "string",
+                                        "optional": false
+                                      },
+                                      {
+                                        "control_type": "text",
+                                        "label": "Last run timestamp",
+                                        "name": "lastRunTimestamp",
+                                        "type": "string",
+                                        "optional": false
+                                      },
+                                      {
+                                        "control_type": "text",
+                                        "label": "Entry ID",
+                                        "name": "entryID",
+                                        "type": "string",
+                                        "optional": false
+                                      },
+                                      {
+                                        "control_type": "text",
+                                        "label": "Error identifier",
+                                        "name": "errorIdentifier",
+                                        "type": "string",
+                                        "optional": false
+                                      }
+                                    ],
+                                    "type": "object"
+                                  }
+                                ],
+                                "uuid": "ca7b5252-9939-45e6-b93c-8c5f39000d48"
+                              }
+                            ],
+                            "uuid": "d4504f4b-93f5-4d70-9d58-5406dbf3be88"
+                          }
+                        ],
+                        "uuid": "c28fcbef-4ab9-4528-a1bb-3c545796b270"
+                      }
+                    ],
+                    "uuid": "88e49970-042c-48f3-86aa-6d28efd0cc9d"
+                  }
+                ],
+                "uuid": "bde78a53-2b40-4d0a-91c0-2c5f4d847889"
+              },
+              {
+                "number": 12,
+                "as": "5f0bfc65",
+                "keyword": "catch",
+                "input": {
+                  "max_retry_count": "0",
+                  "retry_interval": "2"
+                },
+                "block": [
+                  {
+                    "number": 13,
+                    "provider": "workato_variable",
+                    "name": "insert_to_list",
+                    "as": "4ddc51f9",
+                    "keyword": "action",
+                    "dynamicPickListSelection": {
+                      "name": "Admin Error List (step 3)"
+                    },
+                    "input": {
+                      "location": "end",
+                      "name": "0bf321e4-ecbe-4e59-b478-26f786e6c997:a0ca75b6",
+                      "list_item": {
+                        "RecipeID": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"b8ffc5a4\",\"path\":[\"entry\",\"col1\"]}')}",
+                        "Error": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_variable\",\"line\":\"a0ca75b6\",\"path\":[\"list_items\",{\"path_element_type\":\"current_item\"},\"Error\"]}')}: #{_dp('{\"pill_type\":\"output\",\"provider\":\"catch\",\"line\":\"5f0bfc65\",\"path\":[\"message\"]}')}"
+                      }
+                    },
+                    "extended_input_schema": [
+                      {
+                        "label": "List item",
+                        "name": "list_item",
+                        "properties": [
+                          {
+                            "control_type": "text",
+                            "label": "Recipe ID",
+                            "name": "RecipeID",
+                            "type": "string",
+                            "optional": false
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Error",
+                            "name": "Error",
+                            "type": "string",
+                            "optional": false
+                          }
+                        ],
+                        "type": "object"
+                      }
+                    ],
+                    "uuid": "3d742506-5948-4126-aec1-c5b08c448fa8"
+                  }
+                ],
+                "uuid": "c07ccc15-8733-4515-811f-8976d089b835"
+              }
+            ],
+            "uuid": "d6076cc1-a335-4a24-a2ac-a6e1b56e7c64"
+          }
+        ],
+        "source": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"lookup_table\",\"line\":\"29fbd33b\",\"path\":[\"entries\"]}')}",
+        "uuid": "d934575c-c809-4435-8025-03bfd179c176"
+      },
+      {
+        "number": 14,
+        "provider": "logger",
+        "name": "log_message",
+        "as": "325052b2",
+        "keyword": "action",
+        "input": {
+          "message": "=_dp('{\"pill_type\":\"output\",\"provider\":\"workato_variable\",\"line\":\"a0ca75b6\",\"path\":[\"list_items\"]}')"
+        },
+        "uuid": "8f33a028-7117-454b-a241-d6431b48e92d"
+      }
+    ],
+    "uuid": "64c5a356-d42b-4a4e-b668-56dce1ee9753",
+    "format_version": 2
+  },
+  "config": [
+    {
+      "keyword": "application",
+      "provider": "clock",
+      "skip_validation": false,
+      "account_id": null
+    },
+    {
+      "keyword": "application",
+      "provider": "lookup_table",
+      "skip_validation": false,
+      "account_id": null
+    },
+    {
+      "keyword": "application",
+      "provider": "workato_variable",
+      "skip_validation": false,
+      "account_id": null
+    },
+    {
+      "keyword": "application",
+      "provider": "logger",
+      "skip_validation": false,
+      "account_id": null
+    },
+    {
+      "keyword": "application",
+      "provider": "workato_recipe_function",
+      "skip_validation": false,
+      "account_id": null
+    }
+  ]
+}

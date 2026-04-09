@@ -1,0 +1,5 @@
+{
+  "name": "AOF | CON | Snowflake",
+  "provider": "snowflake",
+  "root_folder": false
+}

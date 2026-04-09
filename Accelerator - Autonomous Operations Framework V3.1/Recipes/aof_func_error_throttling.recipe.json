@@ -1,0 +1,1306 @@
+{
+  "name": "AOF | FUNC | Error Throttling",
+  "version": 1,
+  "private": true,
+  "concurrency": 1,
+  "code": {
+    "number": 0,
+    "provider": "workato_recipe_function",
+    "name": "execute",
+    "as": "b4648954",
+    "keyword": "trigger",
+    "input": {
+      "parameters_schema_json": "[{\"name\":\"recipe_id\",\"type\":\"string\",\"optional\":false,\"control_type\":\"text\",\"label\":\"Recipe ID\"},{\"name\":\"job_id\",\"type\":\"string\",\"optional\":false,\"control_type\":\"text\",\"label\":\"Job ID\"},{\"name\":\"error_code\",\"type\":\"string\",\"optional\":true,\"control_type\":\"text\",\"label\":\"Error code\"}]",
+      "result_schema_json": "[{\"name\":\"notifications_required\",\"type\":\"boolean\",\"optional\":false,\"control_type\":\"checkbox\",\"label\":\"Notifications required\",\"render_input\":{},\"parse_output\":{},\"toggle_hint\":\"Select from option list\",\"toggle_field\":{\"label\":\"Notifications required\",\"control_type\":\"text\",\"toggle_hint\":\"Use custom value\",\"name\":\"notifications_required\",\"type\":\"boolean\",\"optional\":false}}]"
+    },
+    "extended_output_schema": [
+      {
+        "label": "Parameters",
+        "name": "parameters",
+        "properties": [
+          {
+            "control_type": "text",
+            "label": "Recipe ID",
+            "name": "recipe_id",
+            "type": "string",
+            "optional": false
+          },
+          {
+            "control_type": "text",
+            "label": "Job ID",
+            "name": "job_id",
+            "type": "string",
+            "optional": false
+          },
+          {
+            "control_type": "text",
+            "label": "Error code",
+            "name": "error_code",
+            "type": "string",
+            "optional": true
+          }
+        ],
+        "type": "object"
+      }
+    ],
+    "block": [
+      {
+        "number": 1,
+        "provider": "lookup_table",
+        "name": "search_entries",
+        "as": "075f8c5b",
+        "keyword": "action",
+        "dynamicPickListSelection": {
+          "lookup_table_id": "AOF | LT | Error Throttling Configurations"
+        },
+        "input": {
+          "lookup_table_id": "3243009",
+          "parameters": {
+            "col1": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_recipe_function\",\"line\":\"b4648954\",\"path\":[\"parameters\",\"recipe_id\"]}')}"
+          }
+        },
+        "extended_output_schema": [
+          {
+            "label": "Entries",
+            "name": "entries",
+            "of": "object",
+            "properties": [
+              {
+                "control_type": "number",
+                "label": "Entry ID",
+                "parse_output": "integer_conversion",
+                "type": "integer",
+                "name": "id"
+              },
+              {
+                "properties": [
+                  {
+                    "control_type": "text",
+                    "label": "Recipe Id",
+                    "name": "col1",
+                    "type": "string",
+                    "sticky": true
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Throttle Expiry Time",
+                    "name": "col2",
+                    "type": "string",
+                    "sticky": true
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Error Count",
+                    "name": "col3",
+                    "type": "string",
+                    "sticky": true
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Job Id List",
+                    "name": "col4",
+                    "type": "string",
+                    "sticky": true
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Last Update Time",
+                    "name": "col5",
+                    "type": "string",
+                    "sticky": true
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Error Code",
+                    "name": "col6",
+                    "type": "string",
+                    "sticky": true
+                  }
+                ],
+                "label": "Entry",
+                "type": "object",
+                "name": "entry"
+              }
+            ],
+            "type": "array"
+          }
+        ],
+        "extended_input_schema": [
+          {
+            "hint": "Provide one or more entry fields to search the entry",
+            "label": "Search by",
+            "name": "parameters",
+            "properties": [
+              {
+                "control_type": "text",
+                "label": "Recipe Id",
+                "name": "col1",
+                "type": "string",
+                "sticky": true,
+                "optional": true
+              },
+              {
+                "control_type": "text",
+                "label": "Throttle Expiry Time",
+                "name": "col2",
+                "type": "string",
+                "sticky": true,
+                "optional": true
+              },
+              {
+                "control_type": "text",
+                "label": "Error Count",
+                "name": "col3",
+                "type": "string",
+                "sticky": true,
+                "optional": true
+              },
+              {
+                "control_type": "text",
+                "label": "Job Id List",
+                "name": "col4",
+                "type": "string",
+                "sticky": true,
+                "optional": true
+              },
+              {
+                "control_type": "text",
+                "label": "Last Update Time",
+                "name": "col5",
+                "type": "string",
+                "sticky": true,
+                "optional": true
+              },
+              {
+                "control_type": "text",
+                "label": "Error Code",
+                "name": "col6",
+                "type": "string",
+                "sticky": true,
+                "optional": true
+              }
+            ],
+            "type": "object"
+          }
+        ],
+        "uuid": "e425b838-7710-444b-be35-1e597a2df129",
+        "skip": true
+      },
+      {
+        "number": 2,
+        "provider": "lookup_table",
+        "name": "search_entries",
+        "as": "13949f67",
+        "keyword": "action",
+        "dynamicPickListSelection": {
+          "lookup_table_id": "AOF | LT | Error Throttling Configurations"
+        },
+        "input": {
+          "lookup_table_id": {
+            "zip_name": "aof_lt_error_throttling_entries.lookup_table.json",
+            "name": "AOF | LT | Error Throttling Entries",
+            "folder": ""
+          },
+          "parameters": {
+            "col1": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_recipe_function\",\"line\":\"b4648954\",\"path\":[\"parameters\",\"recipe_id\"]}')}",
+            "col6": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_recipe_function\",\"line\":\"b4648954\",\"path\":[\"parameters\",\"error_code\"]}')}"
+          }
+        },
+        "extended_output_schema": [
+          {
+            "label": "Entries",
+            "name": "entries",
+            "of": "object",
+            "properties": [
+              {
+                "control_type": "number",
+                "label": "Entry ID",
+                "parse_output": "integer_conversion",
+                "type": "integer",
+                "name": "id"
+              },
+              {
+                "properties": [
+                  {
+                    "control_type": "text",
+                    "label": "Recipe Id",
+                    "name": "col1",
+                    "type": "string",
+                    "sticky": true
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Throttle Expiry Time",
+                    "name": "col2",
+                    "type": "string",
+                    "sticky": true
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Error Count",
+                    "name": "col3",
+                    "type": "string",
+                    "sticky": true
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Job Id List",
+                    "name": "col4",
+                    "type": "string",
+                    "sticky": true
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Last Update Time",
+                    "name": "col5",
+                    "type": "string",
+                    "sticky": true
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Error Code",
+                    "name": "col6",
+                    "type": "string",
+                    "sticky": true
+                  }
+                ],
+                "label": "Entry",
+                "type": "object",
+                "name": "entry"
+              }
+            ],
+            "type": "array"
+          }
+        ],
+        "extended_input_schema": [
+          {
+            "hint": "Provide one or more entry fields to search the entry",
+            "label": "Search by",
+            "name": "parameters",
+            "properties": [
+              {
+                "control_type": "text",
+                "label": "Recipe Id",
+                "name": "col1",
+                "type": "string",
+                "sticky": true,
+                "optional": true
+              },
+              {
+                "control_type": "text",
+                "label": "Throttle Expiry Time",
+                "name": "col2",
+                "type": "string",
+                "sticky": true,
+                "optional": true
+              },
+              {
+                "control_type": "text",
+                "label": "Error Count",
+                "name": "col3",
+                "type": "string",
+                "sticky": true,
+                "optional": true
+              },
+              {
+                "control_type": "text",
+                "label": "Job Id List",
+                "name": "col4",
+                "type": "string",
+                "sticky": true,
+                "optional": true
+              },
+              {
+                "control_type": "text",
+                "label": "Last Update Time",
+                "name": "col5",
+                "type": "string",
+                "sticky": true,
+                "optional": true
+              },
+              {
+                "control_type": "text",
+                "label": "Error Code",
+                "name": "col6",
+                "type": "string",
+                "sticky": true,
+                "optional": true
+              }
+            ],
+            "type": "object"
+          }
+        ],
+        "uuid": "0826cf20-f1a1-4e6c-9f83-ca075a42dde7"
+      },
+      {
+        "number": 3,
+        "keyword": "if",
+        "input": {
+          "type": "compound",
+          "operand": "and",
+          "conditions": [
+            {
+              "operand": "present",
+              "lhs": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"lookup_table\",\"line\":\"13949f67\",\"path\":[\"entries\",{\"path_element_type\":\"current_item\"},\"id\"]}')}",
+              "rhs": "",
+              "uuid": "427683cc-60c4-4ca4-aa40-27f1ac86ac7c"
+            }
+          ]
+        },
+        "block": [
+          {
+            "number": 4,
+            "keyword": "if",
+            "input": {
+              "type": "compound",
+              "operand": "and",
+              "conditions": [
+                {
+                  "operand": "greater_than",
+                  "lhs": "=_dp('{\"pill_type\":\"output\",\"provider\":\"lookup_table\",\"line\":\"13949f67\",\"path\":[\"entries\",{\"path_element_type\":\"current_item\"},\"entry\",\"col2\"]}').to_time",
+                  "rhs": "=now",
+                  "uuid": "6ac0866a-58d9-46f9-b04c-395e793dee41"
+                }
+              ]
+            },
+            "block": [
+              {
+                "number": 5,
+                "keyword": "if",
+                "input": {
+                  "type": "compound",
+                  "operand": "and",
+                  "conditions": [
+                    {
+                      "operand": "less_than",
+                      "lhs": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"lookup_table\",\"line\":\"13949f67\",\"path\":[\"entries\",{\"path_element_type\":\"current_item\"},\"entry\",\"col3\"]}')}",
+                      "rhs": "#{_dp('{\"pill_type\":\"account_property\",\"property_name\":\"Accl.AOF.throttle_maxcount\"}')}",
+                      "uuid": "874e4a57-f762-4b45-9f93-cbd08b33fef8"
+                    }
+                  ]
+                },
+                "block": [
+                  {
+                    "number": 6,
+                    "provider": "lookup_table",
+                    "name": "update_entry",
+                    "as": "ab51be73",
+                    "keyword": "action",
+                    "dynamicPickListSelection": {
+                      "lookup_table_id": "AOF | LT | Error Throttling Configurations"
+                    },
+                    "toggleCfg": {
+                      "ignore_not_found": true
+                    },
+                    "input": {
+                      "lookup_table_id": {
+                        "zip_name": "aof_lt_error_throttling_entries.lookup_table.json",
+                        "name": "AOF | LT | Error Throttling Entries",
+                        "folder": ""
+                      },
+                      "parameters": {
+                        "col2": "=",
+                        "col3": "=_dp('{\"pill_type\":\"output\",\"provider\":\"lookup_table\",\"line\":\"13949f67\",\"path\":[\"entries\",{\"path_element_type\":\"current_item\"},\"entry\",\"col3\"]}').to_i + 1",
+                        "col4": "=_dp('{\"pill_type\":\"output\",\"provider\":\"lookup_table\",\"line\":\"13949f67\",\"path\":[\"entries\",{\"path_element_type\":\"current_item\"},\"entry\",\"col4\"]}') + \",\" + _dp('{\"pill_type\":\"output\",\"provider\":\"workato_recipe_function\",\"line\":\"b4648954\",\"path\":[\"parameters\",\"job_id\"]}')",
+                        "col5": "=now"
+                      },
+                      "ignore_not_found": "false",
+                      "id": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"lookup_table\",\"line\":\"13949f67\",\"path\":[\"entries\",{\"path_element_type\":\"current_item\"},\"id\"]}')}"
+                    },
+                    "extended_output_schema": [
+                      {
+                        "control_type": "number",
+                        "label": "Entry ID",
+                        "name": "id",
+                        "parse_output": "integer_conversion",
+                        "type": "integer"
+                      },
+                      {
+                        "label": "Entry",
+                        "name": "entry",
+                        "properties": [
+                          {
+                            "control_type": "text",
+                            "label": "Recipe Id",
+                            "name": "col1",
+                            "type": "string",
+                            "sticky": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Throttle Expiry Time",
+                            "name": "col2",
+                            "type": "string",
+                            "sticky": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Error Count",
+                            "name": "col3",
+                            "type": "string",
+                            "sticky": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Job Id List",
+                            "name": "col4",
+                            "type": "string",
+                            "sticky": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Last Update Time",
+                            "name": "col5",
+                            "type": "string",
+                            "sticky": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Error Code",
+                            "name": "col6",
+                            "type": "string",
+                            "sticky": true
+                          }
+                        ],
+                        "type": "object"
+                      }
+                    ],
+                    "extended_input_schema": [
+                      {
+                        "hint": "Fill the fields you want to update",
+                        "label": "Entry fields",
+                        "name": "parameters",
+                        "properties": [
+                          {
+                            "control_type": "text",
+                            "label": "Recipe Id",
+                            "name": "col1",
+                            "type": "string",
+                            "sticky": true,
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Throttle Expiry Time",
+                            "name": "col2",
+                            "type": "string",
+                            "sticky": true,
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Error Count",
+                            "name": "col3",
+                            "type": "string",
+                            "sticky": true,
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Job Id List",
+                            "name": "col4",
+                            "type": "string",
+                            "sticky": true,
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Last Update Time",
+                            "name": "col5",
+                            "type": "string",
+                            "sticky": true,
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Error Code",
+                            "name": "col6",
+                            "type": "string",
+                            "sticky": true,
+                            "optional": true
+                          }
+                        ],
+                        "type": "object"
+                      }
+                    ],
+                    "uuid": "ed7b4bd5-cc50-4ed8-961a-d3c9a804cc82",
+                    "skip": false
+                  },
+                  {
+                    "number": 7,
+                    "provider": "workato_recipe_function",
+                    "name": "return_result",
+                    "as": "eeba8ee1",
+                    "keyword": "action",
+                    "toggleCfg": {
+                      "result.notifications_required": true
+                    },
+                    "input": {
+                      "result": {
+                        "notifications_required": "false"
+                      }
+                    },
+                    "extended_output_schema": [
+                      {
+                        "label": "Result",
+                        "name": "result",
+                        "properties": [
+                          {
+                            "control_type": "checkbox",
+                            "label": "Notifications required",
+                            "render_input": {
+                            },
+                            "parse_output": {
+                            },
+                            "toggle_hint": "Select from option list",
+                            "toggle_field": {
+                              "label": "Notifications required",
+                              "control_type": "text",
+                              "toggle_hint": "Use custom value",
+                              "name": "notifications_required",
+                              "type": "boolean",
+                              "optional": false
+                            },
+                            "name": "notifications_required",
+                            "type": "boolean",
+                            "optional": false
+                          }
+                        ],
+                        "type": "object"
+                      }
+                    ],
+                    "extended_input_schema": [
+                      {
+                        "label": "Result",
+                        "name": "result",
+                        "properties": [
+                          {
+                            "control_type": "checkbox",
+                            "label": "Notifications required",
+                            "render_input": {
+                            },
+                            "parse_output": {
+                            },
+                            "toggle_hint": "Select from option list",
+                            "toggle_field": {
+                              "label": "Notifications required",
+                              "control_type": "text",
+                              "toggle_hint": "Use custom value",
+                              "name": "notifications_required",
+                              "type": "boolean",
+                              "optional": false
+                            },
+                            "name": "notifications_required",
+                            "type": "boolean",
+                            "optional": false
+                          }
+                        ],
+                        "type": "object"
+                      }
+                    ],
+                    "uuid": "98f7d5cf-4163-4b2d-8cdd-b494d14e640b"
+                  },
+                  {
+                    "number": 8,
+                    "keyword": "else",
+                    "input": {
+                    },
+                    "block": [
+                      {
+                        "number": 9,
+                        "provider": "lookup_table",
+                        "name": "update_entry",
+                        "as": "ce08aa06",
+                        "keyword": "action",
+                        "dynamicPickListSelection": {
+                          "lookup_table_id": "AOF | LT | Error Throttling Configurations"
+                        },
+                        "toggleCfg": {
+                          "ignore_not_found": true
+                        },
+                        "input": {
+                          "lookup_table_id": {
+                            "zip_name": "aof_lt_error_throttling_entries.lookup_table.json",
+                            "name": "AOF | LT | Error Throttling Entries",
+                            "folder": ""
+                          },
+                          "parameters": {
+                            "col2": "=_dp('{\"pill_type\":\"account_property\",\"property_name\":\"Accl.AOF.throttle_expiry_duration\"}').to_i.minutes.from_now",
+                            "col3": "1",
+                            "col4": "=_dp('{\"pill_type\":\"output\",\"provider\":\"lookup_table\",\"line\":\"13949f67\",\"path\":[\"entries\",{\"path_element_type\":\"current_item\"},\"entry\",\"col4\"]}') + \",\" + _dp('{\"pill_type\":\"output\",\"provider\":\"workato_recipe_function\",\"line\":\"b4648954\",\"path\":[\"parameters\",\"job_id\"]}')",
+                            "col5": "=now"
+                          },
+                          "ignore_not_found": "false",
+                          "id": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"lookup_table\",\"line\":\"13949f67\",\"path\":[\"entries\",{\"path_element_type\":\"current_item\"},\"id\"]}')}"
+                        },
+                        "extended_output_schema": [
+                          {
+                            "control_type": "number",
+                            "label": "Entry ID",
+                            "name": "id",
+                            "parse_output": "integer_conversion",
+                            "type": "integer"
+                          },
+                          {
+                            "label": "Entry",
+                            "name": "entry",
+                            "properties": [
+                              {
+                                "control_type": "text",
+                                "label": "Recipe Id",
+                                "name": "col1",
+                                "type": "string",
+                                "sticky": true
+                              },
+                              {
+                                "control_type": "text",
+                                "label": "Throttle Expiry Time",
+                                "name": "col2",
+                                "type": "string",
+                                "sticky": true
+                              },
+                              {
+                                "control_type": "text",
+                                "label": "Error Count",
+                                "name": "col3",
+                                "type": "string",
+                                "sticky": true
+                              },
+                              {
+                                "control_type": "text",
+                                "label": "Job Id List",
+                                "name": "col4",
+                                "type": "string",
+                                "sticky": true
+                              },
+                              {
+                                "control_type": "text",
+                                "label": "Last Update Time",
+                                "name": "col5",
+                                "type": "string",
+                                "sticky": true
+                              },
+                              {
+                                "control_type": "text",
+                                "label": "Error Code",
+                                "name": "col6",
+                                "type": "string",
+                                "sticky": true
+                              }
+                            ],
+                            "type": "object"
+                          }
+                        ],
+                        "extended_input_schema": [
+                          {
+                            "hint": "Fill the fields you want to update",
+                            "label": "Entry fields",
+                            "name": "parameters",
+                            "properties": [
+                              {
+                                "control_type": "text",
+                                "label": "Recipe Id",
+                                "name": "col1",
+                                "type": "string",
+                                "sticky": true,
+                                "optional": true
+                              },
+                              {
+                                "control_type": "text",
+                                "label": "Throttle Expiry Time",
+                                "name": "col2",
+                                "type": "string",
+                                "sticky": true,
+                                "optional": true
+                              },
+                              {
+                                "control_type": "text",
+                                "label": "Error Count",
+                                "name": "col3",
+                                "type": "string",
+                                "sticky": true,
+                                "optional": true
+                              },
+                              {
+                                "control_type": "text",
+                                "label": "Job Id List",
+                                "name": "col4",
+                                "type": "string",
+                                "sticky": true,
+                                "optional": true
+                              },
+                              {
+                                "control_type": "text",
+                                "label": "Last Update Time",
+                                "name": "col5",
+                                "type": "string",
+                                "sticky": true,
+                                "optional": true
+                              },
+                              {
+                                "control_type": "text",
+                                "label": "Error Code",
+                                "name": "col6",
+                                "type": "string",
+                                "sticky": true,
+                                "optional": true
+                              }
+                            ],
+                            "type": "object"
+                          }
+                        ],
+                        "uuid": "63235eb8-ca1e-4551-a339-3323b3592d43",
+                        "skip": false
+                      },
+                      {
+                        "number": 10,
+                        "provider": "workato_recipe_function",
+                        "name": "return_result",
+                        "as": "366eeba2",
+                        "keyword": "action",
+                        "input": {
+                          "result": {
+                            "notifications_required": "true"
+                          }
+                        },
+                        "extended_output_schema": [
+                          {
+                            "label": "Result",
+                            "name": "result",
+                            "properties": [
+                              {
+                                "control_type": "checkbox",
+                                "label": "Notifications required",
+                                "render_input": {
+                                },
+                                "parse_output": {
+                                },
+                                "toggle_hint": "Select from option list",
+                                "toggle_field": {
+                                  "label": "Notifications required",
+                                  "control_type": "text",
+                                  "toggle_hint": "Use custom value",
+                                  "name": "notifications_required",
+                                  "type": "boolean",
+                                  "optional": false
+                                },
+                                "name": "notifications_required",
+                                "type": "boolean",
+                                "optional": false
+                              }
+                            ],
+                            "type": "object"
+                          }
+                        ],
+                        "extended_input_schema": [
+                          {
+                            "label": "Result",
+                            "name": "result",
+                            "properties": [
+                              {
+                                "control_type": "checkbox",
+                                "label": "Notifications required",
+                                "render_input": {
+                                },
+                                "parse_output": {
+                                },
+                                "toggle_hint": "Select from option list",
+                                "toggle_field": {
+                                  "label": "Notifications required",
+                                  "control_type": "text",
+                                  "toggle_hint": "Use custom value",
+                                  "name": "notifications_required",
+                                  "type": "boolean",
+                                  "optional": false
+                                },
+                                "name": "notifications_required",
+                                "type": "boolean",
+                                "optional": false
+                              }
+                            ],
+                            "type": "object"
+                          }
+                        ],
+                        "uuid": "3a7a05ff-754c-4c06-9674-04f1c0230652"
+                      }
+                    ],
+                    "uuid": "5549f48b-2ac7-440b-b04b-e97f71849f31"
+                  }
+                ],
+                "uuid": "f63b92b3-6b29-4a69-9ee3-3574b34c795a"
+              },
+              {
+                "number": 11,
+                "keyword": "else",
+                "input": {
+                },
+                "block": [
+                  {
+                    "number": 12,
+                    "provider": "lookup_table",
+                    "name": "update_entry",
+                    "as": "f5c42438",
+                    "keyword": "action",
+                    "dynamicPickListSelection": {
+                      "lookup_table_id": "AOF | LT | Error Throttling Configurations"
+                    },
+                    "toggleCfg": {
+                      "ignore_not_found": true
+                    },
+                    "input": {
+                      "lookup_table_id": {
+                        "zip_name": "aof_lt_error_throttling_entries.lookup_table.json",
+                        "name": "AOF | LT | Error Throttling Entries",
+                        "folder": ""
+                      },
+                      "parameters": {
+                        "col1": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_recipe_function\",\"line\":\"b4648954\",\"path\":[\"parameters\",\"recipe_id\"]}')}",
+                        "col2": "=_dp('{\"pill_type\":\"account_property\",\"property_name\":\"Accl.AOF.throttle_expiry_duration\"}').to_i.minutes.from_now",
+                        "col3": "1",
+                        "col4": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_recipe_function\",\"line\":\"b4648954\",\"path\":[\"parameters\",\"job_id\"]}')}",
+                        "col5": "=now"
+                      },
+                      "ignore_not_found": "false",
+                      "id": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"lookup_table\",\"line\":\"13949f67\",\"path\":[\"entries\",{\"path_element_type\":\"current_item\"},\"id\"]}')}"
+                    },
+                    "extended_output_schema": [
+                      {
+                        "control_type": "number",
+                        "label": "Entry ID",
+                        "name": "id",
+                        "parse_output": "integer_conversion",
+                        "type": "integer"
+                      },
+                      {
+                        "label": "Entry",
+                        "name": "entry",
+                        "properties": [
+                          {
+                            "control_type": "text",
+                            "label": "Recipe Id",
+                            "name": "col1",
+                            "type": "string",
+                            "sticky": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Throttle Expiry Time",
+                            "name": "col2",
+                            "type": "string",
+                            "sticky": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Error Count",
+                            "name": "col3",
+                            "type": "string",
+                            "sticky": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Job Id List",
+                            "name": "col4",
+                            "type": "string",
+                            "sticky": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Last Update Time",
+                            "name": "col5",
+                            "type": "string",
+                            "sticky": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Error Code",
+                            "name": "col6",
+                            "type": "string",
+                            "sticky": true
+                          }
+                        ],
+                        "type": "object"
+                      }
+                    ],
+                    "extended_input_schema": [
+                      {
+                        "hint": "Fill the fields you want to update",
+                        "label": "Entry fields",
+                        "name": "parameters",
+                        "properties": [
+                          {
+                            "control_type": "text",
+                            "label": "Recipe Id",
+                            "name": "col1",
+                            "type": "string",
+                            "sticky": true,
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Throttle Expiry Time",
+                            "name": "col2",
+                            "type": "string",
+                            "sticky": true,
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Error Count",
+                            "name": "col3",
+                            "type": "string",
+                            "sticky": true,
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Job Id List",
+                            "name": "col4",
+                            "type": "string",
+                            "sticky": true,
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Last Update Time",
+                            "name": "col5",
+                            "type": "string",
+                            "sticky": true,
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Error Code",
+                            "name": "col6",
+                            "type": "string",
+                            "sticky": true,
+                            "optional": true
+                          }
+                        ],
+                        "type": "object"
+                      }
+                    ],
+                    "uuid": "7e3cb200-7414-497f-a28f-ecfe19b1b2c8",
+                    "skip": false
+                  },
+                  {
+                    "number": 13,
+                    "provider": "workato_recipe_function",
+                    "name": "return_result",
+                    "as": "a2706bca",
+                    "keyword": "action",
+                    "input": {
+                      "result": {
+                        "notifications_required": "true"
+                      }
+                    },
+                    "extended_output_schema": [
+                      {
+                        "label": "Result",
+                        "name": "result",
+                        "properties": [
+                          {
+                            "control_type": "checkbox",
+                            "label": "Notifications required",
+                            "render_input": {
+                            },
+                            "parse_output": {
+                            },
+                            "toggle_hint": "Select from option list",
+                            "toggle_field": {
+                              "label": "Notifications required",
+                              "control_type": "text",
+                              "toggle_hint": "Use custom value",
+                              "name": "notifications_required",
+                              "type": "boolean",
+                              "optional": false
+                            },
+                            "name": "notifications_required",
+                            "type": "boolean",
+                            "optional": false
+                          }
+                        ],
+                        "type": "object"
+                      }
+                    ],
+                    "extended_input_schema": [
+                      {
+                        "label": "Result",
+                        "name": "result",
+                        "properties": [
+                          {
+                            "control_type": "checkbox",
+                            "label": "Notifications required",
+                            "render_input": {
+                            },
+                            "parse_output": {
+                            },
+                            "toggle_hint": "Select from option list",
+                            "toggle_field": {
+                              "label": "Notifications required",
+                              "control_type": "text",
+                              "toggle_hint": "Use custom value",
+                              "name": "notifications_required",
+                              "type": "boolean",
+                              "optional": false
+                            },
+                            "name": "notifications_required",
+                            "type": "boolean",
+                            "optional": false
+                          }
+                        ],
+                        "type": "object"
+                      }
+                    ],
+                    "uuid": "37d93be1-cf7d-4853-82b7-888138a10266"
+                  }
+                ],
+                "uuid": "029520da-0897-470a-a617-2138d6b92907"
+              }
+            ],
+            "uuid": "6705fe9d-4b39-44e3-91e2-c151f89839dd"
+          },
+          {
+            "number": 14,
+            "keyword": "else",
+            "input": {
+            },
+            "block": [
+              {
+                "number": 15,
+                "provider": "lookup_table",
+                "name": "add_entry",
+                "as": "077e447a",
+                "keyword": "action",
+                "dynamicPickListSelection": {
+                  "lookup_table_id": "AOF | LT | Error Throttling Configurations"
+                },
+                "input": {
+                  "lookup_table_id": {
+                    "zip_name": "aof_lt_error_throttling_entries.lookup_table.json",
+                    "name": "AOF | LT | Error Throttling Entries",
+                    "folder": ""
+                  },
+                  "parameters": {
+                    "col1": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_recipe_function\",\"line\":\"b4648954\",\"path\":[\"parameters\",\"recipe_id\"]}')}",
+                    "col2": "=_dp('{\"pill_type\":\"account_property\",\"property_name\":\"Accl.AOF.throttle_expiry_duration\"}').to_i.minutes.from_now",
+                    "col3": "1",
+                    "col4": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_recipe_function\",\"line\":\"b4648954\",\"path\":[\"parameters\",\"job_id\"]}')}",
+                    "col5": "=now",
+                    "col6": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_recipe_function\",\"line\":\"b4648954\",\"path\":[\"parameters\",\"error_code\"]}')}"
+                  }
+                },
+                "extended_output_schema": [
+                  {
+                    "control_type": "number",
+                    "label": "Entry ID",
+                    "name": "id",
+                    "parse_output": "integer_conversion",
+                    "type": "integer"
+                  },
+                  {
+                    "label": "Entry",
+                    "name": "entry",
+                    "properties": [
+                      {
+                        "control_type": "text",
+                        "label": "Recipe Id",
+                        "name": "col1",
+                        "type": "string",
+                        "sticky": true
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "Throttle Expiry Time",
+                        "name": "col2",
+                        "type": "string",
+                        "sticky": true
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "Error Count",
+                        "name": "col3",
+                        "type": "string",
+                        "sticky": true
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "Job Id List",
+                        "name": "col4",
+                        "type": "string",
+                        "sticky": true
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "Last Update Time",
+                        "name": "col5",
+                        "type": "string",
+                        "sticky": true
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "Error Code",
+                        "name": "col6",
+                        "type": "string",
+                        "sticky": true
+                      }
+                    ],
+                    "type": "object"
+                  }
+                ],
+                "extended_input_schema": [
+                  {
+                    "hint": "Fill the fields for the new entry",
+                    "label": "Entry fields",
+                    "name": "parameters",
+                    "properties": [
+                      {
+                        "control_type": "text",
+                        "label": "Recipe Id",
+                        "name": "col1",
+                        "type": "string",
+                        "sticky": true,
+                        "optional": true
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "Throttle Expiry Time",
+                        "name": "col2",
+                        "type": "string",
+                        "sticky": true,
+                        "optional": true
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "Error Count",
+                        "name": "col3",
+                        "type": "string",
+                        "sticky": true,
+                        "optional": true
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "Job Id List",
+                        "name": "col4",
+                        "type": "string",
+                        "sticky": true,
+                        "optional": true
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "Last Update Time",
+                        "name": "col5",
+                        "type": "string",
+                        "sticky": true,
+                        "optional": true
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "Error Code",
+                        "name": "col6",
+                        "type": "string",
+                        "sticky": true,
+                        "optional": true
+                      }
+                    ],
+                    "type": "object"
+                  }
+                ],
+                "uuid": "d55b6bfa-3c3b-4f80-9daa-070492d598f8",
+                "skip": false
+              },
+              {
+                "number": 16,
+                "provider": "workato_recipe_function",
+                "name": "return_result",
+                "as": "08bcda95",
+                "keyword": "action",
+                "input": {
+                  "result": {
+                    "notifications_required": "true"
+                  }
+                },
+                "extended_output_schema": [
+                  {
+                    "label": "Result",
+                    "name": "result",
+                    "properties": [
+                      {
+                        "control_type": "checkbox",
+                        "label": "Notifications required",
+                        "render_input": {
+                        },
+                        "parse_output": {
+                        },
+                        "toggle_hint": "Select from option list",
+                        "toggle_field": {
+                          "label": "Notifications required",
+                          "control_type": "text",
+                          "toggle_hint": "Use custom value",
+                          "name": "notifications_required",
+                          "type": "boolean",
+                          "optional": false
+                        },
+                        "name": "notifications_required",
+                        "type": "boolean",
+                        "optional": false
+                      }
+                    ],
+                    "type": "object"
+                  }
+                ],
+                "extended_input_schema": [
+                  {
+                    "label": "Result",
+                    "name": "result",
+                    "properties": [
+                      {
+                        "control_type": "checkbox",
+                        "label": "Notifications required",
+                        "render_input": {
+                        },
+                        "parse_output": {
+                        },
+                        "toggle_hint": "Select from option list",
+                        "toggle_field": {
+                          "label": "Notifications required",
+                          "control_type": "text",
+                          "toggle_hint": "Use custom value",
+                          "name": "notifications_required",
+                          "type": "boolean",
+                          "optional": false
+                        },
+                        "name": "notifications_required",
+                        "type": "boolean",
+                        "optional": false
+                      }
+                    ],
+                    "type": "object"
+                  }
+                ],
+                "uuid": "da02f5d1-3fba-41aa-86bc-97926bd5961c"
+              }
+            ],
+            "uuid": "c5bdd3b1-eb27-4ba8-9bd8-f18b58d321e2"
+          }
+        ],
+        "uuid": "798fc586-e425-42c5-946f-eea656a4756d"
+      }
+    ],
+    "uuid": "b95acca0-949f-44e7-b88b-fd1b5b0bbc4f",
+    "unfinished": false
+  },
+  "config": [
+    {
+      "keyword": "application",
+      "provider": "workato_recipe_function",
+      "skip_validation": false,
+      "account_id": null
+    },
+    {
+      "keyword": "application",
+      "provider": "lookup_table",
+      "skip_validation": false,
+      "account_id": null
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "name": "AOF | API | Master Orchestrator",
+  "recipe_id": {
+    "zip_name": "Accelerator - Autonomous Operations Framework V3.1/Recipes/aof_api_master_orchestrator.recipe.json",
+    "name": "AOF | API | Master Orchestrator",
+    "folder": "Accelerator - Autonomous Operations Framework V3.1/Recipes"
+  },
+  "api_group_id": {
+    "zip_name": "autonomous_ops_v3.api_group.json",
+    "name": "Autonomous Ops V3",
+    "folder": ""
+  },
+  "method": "POST",
+  "path": "aof-api-master-orchestrator",
+  "legacy": false,
+  "validate_request": false
+}
