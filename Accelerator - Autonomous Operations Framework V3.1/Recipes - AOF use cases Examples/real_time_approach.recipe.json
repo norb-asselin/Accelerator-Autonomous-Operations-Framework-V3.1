@@ -1,0 +1,548 @@
+{
+  "name": "Real-time Approach",
+  "description": "",
+  "version": 7,
+  "private": true,
+  "concurrency": 1,
+  "code": {
+    "number": 0,
+    "provider": "clock",
+    "name": "scheduled_event",
+    "as": "a07366b4",
+    "keyword": "trigger",
+    "input": {
+      "time_unit": "minutes",
+      "trigger_every": "5"
+    },
+    "extended_input_schema": [
+      {
+        "control_type": "integer",
+        "default": "5",
+        "enforce_template_mode": true,
+        "extends_schema": true,
+        "hint": "Define repeating schedule. Enter whole numbers only.\n                        This field can be set to a minimum of 5 minutes.",
+        "label": "Trigger every",
+        "name": "trigger_every",
+        "optional": false,
+        "suffix": {
+          "text": "minutes"
+        },
+        "type": "string"
+      },
+      {
+        "control_type": "select",
+        "hint": "Select the timezone to use. Leave it blank to use <b>{{authUser.account_timezone}}</b>",
+        "label": "Timezone",
+        "name": "timezone",
+        "optional": true,
+        "pick_list": "timezone_id_global_pick_list",
+        "pick_list_connection_less": true,
+        "type": "string"
+      },
+      {
+        "control_type": "date_time",
+        "enforce_template_mode": true,
+        "extends_schema": true,
+        "hint": "Set date and time to start or leave blank to start immediately. <b>Once recipe has been run or tested, value cannot be changed.</b>",
+        "label": "Start after",
+        "name": "start_after",
+        "optional": true,
+        "parse_output": "date_time_conversion",
+        "since_field": true,
+        "type": "date_time",
+        "ignore_timezone": true,
+        "render_input": "date_time_conversion"
+      }
+    ],
+    "block": [
+      {
+        "number": 1,
+        "keyword": "try",
+        "input": {
+        },
+        "block": [
+          {
+            "number": 2,
+            "provider": "rest",
+            "name": "make_request_v2",
+            "as": "de0795e4",
+            "keyword": "action",
+            "toggleCfg": {
+              "response.ignore_http_errors": true,
+              "disable_retries": true
+            },
+            "input": {
+              "request_name": "Send request",
+              "request": {
+                "method": "GET",
+                "content_type": "application/json",
+                "url": "http://workato2.free.beeceptor.com/test2"
+              },
+              "response": {
+                "output_type": "json",
+                "expected_encoding": "UTF-8",
+                "ignore_http_errors": "false"
+              },
+              "wait_for_response": "false",
+              "completion_threshold_seconds": "3600",
+              "disable_retries": "false"
+            },
+            "extended_output_schema": [
+              {
+                "label": "Headers",
+                "name": "headers",
+                "properties": [
+
+                ],
+                "type": "object"
+              },
+              {
+                "label": "Response",
+                "name": "response",
+                "properties": [
+
+                ],
+                "type": "object"
+              }
+            ],
+            "extended_input_schema": [
+              {
+                "label": "Response",
+                "name": "response",
+                "override": true,
+                "properties": [
+                  {
+                    "control_type": "select",
+                    "label": "Response content type",
+                    "pick_list": [
+                      [
+                        "Text",
+                        "rawdatatxt"
+                      ],
+                      [
+                        "Binary",
+                        "rawdata"
+                      ],
+                      [
+                        "JSON",
+                        "json"
+                      ],
+                      [
+                        "XML",
+                        "xml2"
+                      ],
+                      [
+                        "Multipart",
+                        "multipart"
+                      ]
+                    ],
+                    "hint": "Select expected format of data response type, e.g. JSON or XML. <a href=\"https://docs.workato.com/developing-connectors/http.html#response-type\" target=\"_blank\">Learn more</a>",
+                    "default": "json",
+                    "extends_schema": true,
+                    "type": "string",
+                    "name": "output_type"
+                  },
+                  {
+                    "control_type": "select",
+                    "label": "Encoding",
+                    "pick_list": "supported_encodings_without_binary_global_pick_list",
+                    "pick_list_connection_less": true,
+                    "optional": true,
+                    "default": "UTF-8",
+                    "hint": "Default encoding type is set to UTF-8, and typically doesn't need to be changed. <a href=\"https://docs.workato.com/developing-connectors/http.html#response-type\" target=\"_blank\">Learn more</a>",
+                    "type": "string",
+                    "name": "expected_encoding"
+                  },
+                  {
+                    "control_type": "schema-designer",
+                    "label": "Response schema",
+                    "sample_data_type": "json_http",
+                    "extends_schema": true,
+                    "empty_schema_title": "Describe all fields in your response.",
+                    "optional": true,
+                    "sticky": true,
+                    "type": "string",
+                    "name": "response_schema"
+                  },
+                  {
+                    "control_type": "schema-designer",
+                    "label": "HTTP response headers",
+                    "extends_schema": true,
+                    "empty_schema_title": "Describe all the response headers",
+                    "optional": true,
+                    "sticky": true,
+                    "type": "string",
+                    "name": "headers_schema"
+                  },
+                  {
+                    "control_type": "schema-designer",
+                    "label": "Multipart part headers",
+                    "extends_schema": true,
+                    "empty_schema_title": "Describe headers within each multipart part",
+                    "optional": true,
+                    "sticky": true,
+                    "hint": "Define the headers that appear in each part of the multipart response (e.g., Content-Type, Content-ID)",
+                    "ngIf": "input.response.output_type == 'multipart'",
+                    "type": "string",
+                    "name": "part_headers_schema"
+                  },
+                  {
+                    "control_type": "checkbox",
+                    "label": "Mark non-2xx response codes as success?",
+                    "default": "false",
+                    "hint": "If <b>yes</b>, non 2xx response codes returned will be marked as a successful action. If <b>no</b>, non 2xx response codes returned will be marked as an error.",
+                    "optional": true,
+                    "toggle_hint": "Select from option list",
+                    "toggle_field": {
+                      "label": "Mark non-2xx response codes as success?",
+                      "control_type": "text",
+                      "toggle_hint": "Use custom value",
+                      "default": false,
+                      "hint": "If <b>yes</b>, non 2xx response codes returned will be marked as a successful action. If <b>no</b>, non 2xx response codes returned will be marked as an error.",
+                      "optional": true,
+                      "render_input": null,
+                      "parse_output": null,
+                      "type": "boolean",
+                      "name": "ignore_http_errors"
+                    },
+                    "type": "boolean",
+                    "name": "ignore_http_errors"
+                  }
+                ],
+                "type": "object"
+              }
+            ],
+            "uuid": "cbc4f22f-c0d1-4c8d-8ed6-610dfaa670ad",
+            "wizardFinished": true
+          },
+          {
+            "number": 3,
+            "as": "9458a844",
+            "keyword": "catch",
+            "input": {
+              "max_retry_count": "0",
+              "retry_interval": "2"
+            },
+            "block": [
+              {
+                "number": 4,
+                "provider": "workato_pub_sub",
+                "name": "publish_to_topic",
+                "as": "dabca090",
+                "keyword": "action",
+                "dynamicPickListSelection": {
+                  "topic_id": "AOF | PS-001 | AOF_Topic"
+                },
+                "toggleCfg": {
+                  "message.errorHandlingData.jobDetails.trigger_async": true
+                },
+                "input": {
+                  "topic_id": {
+                    "zip_name": "aof_ps_001_aof_topic.topic.json",
+                    "name": "AOF | PS-001 | AOF_Topic",
+                    "folder": ""
+                  },
+                  "message": {
+                    "errorHandlingData": {
+                      "jobDetails": {
+                        "identifier": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"rest\",\"line\":\"de0795e4\",\"path\":[\"status_code\"]}')}",
+                        "transactionType": "HTTP call for business results",
+                        "transactionDescription": "Test case for AOF",
+                        "jobID": "#{_dp('{\"pill_type\":\"job_context\",\"path\":[\"job_id\"]}')}",
+                        "recipeID": "#{_dp('{\"pill_type\":\"job_context\",\"path\":[\"recipe_id\"]}')}",
+                        "dateTime": "=now",
+                        "recipe_path": "#{_dp('{\"pill_type\":\"job_context\",\"path\":[\"recipe_path\"]}')}",
+                        "trigger_async": "true",
+                        "project_notifications_required": "TRUE"
+                      },
+                      "errorDetails": {
+                        "parentJobID": "#{_dp('{\"pill_type\":\"job_context\",\"path\":[\"parent_job_id\"]}')}",
+                        "errorMessage": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"catch\",\"line\":\"9458a844\",\"path\":[\"message\"]}')}",
+                        "errorCode": "ERR_0001",
+                        "stackTrace": "Raw error message for Slack trace"
+                      }
+                    }
+                  }
+                },
+                "extended_input_schema": [
+                  {
+                    "label": "Message",
+                    "name": "message",
+                    "properties": [
+                      {
+                        "properties": [
+                          {
+                            "properties": [
+                              {
+                                "control_type": "text",
+                                "label": "Identifier",
+                                "hint": "Identifier value for record or data. Ex: Account ID, External ID.",
+                                "name": "identifier",
+                                "optional": false,
+                                "type": "string"
+                              },
+                              {
+                                "control_type": "text",
+                                "label": "Transaction type",
+                                "hint": "Type of action/s involved inside the catch scope. Ex: invocation, record insertion, mapping.",
+                                "name": "transactionType",
+                                "optional": true,
+                                "sticky": true,
+                                "type": "string"
+                              },
+                              {
+                                "control_type": "text",
+                                "label": "Transaction description",
+                                "hint": "Brief description of action/s involved in the catch scope.",
+                                "name": "transactionDescription",
+                                "optional": true,
+                                "sticky": true,
+                                "type": "string"
+                              },
+                              {
+                                "control_type": "text",
+                                "label": "Job ID",
+                                "hint": "Use Properties - Job ID.",
+                                "name": "jobID",
+                                "optional": false,
+                                "type": "string"
+                              },
+                              {
+                                "control_type": "text",
+                                "label": "Recipe ID",
+                                "hint": "Use Properties - Recipe ID",
+                                "name": "recipeID",
+                                "optional": false,
+                                "type": "string"
+                              },
+                              {
+                                "control_type": "text",
+                                "label": "Date/Time",
+                                "hint": "Timestamp of the action/s. Use timestamp of action or 'now' in formula mode.",
+                                "name": "dateTime",
+                                "optional": false,
+                                "type": "string"
+                              },
+                              {
+                                "control_type": "text",
+                                "label": "Recipe path",
+                                "name": "recipe_path",
+                                "optional": false,
+                                "type": "string"
+                              },
+                              {
+                                "control_type": "text",
+                                "label": "Project notifications required",
+                                "name": "project_notifications_required",
+                                "optional": true,
+                                "type": "string"
+                              },
+                              {
+                                "control_type": "checkbox",
+                                "label": "Trigger Source Asynchronous?",
+                                "render_input": {
+                                },
+                                "parse_output": {
+                                },
+                                "name": "trigger_async",
+                                "optional": false,
+                                "toggle_field": {
+                                  "control_type": "text",
+                                  "label": "Trigger source",
+                                  "name": "trigger_async",
+                                  "optional": false,
+                                  "toggle_hint": "Use custom value",
+                                  "type": "boolean"
+                                },
+                                "toggle_hint": "Select from option list",
+                                "type": "boolean"
+                              },
+                              {
+                                "control_type": "text",
+                                "label": "Free text",
+                                "name": "freeText",
+                                "optional": true,
+                                "type": "string"
+                              }
+                            ],
+                            "label": "Job Details",
+                            "name": "jobDetails",
+                            "optional": false,
+                            "type": "object"
+                          },
+                          {
+                            "properties": [
+                              {
+                                "control_type": "text",
+                                "label": "Parent Job ID",
+                                "hint": "Use Properties > Parent Job ID.",
+                                "name": "parentJobID",
+                                "optional": false,
+                                "type": "string"
+                              },
+                              {
+                                "control_type": "text",
+                                "label": "Error code",
+                                "name": "errorCode",
+                                "optional": false,
+                                "type": "string"
+                              },
+                              {
+                                "control_type": "text",
+                                "label": "Error message",
+                                "hint": "Use an error code defined in the error code lookup table",
+                                "name": "errorMessage",
+                                "optional": true,
+                                "sticky": true,
+                                "type": "string"
+                              },
+                              {
+                                "control_type": "text",
+                                "label": "Stack trace",
+                                "hint": "Raw error message",
+                                "name": "stackTrace",
+                                "optional": true,
+                                "sticky": true,
+                                "type": "string"
+                              }
+                            ],
+                            "label": "Error Details",
+                            "name": "errorDetails",
+                            "of": "object",
+                            "optional": false,
+                            "type": "object"
+                          },
+                          {
+                            "properties": [
+                              {
+                                "label": "Custom fields",
+                                "name": "customFields",
+                                "optional": true,
+                                "type": "array",
+                                "of": "object",
+                                "properties": [
+                                  {
+                                    "control_type": "text",
+                                    "label": "Key",
+                                    "name": "key",
+                                    "optional": true,
+                                    "type": "string"
+                                  },
+                                  {
+                                    "control_type": "text",
+                                    "label": "Value",
+                                    "name": "value",
+                                    "optional": true,
+                                    "type": "string"
+                                  }
+                                ]
+                              },
+                              {
+                                "label": "Custom arrays",
+                                "name": "customArrays",
+                                "optional": true,
+                                "type": "array",
+                                "of": "object",
+                                "properties": [
+                                  {
+                                    "control_type": "text",
+                                    "label": "Array name",
+                                    "name": "arrayName",
+                                    "optional": true,
+                                    "type": "string"
+                                  },
+                                  {
+                                    "label": "Internal array",
+                                    "name": "internalArray",
+                                    "optional": true,
+                                    "type": "array",
+                                    "of": "object",
+                                    "properties": [
+                                      {
+                                        "control_type": "text",
+                                        "label": "Value",
+                                        "name": "value",
+                                        "optional": true,
+                                        "type": "string"
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ],
+                            "label": "Custom data",
+                            "name": "customData",
+                            "optional": true,
+                            "type": "object"
+                          }
+                        ],
+                        "label": "Error Handling Data",
+                        "name": "errorHandlingData",
+                        "optional": false,
+                        "type": "object"
+                      }
+                    ],
+                    "type": "object"
+                  }
+                ],
+                "visible_config_fields": [
+                  "topic_id",
+                  "message",
+                  "message.errorHandlingData",
+                  "message.errorHandlingData.jobDetails",
+                  "message.errorHandlingData.jobDetails.identifier",
+                  "message.errorHandlingData.jobDetails.transactionType",
+                  "message.errorHandlingData.jobDetails.transactionDescription",
+                  "message.errorHandlingData.jobDetails.jobID",
+                  "message.errorHandlingData.jobDetails.recipeID",
+                  "message.errorHandlingData.jobDetails.dateTime",
+                  "message.errorHandlingData.jobDetails.recipe_path",
+                  "message.errorHandlingData.jobDetails.trigger_async",
+                  "message.errorHandlingData.errorDetails",
+                  "message.errorHandlingData.errorDetails.parentJobID",
+                  "message.errorHandlingData.errorDetails.errorCode",
+                  "message.errorHandlingData.errorDetails.errorMessage",
+                  "message.errorHandlingData.errorDetails.stackTrace",
+                  "message.errorHandlingData.jobDetails.project_notifications_required",
+                  "message.errorHandlingData.jobDetails.freeText",
+                  "message.errorHandlingData.customData.customFields.key",
+                  "message.errorHandlingData.customData.customFields.value",
+                  "message.errorHandlingData.customData.customArrays.arrayName",
+                  "message.errorHandlingData.customData.customArrays.internalArray.value"
+                ],
+                "uuid": "8c6887d0-48d2-43f2-bffa-daf5c91ae17c"
+              }
+            ],
+            "uuid": "6e0c0c6f-10a8-4ab0-a57d-32f04a9ad7db"
+          }
+        ],
+        "uuid": "14aeb7a1-d364-4449-bcb8-9f32f4298050"
+      }
+    ],
+    "uuid": "e83bdb47-b315-4a2d-849f-df3fa3e93c35"
+  },
+  "config": [
+    {
+      "keyword": "application",
+      "provider": "clock",
+      "skip_validation": false,
+      "account_id": null
+    },
+    {
+      "keyword": "application",
+      "provider": "workato_pub_sub",
+      "skip_validation": false,
+      "account_id": null
+    },
+    {
+      "keyword": "application",
+      "provider": "rest",
+      "skip_validation": false,
+      "account_id": {
+        "zip_name": "Accelerator - Autonomous Operations Framework V3.1/Recipes - AOF use cases Examples/workato2_free_beeceptor_com.connection.json",
+        "name": "workato2.free.beeceptor.com",
+        "folder": "Accelerator - Autonomous Operations Framework V3.1/Recipes - AOF use cases Examples"
+      }
+    }
+  ]
+}

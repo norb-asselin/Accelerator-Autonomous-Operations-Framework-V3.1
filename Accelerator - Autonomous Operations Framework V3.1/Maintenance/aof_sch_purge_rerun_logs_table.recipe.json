@@ -1,0 +1,211 @@
+{
+  "name": "AOF | SCH | Purge Rerun Logs Table",
+  "description": "When there is a trigger on a specified schedule, do action",
+  "version": 1,
+  "private": true,
+  "concurrency": 1,
+  "code": {
+    "number": 0,
+    "provider": "clock",
+    "name": "scheduled_event",
+    "as": "6d84d3b4",
+    "keyword": "trigger",
+    "dynamicPickListSelection": {
+      "time_unit": "Hours"
+    },
+    "toggleCfg": {
+    },
+    "input": {
+      "time_unit": "hours",
+      "trigger_every": "12"
+    },
+    "extended_input_schema": [
+      {
+        "control_type": "integer",
+        "default": "5",
+        "enforce_template_mode": true,
+        "extends_schema": true,
+        "hint": "Define repeating schedule. Enter whole numbers only.\n                        This field can be set to a minimum of 5 minutes.",
+        "label": "Trigger every",
+        "name": "trigger_every",
+        "optional": false,
+        "suffix": {
+          "text": "hours"
+        },
+        "type": "string"
+      },
+      {
+        "control_type": "date_time",
+        "enforce_template_mode": true,
+        "extends_schema": true,
+        "hint": "Set date and time to start or leave blank to start immediately. <b>Once recipe has been run or tested, value cannot be changed.</b>",
+        "label": "Start after",
+        "name": "start_after",
+        "optional": true,
+        "parse_output": "date_time_conversion",
+        "since_field": true,
+        "type": "date_time",
+        "render_input": "date_time_conversion"
+      }
+    ],
+    "block": [
+      {
+        "number": 1,
+        "provider": "lookup_table",
+        "name": "get_entries",
+        "as": "56579b6f",
+        "keyword": "action",
+        "dynamicPickListSelection": {
+          "lookup_table_id": "Rerun logs"
+        },
+        "toggleCfg": {
+        },
+        "input": {
+          "lookup_table_id": {
+            "zip_name": "aof_lt_003_rerun_logs.lookup_table.json",
+            "name": "AOF | LT-003 | Rerun logs",
+            "folder": ""
+          }
+        },
+        "extended_output_schema": [
+          {
+            "label": "Entries",
+            "name": "entries",
+            "of": "object",
+            "properties": [
+              {
+                "control_type": "number",
+                "label": "Entry ID",
+                "parse_output": "integer_conversion",
+                "type": "integer",
+                "name": "id"
+              },
+              {
+                "properties": [
+                  {
+                    "control_type": "text",
+                    "label": "RecipeID",
+                    "name": "col1",
+                    "type": "string",
+                    "sticky": true
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Parent JobID",
+                    "name": "col2",
+                    "type": "string",
+                    "sticky": true
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Error JobID",
+                    "name": "col3",
+                    "type": "string",
+                    "sticky": true
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "RerunCount",
+                    "name": "col4",
+                    "type": "string",
+                    "sticky": true
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "LastRerunAt",
+                    "name": "col5",
+                    "type": "string",
+                    "sticky": true
+                  }
+                ],
+                "label": "Entry",
+                "type": "object",
+                "name": "entry"
+              }
+            ],
+            "type": "array"
+          }
+        ],
+        "uuid": "8d967537-2262-45b1-bcd8-42155430e0b3"
+      },
+      {
+        "number": 2,
+        "as": "f59f8ff3",
+        "keyword": "foreach",
+        "dynamicPickListSelection": {
+        },
+        "toggleCfg": {
+        },
+        "repeat_mode": "simple",
+        "clear_scope": "false",
+        "input": {
+        },
+        "block": [
+          {
+            "number": 3,
+            "keyword": "if",
+            "dynamicPickListSelection": {
+            },
+            "toggleCfg": {
+            },
+            "input": {
+              "type": "compound",
+              "operand": "and",
+              "conditions": [
+                {
+                  "operand": "less_than",
+                  "lhs": "=_('data.foreach.f59f8ff3.entry.col5').to_time",
+                  "rhs": "=now - 12.hours",
+                  "uuid": "condition-916e0cfb-8732-43f5-bf83-4b0a1b5205ff"
+                }
+              ]
+            },
+            "block": [
+              {
+                "number": 4,
+                "provider": "lookup_table",
+                "name": "delete_entry",
+                "as": "b46cc8e2",
+                "keyword": "action",
+                "dynamicPickListSelection": {
+                  "lookup_table_id": "Rerun logs"
+                },
+                "toggleCfg": {
+                  "ignore_not_found": true
+                },
+                "input": {
+                  "ignore_not_found": "false",
+                  "id": "#{_('data.foreach.f59f8ff3.id')}",
+                  "lookup_table_id": {
+                    "zip_name": "aof_lt_003_rerun_logs.lookup_table.json",
+                    "name": "AOF | LT-003 | Rerun logs",
+                    "folder": ""
+                  }
+                },
+                "uuid": "9eeae3ec-3fb3-4513-bfed-baad0867642e"
+              }
+            ],
+            "uuid": "eda29e6a-4aaa-4519-bfe8-199a888b5f26"
+          }
+        ],
+        "source": "#{_('data.lookup_table.56579b6f.entries')}",
+        "uuid": "8a0dfd0b-8ac6-43d1-8f96-ecdc01718af9"
+      }
+    ],
+    "uuid": "31062767-19df-4549-9c9b-a1d5168af059"
+  },
+  "config": [
+    {
+      "keyword": "application",
+      "provider": "clock",
+      "skip_validation": false,
+      "account_id": null
+    },
+    {
+      "keyword": "application",
+      "provider": "lookup_table",
+      "skip_validation": false,
+      "account_id": null
+    }
+  ]
+}

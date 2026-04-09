@@ -1,0 +1,218 @@
+{
+  "name": "AOF | PS-001 | AOF_Topic",
+  "schema": [
+    {
+      "label": "Error Handling Data",
+      "name": "errorHandlingData",
+      "optional": false,
+      "properties": [
+        {
+          "label": "Job Details",
+          "name": "jobDetails",
+          "optional": false,
+          "properties": [
+            {
+              "control_type": "text",
+              "hint": "Identifier value for record or data. Ex: Account ID, External ID.",
+              "label": "Identifier",
+              "name": "identifier",
+              "optional": false,
+              "type": "string"
+            },
+            {
+              "control_type": "text",
+              "hint": "Type of action/s involved inside the catch scope. Ex: invocation, record insertion, mapping.",
+              "label": "Transaction type",
+              "name": "transactionType",
+              "optional": true,
+              "sticky": true,
+              "type": "string"
+            },
+            {
+              "control_type": "text",
+              "hint": "Brief description of action/s involved in the catch scope.",
+              "label": "Transaction description",
+              "name": "transactionDescription",
+              "optional": true,
+              "sticky": true,
+              "type": "string"
+            },
+            {
+              "control_type": "text",
+              "hint": "Use Properties - Job ID.",
+              "label": "Job ID",
+              "name": "jobID",
+              "optional": false,
+              "type": "string"
+            },
+            {
+              "control_type": "text",
+              "hint": "Use Properties - Recipe ID",
+              "label": "Recipe ID",
+              "name": "recipeID",
+              "optional": false,
+              "type": "string"
+            },
+            {
+              "control_type": "text",
+              "hint": "Timestamp of the action/s. Use timestamp of action or 'now' in formula mode.",
+              "label": "Date/Time",
+              "name": "dateTime",
+              "optional": false,
+              "type": "string"
+            },
+            {
+              "control_type": "text",
+              "label": "Recipe path",
+              "name": "recipe_path",
+              "optional": false,
+              "type": "string"
+            },
+            {
+              "control_type": "text",
+              "label": "Project notifications required",
+              "name": "project_notifications_required",
+              "optional": true,
+              "type": "string"
+            },
+            {
+              "control_type": "checkbox",
+              "label": "Trigger Source Asynchronous?",
+              "name": "trigger_async",
+              "optional": false,
+              "parse_output": {
+              },
+              "render_input": {
+              },
+              "toggle_field": {
+                "control_type": "text",
+                "label": "Trigger source",
+                "name": "trigger_async",
+                "optional": false,
+                "toggle_hint": "Use custom value",
+                "type": "boolean"
+              },
+              "toggle_hint": "Select from option list",
+              "type": "boolean"
+            },
+            {
+              "control_type": "text",
+              "label": "Free text",
+              "name": "freeText",
+              "optional": true,
+              "type": "string"
+            }
+          ],
+          "type": "object"
+        },
+        {
+          "label": "Error Details",
+          "name": "errorDetails",
+          "of": "object",
+          "optional": false,
+          "properties": [
+            {
+              "control_type": "text",
+              "hint": "Use Properties > Parent Job ID.",
+              "label": "Parent Job ID",
+              "name": "parentJobID",
+              "optional": false,
+              "type": "string"
+            },
+            {
+              "control_type": "text",
+              "label": "Error code",
+              "name": "errorCode",
+              "optional": false,
+              "type": "string"
+            },
+            {
+              "control_type": "text",
+              "hint": "Use an error code defined in the error code lookup table",
+              "label": "Error message",
+              "name": "errorMessage",
+              "optional": true,
+              "sticky": true,
+              "type": "string"
+            },
+            {
+              "control_type": "text",
+              "hint": "Raw error message",
+              "label": "Stack trace",
+              "name": "stackTrace",
+              "optional": true,
+              "sticky": true,
+              "type": "string"
+            }
+          ],
+          "type": "object"
+        },
+        {
+          "label": "Custom data",
+          "name": "customData",
+          "optional": true,
+          "properties": [
+            {
+              "label": "Custom fields",
+              "name": "customFields",
+              "of": "object",
+              "optional": true,
+              "properties": [
+                {
+                  "control_type": "text",
+                  "label": "Key",
+                  "name": "key",
+                  "optional": true,
+                  "type": "string"
+                },
+                {
+                  "control_type": "text",
+                  "label": "Value",
+                  "name": "value",
+                  "optional": true,
+                  "type": "string"
+                }
+              ],
+              "type": "array"
+            },
+            {
+              "label": "Custom arrays",
+              "name": "customArrays",
+              "of": "object",
+              "optional": true,
+              "properties": [
+                {
+                  "control_type": "text",
+                  "label": "Array name",
+                  "name": "arrayName",
+                  "optional": true,
+                  "type": "string"
+                },
+                {
+                  "label": "Internal array",
+                  "name": "internalArray",
+                  "of": "object",
+                  "optional": true,
+                  "properties": [
+                    {
+                      "control_type": "text",
+                      "label": "Value",
+                      "name": "value",
+                      "optional": true,
+                      "type": "string"
+                    }
+                  ],
+                  "type": "array"
+                }
+              ],
+              "type": "array"
+            }
+          ],
+          "type": "object"
+        }
+      ],
+      "type": "object"
+    }
+  ],
+  "retention": 604800
+}

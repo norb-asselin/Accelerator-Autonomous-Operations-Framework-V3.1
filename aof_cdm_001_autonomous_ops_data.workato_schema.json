@@ -1,0 +1,143 @@
+{
+  "name": "AOF | CDM-001 | Autonomous Ops Data",
+  "schema": [
+    {
+      "control_type": "text",
+      "label": "Identifier",
+      "name": "identifier",
+      "hint": "Identifier value for record or data. Ex: Account ID, External ID.",
+      "type": "string",
+      "optional": false
+    },
+    {
+      "control_type": "text",
+      "label": "Parent Job ID",
+      "name": "parentJobID",
+      "hint": "Use Properties > Parent Job ID.",
+      "type": "string",
+      "optional": false
+    },
+    {
+      "control_type": "text",
+      "label": "Transaction type",
+      "name": "transactionType",
+      "hint": "Type of action/s involved inside the catch scope. Ex: invocation, record insertion, mapping.",
+      "type": "string",
+      "sticky": true,
+      "optional": true
+    },
+    {
+      "control_type": "text",
+      "label": "Transaction description",
+      "name": "transactionDescription",
+      "hint": "Brief description of action/s involved in the catch scope.",
+      "type": "string",
+      "sticky": true,
+      "optional": true
+    },
+    {
+      "control_type": "text",
+      "label": "Recipe path",
+      "name": "recipePath",
+      "type": "string",
+      "optional": true
+    },
+    {
+      "control_type": "text",
+      "label": "Project notifications required",
+      "name": "project_notifications_required",
+      "type": "string",
+      "optional": true
+    },
+    {
+      "control_type": "checkbox",
+      "label": "Trigger async",
+      "render_input": {
+      },
+      "parse_output": {
+      },
+      "toggle_hint": "Select from option list",
+      "toggle_field": {
+        "label": "Trigger async",
+        "control_type": "text",
+        "toggle_hint": "Use custom value",
+        "name": "trigger_async",
+        "type": "boolean",
+        "optional": true
+      },
+      "name": "trigger_async",
+      "type": "boolean",
+      "optional": true
+    },
+    {
+      "control_type": "text",
+      "label": "Free text",
+      "name": "freeText",
+      "type": "string",
+      "optional": true
+    },
+    {
+      "properties": [
+        {
+          "label": "Custom fields",
+          "name": "customFields",
+          "type": "array",
+          "optional": true,
+          "of": "object",
+          "properties": [
+            {
+              "control_type": "text",
+              "label": "Key",
+              "name": "key",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "control_type": "text",
+              "label": "Value",
+              "name": "value",
+              "type": "string",
+              "optional": false
+            }
+          ]
+        },
+        {
+          "label": "Custom arrays",
+          "name": "customArrays",
+          "type": "array",
+          "optional": true,
+          "of": "object",
+          "properties": [
+            {
+              "control_type": "text",
+              "label": "Array name",
+              "name": "arrayName",
+              "type": "string",
+              "optional": false
+            },
+            {
+              "label": "Internal array",
+              "name": "internalArray",
+              "type": "array",
+              "optional": false,
+              "of": "object",
+              "properties": [
+                {
+                  "control_type": "text",
+                  "label": "Value",
+                  "name": "value",
+                  "type": "string",
+                  "optional": false
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "label": "Custom data",
+      "name": "customData",
+      "type": "object",
+      "optional": true
+    }
+  ]
+}

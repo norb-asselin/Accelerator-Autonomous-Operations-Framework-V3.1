@@ -1,0 +1,1854 @@
+{
+  "name": "AOF | FUNC | Global Logging",
+  "description": "When there is a new call for callable recipe, do action",
+  "version": 1,
+  "private": true,
+  "concurrency": 1,
+  "code": {
+    "number": 0,
+    "provider": "workato_recipe_function",
+    "name": "execute",
+    "as": "65a14a28",
+    "keyword": "trigger",
+    "dynamicPickListSelection": {
+    },
+    "toggleCfg": {
+    },
+    "input": {
+      "parameters_schema_json": "[{\"control_type\":\"select\",\"label\":\"Status\",\"name\":\"status\",\"sticky\":true,\"optional\":true,\"pick_list\":[[\"Logging\",\"LOGGING\"],[\"Error\",\"ERROR\"],[\"Success\",\"SUCCESS\"]],\"type\":\"string\",\"hint\":\"Do not use 'Error' with the Global Logging activity. If you need to log errors, use the Global Error Handling callable recipe.\",\"toggle_hint\":\"Set status the status of the logging activity\",\"toggle_field\":{\"label\":\"Status\",\"control_type\":\"text\",\"toggle_hint\":\"Use status custom value\",\"type\":\"string\",\"name\":\"status\"}},{\"properties\":[{\"control_type\":\"text\",\"label\":\"Identifier\",\"name\":\"identifier\",\"hint\":\"Identifier value for record or data. Ex: Account ID, External ID.\",\"type\":\"string\",\"optional\":false},{\"control_type\":\"text\",\"label\":\"Transaction type\",\"name\":\"transactionType\",\"hint\":\"Type of action/s involved inside the catch scope. Ex: invocation, record insertion, mapping.\",\"type\":\"string\",\"optional\":false},{\"control_type\":\"text\",\"label\":\"Transaction description\",\"name\":\"transactionDescription\",\"hint\":\"Brief description of action/s involved in the catch scope.\",\"type\":\"string\",\"sticky\":true,\"optional\":true},{\"control_type\":\"text\",\"label\":\"Job ID\",\"name\":\"jobID\",\"hint\":\"Not needed for logging\",\"type\":\"string\",\"optional\":true},{\"control_type\":\"text\",\"label\":\"Recipe ID\",\"name\":\"recipeID\",\"hint\":\"Not needed for logging\",\"type\":\"string\",\"optional\":true},{\"control_type\":\"text\",\"label\":\"Recipe name\",\"name\":\"recipeName\",\"hint\":\"Not needed for logging\",\"type\":\"string\",\"optional\":true},{\"control_type\":\"text\",\"label\":\"Date/Time\",\"hint\":\"Timestamp of the action/s. Use timestamp of action or 'now' in formula mode.\",\"name\":\"dateTime\",\"type\":\"string\",\"optional\":false},{\"control_type\":\"text\",\"label\":\"Folder\",\"name\":\"folder\",\"type\":\"string\",\"optional\":true,\"hint\":\"Not needed for logging\"},{\"control_type\":\"text\",\"label\":\"Last modified by\",\"name\":\"lastModifiedBy\",\"type\":\"string\",\"optional\":true,\"hint\":\"Not needed for logging\"},{\"control_type\":\"text\",\"label\":\"Event type\",\"name\":\"event_type\",\"type\":\"string\",\"optional\":true},{\"control_type\":\"text\",\"label\":\"Event description\",\"name\":\"event_description\",\"type\":\"string\",\"optional\":true},{\"control_type\":\"text\",\"label\":\"Free text\",\"name\":\"freeText\",\"type\":\"string\",\"optional\":false}],\"label\":\"Job Details\",\"name\":\"jobDetails\",\"type\":\"object\",\"optional\":false},{\"properties\":[{\"name\":\"customFields\",\"type\":\"array\",\"of\":\"object\",\"label\":\"Custom fields\",\"optional\":true,\"properties\":[{\"control_type\":\"text\",\"label\":\"Key\",\"name\":\"key\",\"type\":\"string\",\"optional\":true},{\"control_type\":\"text\",\"label\":\"Value\",\"name\":\"value\",\"type\":\"string\",\"optional\":true}]},{\"name\":\"customArrays\",\"type\":\"array\",\"of\":\"object\",\"label\":\"Custom arrays\",\"optional\":true,\"properties\":[{\"control_type\":\"text\",\"label\":\"Array name\",\"name\":\"arrayName\",\"type\":\"string\",\"optional\":true},{\"name\":\"internalArray\",\"type\":\"array\",\"of\":\"object\",\"label\":\"Internal array\",\"optional\":true,\"properties\":[{\"control_type\":\"text\",\"label\":\"Value\",\"name\":\"value\",\"type\":\"string\",\"optional\":true}]}]}],\"label\":\"Custom data\",\"name\":\"customData\",\"type\":\"object\",\"optional\":true},{\"properties\":[{\"control_type\":\"text\",\"label\":\"Error code\",\"name\":\"errorCode\",\"type\":\"string\",\"optional\":true},{\"control_type\":\"text\",\"label\":\"Error message\",\"name\":\"errorMessage\",\"type\":\"string\",\"optional\":true},{\"control_type\":\"text\",\"label\":\"Severity level\",\"name\":\"severityLevel\",\"type\":\"string\",\"optional\":true},{\"control_type\":\"text\",\"label\":\"Error description\",\"name\":\"errorDescription\",\"type\":\"string\",\"optional\":true},{\"control_type\":\"text\",\"label\":\"Data flow\",\"name\":\"dataFlow\",\"type\":\"string\",\"optional\":true},{\"control_type\":\"text\",\"label\":\"Stack trace\",\"hint\":\"Raw error message\",\"name\":\"stackTrace\",\"type\":\"string\",\"optional\":true}],\"label\":\"Error\",\"name\":\"error\",\"type\":\"object\",\"of\":\"object\",\"hint\":\"Not needed for logging. If you need to log errors, use the Global Error Handling callable recipe.\",\"optional\":true}]"
+    },
+    "extended_output_schema": [
+      {
+        "label": "Parameters",
+        "name": "parameters",
+        "properties": [
+          {
+            "control_type": "select",
+            "label": "Status",
+            "name": "status",
+            "sticky": true,
+            "optional": true,
+            "pick_list": [
+              [
+                "Logging",
+                "LOGGING"
+              ],
+              [
+                "Error",
+                "ERROR"
+              ],
+              [
+                "Success",
+                "SUCCESS"
+              ]
+            ],
+            "type": "string",
+            "hint": "Do not use 'Error' with the Global Logging activity. If you need to log errors, use the Global Error Handling callable recipe.",
+            "toggle_hint": "Set status the status of the logging activity",
+            "toggle_field": {
+              "label": "Status",
+              "control_type": "text",
+              "toggle_hint": "Use status custom value",
+              "type": "string",
+              "name": "status"
+            }
+          },
+          {
+            "properties": [
+              {
+                "control_type": "text",
+                "label": "Identifier",
+                "name": "identifier",
+                "hint": "Identifier value for record or data. Ex: Account ID, External ID.",
+                "type": "string",
+                "optional": false
+              },
+              {
+                "control_type": "text",
+                "label": "Transaction type",
+                "name": "transactionType",
+                "hint": "Type of action/s involved inside the catch scope. Ex: invocation, record insertion, mapping.",
+                "type": "string",
+                "optional": false
+              },
+              {
+                "control_type": "text",
+                "label": "Transaction description",
+                "name": "transactionDescription",
+                "hint": "Brief description of action/s involved in the catch scope.",
+                "type": "string",
+                "sticky": true,
+                "optional": true
+              },
+              {
+                "control_type": "text",
+                "label": "Job ID",
+                "name": "jobID",
+                "hint": "Not needed for logging",
+                "type": "string",
+                "optional": true
+              },
+              {
+                "control_type": "text",
+                "label": "Recipe ID",
+                "name": "recipeID",
+                "hint": "Not needed for logging",
+                "type": "string",
+                "optional": true
+              },
+              {
+                "control_type": "text",
+                "label": "Recipe name",
+                "name": "recipeName",
+                "hint": "Not needed for logging",
+                "type": "string",
+                "optional": true
+              },
+              {
+                "control_type": "text",
+                "label": "Date/Time",
+                "hint": "Timestamp of the action/s. Use timestamp of action or 'now' in formula mode.",
+                "name": "dateTime",
+                "type": "string",
+                "optional": false
+              },
+              {
+                "control_type": "text",
+                "label": "Folder",
+                "name": "folder",
+                "type": "string",
+                "optional": true,
+                "hint": "Not needed for logging"
+              },
+              {
+                "control_type": "text",
+                "label": "Last modified by",
+                "name": "lastModifiedBy",
+                "type": "string",
+                "optional": true,
+                "hint": "Not needed for logging"
+              },
+              {
+                "control_type": "text",
+                "label": "Event type",
+                "name": "event_type",
+                "type": "string",
+                "optional": true
+              },
+              {
+                "control_type": "text",
+                "label": "Event description",
+                "name": "event_description",
+                "type": "string",
+                "optional": true
+              },
+              {
+                "control_type": "text",
+                "label": "Free text",
+                "name": "freeText",
+                "type": "string",
+                "optional": false
+              }
+            ],
+            "label": "Job Details",
+            "name": "jobDetails",
+            "type": "object",
+            "optional": false
+          },
+          {
+            "properties": [
+              {
+                "name": "customFields",
+                "type": "array",
+                "of": "object",
+                "label": "Custom fields",
+                "optional": true,
+                "properties": [
+                  {
+                    "control_type": "text",
+                    "label": "Key",
+                    "name": "key",
+                    "type": "string",
+                    "optional": true
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Value",
+                    "name": "value",
+                    "type": "string",
+                    "optional": true
+                  }
+                ]
+              },
+              {
+                "name": "customArrays",
+                "type": "array",
+                "of": "object",
+                "label": "Custom arrays",
+                "optional": true,
+                "properties": [
+                  {
+                    "control_type": "text",
+                    "label": "Array name",
+                    "name": "arrayName",
+                    "type": "string",
+                    "optional": true
+                  },
+                  {
+                    "name": "internalArray",
+                    "type": "array",
+                    "of": "object",
+                    "label": "Internal array",
+                    "optional": true,
+                    "properties": [
+                      {
+                        "control_type": "text",
+                        "label": "Value",
+                        "name": "value",
+                        "type": "string",
+                        "optional": true
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "label": "Custom data",
+            "name": "customData",
+            "type": "object",
+            "optional": true
+          },
+          {
+            "properties": [
+              {
+                "control_type": "text",
+                "label": "Error code",
+                "name": "errorCode",
+                "type": "string",
+                "optional": true
+              },
+              {
+                "control_type": "text",
+                "label": "Error message",
+                "name": "errorMessage",
+                "type": "string",
+                "optional": true
+              },
+              {
+                "control_type": "text",
+                "label": "Severity level",
+                "name": "severityLevel",
+                "type": "string",
+                "optional": true
+              },
+              {
+                "control_type": "text",
+                "label": "Error description",
+                "name": "errorDescription",
+                "type": "string",
+                "optional": true
+              },
+              {
+                "control_type": "text",
+                "label": "Data flow",
+                "name": "dataFlow",
+                "type": "string",
+                "optional": true
+              },
+              {
+                "control_type": "text",
+                "label": "Stack trace",
+                "hint": "Raw error message",
+                "name": "stackTrace",
+                "type": "string",
+                "optional": true
+              }
+            ],
+            "label": "Error",
+            "name": "error",
+            "type": "object",
+            "of": "object",
+            "hint": "Not needed for logging. If you need to log errors, use the Global Error Handling callable recipe.",
+            "optional": true
+          }
+        ],
+        "type": "object"
+      }
+    ],
+    "block": [
+      {
+        "number": 1,
+        "keyword": "try",
+        "dynamicPickListSelection": {
+        },
+        "toggleCfg": {
+        },
+        "input": {
+        },
+        "block": [
+          {
+            "number": 2,
+            "provider": "workato_variable",
+            "name": "declare_variable",
+            "as": "fb7c0d41",
+            "keyword": "action",
+            "dynamicPickListSelection": {
+            },
+            "toggleCfg": {
+            },
+            "input": {
+              "type": "string",
+              "name": "fullError"
+            },
+            "extended_output_schema": [
+              {
+                "control_type": "text",
+                "label": "fullError",
+                "name": "value",
+                "type": "string"
+              }
+            ],
+            "extended_input_schema": [
+              {
+                "control_type": "text",
+                "hint": "Default value for the variable",
+                "label": "Default value",
+                "name": "value",
+                "optional": true,
+                "sticky": true,
+                "type": "string",
+                "strip_interpolation": true
+              }
+            ],
+            "uuid": "a2bf1dd7-0a65-406d-b767-90abfe4141e4"
+          },
+          {
+            "number": 3,
+            "keyword": "if",
+            "dynamicPickListSelection": {
+            },
+            "toggleCfg": {
+            },
+            "input": {
+              "type": "compound",
+              "operand": "and",
+              "conditions": [
+                {
+                  "operand": "not_equals_to",
+                  "lhs": "=_('data.workato_recipe_function.65a14a28.parameters.status').upcase",
+                  "rhs": "ERROR",
+                  "uuid": "condition-8d73e942-0579-406b-a6eb-a584ce44ac36"
+                }
+              ]
+            },
+            "block": [
+              {
+                "number": 4,
+                "keyword": "try",
+                "dynamicPickListSelection": {
+                },
+                "toggleCfg": {
+                },
+                "input": {
+                },
+                "block": [
+                  {
+                    "number": 5,
+                    "provider": "workato_app",
+                    "name": "get_recipe",
+                    "as": "6b5f8985",
+                    "keyword": "action",
+                    "dynamicPickListSelection": {
+                    },
+                    "toggleCfg": {
+                      "recipe_id": false
+                    },
+                    "input": {
+                      "recipe_id": "#{_('data.workato_recipe_function.65a14a28.context.calling_recipe_id')}"
+                    },
+                    "comment": "get recipe path",
+                    "uuid": "3dd9cf83-fb88-46ad-8e14-7802b0748bef"
+                  },
+                  {
+                    "number": 6,
+                    "as": "9251024b",
+                    "keyword": "catch",
+                    "dynamicPickListSelection": {
+                    },
+                    "toggleCfg": {
+                    },
+                    "input": {
+                      "max_retry_count": "0",
+                      "retry_interval": "2"
+                    },
+                    "block": [
+                      {
+                        "number": 7,
+                        "provider": "workato_variable",
+                        "name": "update_variable",
+                        "as": "46231a2c",
+                        "keyword": "action",
+                        "dynamicPickListSelection": {
+                          "name": "fullError (step 3)"
+                        },
+                        "toggleCfg": {
+                        },
+                        "input": {
+                          "name": "a2bf1dd7-0a65-406d-b767-90abfe4141e4:fb7c0d41",
+                          "value": "#{_('data.catch.9251024b.type')} : #{_('data.catch.9251024b.message')}"
+                        },
+                        "extended_input_schema": [
+                          {
+                            "control_type": "text",
+                            "hint": "Provide a value for the variable. When the value is not supplied, the variable is not updated.<br>To clear the value, set the value to <b>nil</b> in formula mode.",
+                            "label": "Value",
+                            "name": "value",
+                            "optional": true,
+                            "sticky": true,
+                            "type": "string",
+                            "strip_interpolation": true
+                          }
+                        ],
+                        "uuid": "c9b9e67e-c1ea-4dc3-9bae-d532e1d7c459"
+                      },
+                      {
+                        "number": 8,
+                        "keyword": "stop",
+                        "dynamicPickListSelection": {
+                        },
+                        "toggleCfg": {
+                        },
+                        "input": {
+                          "stop_with_error": "true",
+                          "stop_reason": "Failed to get recipe details for recipeID: #{_('data.workato_recipe_function.65a14a28.context.calling_recipe_id')}"
+                        },
+                        "uuid": "12af01fa-5be6-49df-a5e0-6301b0bc1564"
+                      }
+                    ],
+                    "uuid": "b7aae5db-6472-40d9-b4e3-054aa6849c11"
+                  }
+                ],
+                "uuid": "9207b9f6-b940-42a9-80b9-303d7cc1e8c0"
+              }
+            ],
+            "comment": "get recipe path if not passed in by calling recipe",
+            "uuid": "1794d01e-b0c7-41e2-b453-50645ce59e69"
+          },
+          {
+            "number": 9,
+            "keyword": "try",
+            "dynamicPickListSelection": {
+            },
+            "toggleCfg": {
+            },
+            "input": {
+            },
+            "block": [
+              {
+                "number": 10,
+                "provider": "snowflake",
+                "name": "insert_row",
+                "as": "7f2184dd",
+                "keyword": "action",
+                "dynamicPickListSelection": {
+                  "table": "PUBLIC.AOF_LOGGING"
+                },
+                "toggleCfg": {
+                  "table": true
+                },
+                "input": {
+                  "table": "PUBLIC.AOF_LOGGING",
+                  "columns": {
+                    "data_flow": "#{_('data.workato_recipe_function.65a14a28.parameters.error.dataFlow')}",
+                    "date_time": "=now",
+                    "error_code": "#{_('data.workato_recipe_function.65a14a28.parameters.error.errorCode')}",
+                    "error_description": "#{_('data.workato_recipe_function.65a14a28.parameters.error.errorDescription')}",
+                    "error_message": "#{_('data.workato_recipe_function.65a14a28.parameters.error.errorMessage')}",
+                    "error_stack_trace": "#{_('data.workato_recipe_function.65a14a28.parameters.error.stackTrace')}",
+                    "identifier": "#{_('data.workato_recipe_function.65a14a28.parameters.jobDetails.identifier')}",
+                    "job_id": "#{_('data.workato_recipe_function.65a14a28.parameters.jobDetails.jobID')}",
+                    "last_modified_by": "#{_('data.workato_recipe_function.65a14a28.parameters.jobDetails.lastModifiedBy')}",
+                    "location": "#{_('data.workato_recipe_function.65a14a28.parameters.jobDetails.folder')}",
+                    "recipe_id": "#{_('data.workato_recipe_function.65a14a28.parameters.jobDetails.recipeID')}",
+                    "recipe_name": "#{_('data.workato_recipe_function.65a14a28.parameters.jobDetails.recipeName')}",
+                    "severity_level": "#{_('data.workato_recipe_function.65a14a28.parameters.error.severityLevel')}",
+                    "status": "#{_('data.workato_recipe_function.65a14a28.parameters.status')}",
+                    "transaction_description": "#{_('data.workato_recipe_function.65a14a28.parameters.jobDetails.transactionDescription')}",
+                    "transaction_type": "#{_('data.workato_recipe_function.65a14a28.parameters.jobDetails.transactionType')}"
+                  }
+                },
+                "extended_input_schema": [
+                  {
+                    "label": "Columns",
+                    "name": "columns",
+                    "properties": [
+                      {
+                        "control_type": "text",
+                        "label": "DATA_FLOW",
+                        "details": {
+                          "primary_key": false,
+                          "data_type": "varchar",
+                          "column_name": "DATA_FLOW",
+                          "length": 16777216,
+                          "precision": 16777216,
+                          "scale": null
+                        },
+                        "optional": true,
+                        "hint": "varchar, max length 16777216",
+                        "type": "string",
+                        "name": "data_flow"
+                      },
+                      {
+                        "control_type": "date_time",
+                        "label": "DATE_TIME",
+                        "render_input": "convert_date_time",
+                        "parse_output": "convert_date_time",
+                        "details": {
+                          "primary_key": false,
+                          "data_type": "timestamp_tz",
+                          "column_name": "DATE_TIME",
+                          "length": 9,
+                          "precision": 9,
+                          "scale": null
+                        },
+                        "optional": true,
+                        "hint": "timestamp_tz, max length 9",
+                        "type": "date_time",
+                        "name": "date_time"
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "ERROR_CODE",
+                        "details": {
+                          "primary_key": false,
+                          "data_type": "varchar",
+                          "column_name": "ERROR_CODE",
+                          "length": 16777216,
+                          "precision": 16777216,
+                          "scale": null
+                        },
+                        "optional": true,
+                        "hint": "varchar, max length 16777216",
+                        "type": "string",
+                        "name": "error_code"
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "ERROR_DESCRIPTION",
+                        "details": {
+                          "primary_key": false,
+                          "data_type": "varchar",
+                          "column_name": "ERROR_DESCRIPTION",
+                          "length": 16777216,
+                          "precision": 16777216,
+                          "scale": null
+                        },
+                        "optional": true,
+                        "hint": "varchar, max length 16777216",
+                        "type": "string",
+                        "name": "error_description"
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "ERROR_MESSAGE",
+                        "details": {
+                          "primary_key": false,
+                          "data_type": "varchar",
+                          "column_name": "ERROR_MESSAGE",
+                          "length": 16777216,
+                          "precision": 16777216,
+                          "scale": null
+                        },
+                        "optional": true,
+                        "hint": "varchar, max length 16777216",
+                        "type": "string",
+                        "name": "error_message"
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "ERROR_STACK_TRACE",
+                        "details": {
+                          "primary_key": false,
+                          "data_type": "varchar",
+                          "column_name": "ERROR_STACK_TRACE",
+                          "length": 16777216,
+                          "precision": 16777216,
+                          "scale": null
+                        },
+                        "optional": true,
+                        "hint": "varchar, max length 16777216",
+                        "type": "string",
+                        "name": "error_stack_trace"
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "IDENTIFIER",
+                        "details": {
+                          "primary_key": false,
+                          "data_type": "varchar",
+                          "column_name": "IDENTIFIER",
+                          "length": 16777216,
+                          "precision": 16777216,
+                          "scale": null
+                        },
+                        "optional": true,
+                        "hint": "varchar, max length 16777216",
+                        "type": "string",
+                        "name": "identifier"
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "JOB_ID",
+                        "details": {
+                          "primary_key": false,
+                          "data_type": "varchar",
+                          "column_name": "JOB_ID",
+                          "length": 16777216,
+                          "precision": 16777216,
+                          "scale": null
+                        },
+                        "optional": true,
+                        "hint": "varchar, max length 16777216",
+                        "type": "string",
+                        "name": "job_id"
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "LAST_MODIFIED_BY",
+                        "details": {
+                          "primary_key": false,
+                          "data_type": "varchar",
+                          "column_name": "LAST_MODIFIED_BY",
+                          "length": 16777216,
+                          "precision": 16777216,
+                          "scale": null
+                        },
+                        "optional": true,
+                        "hint": "varchar, max length 16777216",
+                        "type": "string",
+                        "name": "last_modified_by"
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "LOCATION",
+                        "details": {
+                          "primary_key": false,
+                          "data_type": "varchar",
+                          "column_name": "LOCATION",
+                          "length": 16777216,
+                          "precision": 16777216,
+                          "scale": null
+                        },
+                        "optional": true,
+                        "hint": "varchar, max length 16777216",
+                        "type": "string",
+                        "name": "location"
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "RECIPE_ID",
+                        "details": {
+                          "primary_key": false,
+                          "data_type": "varchar",
+                          "column_name": "RECIPE_ID",
+                          "length": 16777216,
+                          "precision": 16777216,
+                          "scale": null
+                        },
+                        "optional": true,
+                        "hint": "varchar, max length 16777216",
+                        "type": "string",
+                        "name": "recipe_id"
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "RECIPE_NAME",
+                        "details": {
+                          "primary_key": false,
+                          "data_type": "varchar",
+                          "column_name": "RECIPE_NAME",
+                          "length": 16777216,
+                          "precision": 16777216,
+                          "scale": null
+                        },
+                        "optional": true,
+                        "hint": "varchar, max length 16777216",
+                        "type": "string",
+                        "name": "recipe_name"
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "SEVERITY_LEVEL",
+                        "details": {
+                          "primary_key": false,
+                          "data_type": "varchar",
+                          "column_name": "SEVERITY_LEVEL",
+                          "length": 16777216,
+                          "precision": 16777216,
+                          "scale": null
+                        },
+                        "optional": true,
+                        "hint": "varchar, max length 16777216",
+                        "type": "string",
+                        "name": "severity_level"
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "STATUS",
+                        "details": {
+                          "primary_key": false,
+                          "data_type": "varchar",
+                          "column_name": "STATUS",
+                          "length": 16777216,
+                          "precision": 16777216,
+                          "scale": null
+                        },
+                        "optional": true,
+                        "hint": "varchar, max length 16777216",
+                        "type": "string",
+                        "name": "status"
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "TRANSACTION_DESCRIPTION",
+                        "details": {
+                          "primary_key": false,
+                          "data_type": "varchar",
+                          "column_name": "TRANSACTION_DESCRIPTION",
+                          "length": 16777216,
+                          "precision": 16777216,
+                          "scale": null
+                        },
+                        "optional": true,
+                        "hint": "varchar, max length 16777216",
+                        "type": "string",
+                        "name": "transaction_description"
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "TRANSACTION_TYPE",
+                        "details": {
+                          "primary_key": false,
+                          "data_type": "varchar",
+                          "column_name": "TRANSACTION_TYPE",
+                          "length": 16777216,
+                          "precision": 16777216,
+                          "scale": null
+                        },
+                        "optional": true,
+                        "hint": "varchar, max length 16777216",
+                        "type": "string",
+                        "name": "transaction_type"
+                      }
+                    ],
+                    "type": "object"
+                  }
+                ],
+                "visible_config_fields": [
+                  "table",
+                  "columns.data_flow",
+                  "columns.date_time",
+                  "columns.error_code",
+                  "columns.error_description",
+                  "columns.error_message",
+                  "columns.error_stack_trace",
+                  "columns.identifier",
+                  "columns.job_id",
+                  "columns.last_modified_by",
+                  "columns.location",
+                  "columns.recipe_id",
+                  "columns.recipe_name",
+                  "columns.severity_level",
+                  "columns.status",
+                  "columns.transaction_description",
+                  "columns.transaction_type"
+                ],
+                "uuid": "d206cd86-8036-4236-abd5-82225b810e8c"
+              },
+              {
+                "number": 11,
+                "provider": "mssql",
+                "name": "insert_row",
+                "as": "a4591184",
+                "keyword": "action",
+                "dynamicPickListSelection": {
+                  "table": "dbo.AOF_LOGGING"
+                },
+                "toggleCfg": {
+                  "table": true
+                },
+                "input": {
+                  "table": "dbo.AOF_LOGGING",
+                  "columns": {
+                    "data_flow_98b21f56": "#{_('data.workato_recipe_function.65a14a28.parameters.error.dataFlow')}",
+                    "date_time_ba9478d7": "#{_('data.workato_recipe_function.65a14a28.parameters.jobDetails.dateTime')}",
+                    "error_code_799f9512": "#{_('data.workato_recipe_function.65a14a28.parameters.error.errorCode')}",
+                    "error_description_60b39b41": "#{_('data.workato_recipe_function.65a14a28.parameters.error.errorDescription')}",
+                    "error_message_10aaf15d": "#{_('data.workato_recipe_function.65a14a28.parameters.error.errorMessage')}",
+                    "identifier_66e6c3f3": "#{_('data.workato_recipe_function.65a14a28.parameters.jobDetails.identifier')}",
+                    "job_id_eef8f676": "#{_('data.workato_recipe_function.65a14a28.parameters.jobDetails.jobID')}",
+                    "last_modified_by_f1bc57ea": "#{_('data.workato_recipe_function.65a14a28.parameters.jobDetails.lastModifiedBy')}",
+                    "recipe_id_0de771b0": "#{_('data.workato_recipe_function.65a14a28.parameters.jobDetails.recipeID')}",
+                    "recipe_name_53d34810": "#{_('data.workato_recipe_function.65a14a28.parameters.jobDetails.recipeName')}",
+                    "status_6a7f27ae": "#{_('data.workato_recipe_function.65a14a28.parameters.status')}",
+                    "transaction_description_ea2ad1c4": "#{_('data.workato_recipe_function.65a14a28.parameters.jobDetails.transactionDescription')}",
+                    "transaction_type_5bb03cd6": "#{_('data.workato_recipe_function.65a14a28.parameters.jobDetails.transactionType')}"
+                  }
+                },
+                "extended_input_schema": [
+                  {
+                    "label": "Columns",
+                    "name": "columns",
+                    "properties": [
+                      {
+                        "control_type": "text",
+                        "label": "DATA_FLOW",
+                        "details": {
+                          "primary_key": false,
+                          "data_type": "varchar",
+                          "column_name": "DATA_FLOW",
+                          "precision": null,
+                          "scale": null,
+                          "length": 20
+                        },
+                        "optional": true,
+                        "hint": "varchar, max length 20",
+                        "type": "string",
+                        "name": "data_flow_98b21f56",
+                        "parent": "columns"
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "DATE_TIME",
+                        "details": {
+                          "primary_key": false,
+                          "data_type": "varchar",
+                          "column_name": "DATE_TIME",
+                          "precision": null,
+                          "scale": null,
+                          "length": 100
+                        },
+                        "optional": true,
+                        "hint": "varchar, max length 100",
+                        "type": "string",
+                        "name": "date_time_ba9478d7",
+                        "parent": "columns"
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "ERROR_CODE",
+                        "details": {
+                          "primary_key": false,
+                          "data_type": "varchar",
+                          "column_name": "ERROR_CODE",
+                          "precision": null,
+                          "scale": null,
+                          "length": 20
+                        },
+                        "optional": true,
+                        "hint": "varchar, max length 20",
+                        "type": "string",
+                        "name": "error_code_799f9512",
+                        "parent": "columns"
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "ERROR_DESCRIPTION",
+                        "details": {
+                          "primary_key": false,
+                          "data_type": "varchar",
+                          "column_name": "ERROR_DESCRIPTION",
+                          "precision": null,
+                          "scale": null,
+                          "length": 200
+                        },
+                        "optional": true,
+                        "hint": "varchar, max length 200",
+                        "type": "string",
+                        "name": "error_description_60b39b41",
+                        "parent": "columns"
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "ERROR_MESSAGE",
+                        "details": {
+                          "primary_key": false,
+                          "data_type": "varchar",
+                          "column_name": "ERROR_MESSAGE",
+                          "precision": null,
+                          "scale": null,
+                          "length": 200
+                        },
+                        "optional": true,
+                        "hint": "varchar, max length 200",
+                        "type": "string",
+                        "name": "error_message_10aaf15d",
+                        "parent": "columns"
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "ERROR_STACK_TRACE",
+                        "details": {
+                          "primary_key": false,
+                          "data_type": "varchar",
+                          "column_name": "ERROR_STACK_TRACE",
+                          "precision": null,
+                          "scale": null,
+                          "length": 200
+                        },
+                        "optional": true,
+                        "hint": "varchar, max length 200",
+                        "type": "string",
+                        "name": "error_stack_trace_6367339c",
+                        "parent": "columns"
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "IDENTIFIER",
+                        "details": {
+                          "primary_key": false,
+                          "data_type": "varchar",
+                          "column_name": "IDENTIFIER",
+                          "precision": null,
+                          "scale": null,
+                          "length": 20
+                        },
+                        "optional": true,
+                        "hint": "varchar, max length 20",
+                        "type": "string",
+                        "name": "identifier_66e6c3f3",
+                        "parent": "columns"
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "JOB_ID",
+                        "details": {
+                          "primary_key": false,
+                          "data_type": "varchar",
+                          "column_name": "JOB_ID",
+                          "precision": null,
+                          "scale": null,
+                          "length": 20
+                        },
+                        "optional": true,
+                        "hint": "varchar, max length 20",
+                        "type": "string",
+                        "name": "job_id_eef8f676",
+                        "parent": "columns"
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "LAST_MODIFIED_BY",
+                        "details": {
+                          "primary_key": false,
+                          "data_type": "varchar",
+                          "column_name": "LAST_MODIFIED_BY",
+                          "precision": null,
+                          "scale": null,
+                          "length": 100
+                        },
+                        "optional": true,
+                        "hint": "varchar, max length 100",
+                        "type": "string",
+                        "name": "last_modified_by_f1bc57ea",
+                        "parent": "columns"
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "LOCATION",
+                        "details": {
+                          "primary_key": false,
+                          "data_type": "varchar",
+                          "column_name": "LOCATION",
+                          "precision": null,
+                          "scale": null,
+                          "length": 20
+                        },
+                        "optional": true,
+                        "hint": "varchar, max length 20",
+                        "type": "string",
+                        "name": "location_29e1932a",
+                        "parent": "columns"
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "RECIPE_ID",
+                        "details": {
+                          "primary_key": false,
+                          "data_type": "varchar",
+                          "column_name": "RECIPE_ID",
+                          "precision": null,
+                          "scale": null,
+                          "length": 20
+                        },
+                        "optional": true,
+                        "hint": "varchar, max length 20",
+                        "type": "string",
+                        "name": "recipe_id_0de771b0",
+                        "parent": "columns"
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "RECIPE_NAME",
+                        "details": {
+                          "primary_key": false,
+                          "data_type": "varchar",
+                          "column_name": "RECIPE_NAME",
+                          "precision": null,
+                          "scale": null,
+                          "length": 100
+                        },
+                        "optional": true,
+                        "hint": "varchar, max length 100",
+                        "type": "string",
+                        "name": "recipe_name_53d34810",
+                        "parent": "columns"
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "SEVERITY_LEVEL",
+                        "details": {
+                          "primary_key": false,
+                          "data_type": "varchar",
+                          "column_name": "SEVERITY_LEVEL",
+                          "precision": null,
+                          "scale": null,
+                          "length": 10
+                        },
+                        "optional": true,
+                        "hint": "varchar, max length 10",
+                        "type": "string",
+                        "name": "severity_level_08b69871",
+                        "parent": "columns"
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "STATUS",
+                        "details": {
+                          "primary_key": false,
+                          "data_type": "varchar",
+                          "column_name": "STATUS",
+                          "precision": null,
+                          "scale": null,
+                          "length": 20
+                        },
+                        "optional": true,
+                        "hint": "varchar, max length 20",
+                        "type": "string",
+                        "name": "status_6a7f27ae",
+                        "parent": "columns"
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "TRANSACTION_DESCRIPTION",
+                        "details": {
+                          "primary_key": false,
+                          "data_type": "varchar",
+                          "column_name": "TRANSACTION_DESCRIPTION",
+                          "precision": null,
+                          "scale": null,
+                          "length": 200
+                        },
+                        "optional": true,
+                        "hint": "varchar, max length 200",
+                        "type": "string",
+                        "name": "transaction_description_ea2ad1c4",
+                        "parent": "columns"
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "TRANSACTION_TYPE",
+                        "details": {
+                          "primary_key": false,
+                          "data_type": "varchar",
+                          "column_name": "TRANSACTION_TYPE",
+                          "precision": null,
+                          "scale": null,
+                          "length": 20
+                        },
+                        "optional": true,
+                        "hint": "varchar, max length 20",
+                        "type": "string",
+                        "name": "transaction_type_5bb03cd6",
+                        "parent": "columns"
+                      }
+                    ],
+                    "type": "object"
+                  }
+                ],
+                "visible_config_fields": [
+                  "table",
+                  "columns.data_flow_98b21f56",
+                  "columns.date_time_ba9478d7",
+                  "columns.error_code_799f9512",
+                  "columns.error_description_60b39b41",
+                  "columns.error_message_10aaf15d",
+                  "columns.error_stack_trace_6367339c",
+                  "columns.identifier_66e6c3f3",
+                  "columns.job_id_eef8f676",
+                  "columns.last_modified_by_f1bc57ea",
+                  "columns.location_29e1932a",
+                  "columns.recipe_id_0de771b0",
+                  "columns.recipe_name_53d34810",
+                  "columns.severity_level_08b69871",
+                  "columns.status_6a7f27ae",
+                  "columns.transaction_description_ea2ad1c4",
+                  "columns.transaction_type_5bb03cd6"
+                ],
+                "uuid": "36147fcd-ef50-4444-b7c8-ad62379470ea",
+                "skip": true
+              },
+              {
+                "number": 12,
+                "provider": "oracle",
+                "name": "insert_row",
+                "as": "1f29f152",
+                "keyword": "action",
+                "dynamicPickListSelection": {
+                  "table": "ROOT.AOF_LOGGING"
+                },
+                "toggleCfg": {
+                  "table": true
+                },
+                "input": {
+                  "table": "ROOT.AOF_LOGGING",
+                  "columns": {
+                    "data_flow": "#{_('data.workato_service.eb681616.request.error.dataFlow')}",
+                    "error_code": "#{_('data.workato_service.eb681616.request.error.errorCode')}",
+                    "error_description": "#{_('data.workato_service.eb681616.request.error.errorDescription')}",
+                    "error_message": "#{_('data.workato_service.eb681616.request.error.errorMessage')}",
+                    "identifier": "#{_('data.workato_service.eb681616.request.jobDetails.identifier')}",
+                    "job_id": "#{_('data.workato_service.eb681616.request.jobDetails.jobID')}",
+                    "last_modified_by": "#{_('data.workato_service.eb681616.request.jobDetails.lastModifiedBy')}",
+                    "recipe_id": "#{_('data.workato_service.eb681616.request.jobDetails.recipeID')}",
+                    "recipe_name": "#{_('data.workato_service.eb681616.request.jobDetails.recipeName')}",
+                    "severity_level": "#{_('data.workato_service.eb681616.request.error.severityLevel')}",
+                    "status": "#{_('data.workato_service.eb681616.request.status')}",
+                    "transaction_description": "#{_('data.workato_service.eb681616.request.jobDetails.transactionDescription')}",
+                    "transaction_type": "#{_('data.workato_service.eb681616.request.jobDetails.transactionType')}"
+                  }
+                },
+                "extended_input_schema": [
+                  {
+                    "label": "Columns",
+                    "name": "columns",
+                    "properties": [
+                      {
+                        "control_type": "text",
+                        "label": "DATA_FLOW",
+                        "details": {
+                          "primary_key": false,
+                          "data_type": "varchar2",
+                          "column_name": "DATA_FLOW",
+                          "length": 20,
+                          "precision": null,
+                          "scale": null
+                        },
+                        "optional": true,
+                        "hint": "varchar2, max length 20",
+                        "type": "string",
+                        "name": "data_flow",
+                        "parent": "columns"
+                      },
+                      {
+                        "control_type": "date_time",
+                        "label": "DATE_TIME",
+                        "render_input": "convert_date_time",
+                        "parse_output": "convert_date_time",
+                        "details": {
+                          "primary_key": false,
+                          "data_type": "timestamp(6)",
+                          "column_name": "DATE_TIME",
+                          "length": 0,
+                          "precision": null,
+                          "scale": 6
+                        },
+                        "optional": true,
+                        "hint": "timestamp(6)",
+                        "type": "date_time",
+                        "name": "date_time",
+                        "parent": "columns"
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "ERROR_CODE",
+                        "details": {
+                          "primary_key": false,
+                          "data_type": "varchar2",
+                          "column_name": "ERROR_CODE",
+                          "length": 20,
+                          "precision": null,
+                          "scale": null
+                        },
+                        "optional": true,
+                        "hint": "varchar2, max length 20",
+                        "type": "string",
+                        "name": "error_code",
+                        "parent": "columns"
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "ERROR_DESCRIPTION",
+                        "details": {
+                          "primary_key": false,
+                          "data_type": "varchar2",
+                          "column_name": "ERROR_DESCRIPTION",
+                          "length": 200,
+                          "precision": null,
+                          "scale": null
+                        },
+                        "optional": true,
+                        "hint": "varchar2, max length 200",
+                        "type": "string",
+                        "name": "error_description",
+                        "parent": "columns"
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "ERROR_MESSAGE",
+                        "details": {
+                          "primary_key": false,
+                          "data_type": "varchar2",
+                          "column_name": "ERROR_MESSAGE",
+                          "length": 200,
+                          "precision": null,
+                          "scale": null
+                        },
+                        "optional": true,
+                        "hint": "varchar2, max length 200",
+                        "type": "string",
+                        "name": "error_message",
+                        "parent": "columns"
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "ERROR_STACK_TRACE",
+                        "details": {
+                          "primary_key": false,
+                          "data_type": "varchar2",
+                          "column_name": "ERROR_STACK_TRACE",
+                          "length": 200,
+                          "precision": null,
+                          "scale": null
+                        },
+                        "optional": true,
+                        "hint": "varchar2, max length 200",
+                        "type": "string",
+                        "name": "error_stack_trace",
+                        "parent": "columns"
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "IDENTIFIER",
+                        "details": {
+                          "primary_key": false,
+                          "data_type": "varchar2",
+                          "column_name": "IDENTIFIER",
+                          "length": 20,
+                          "precision": null,
+                          "scale": null
+                        },
+                        "optional": true,
+                        "hint": "varchar2, max length 20",
+                        "type": "string",
+                        "name": "identifier",
+                        "parent": "columns"
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "JOB_ID",
+                        "details": {
+                          "primary_key": false,
+                          "data_type": "varchar2",
+                          "column_name": "JOB_ID",
+                          "length": 20,
+                          "precision": null,
+                          "scale": null
+                        },
+                        "optional": true,
+                        "hint": "varchar2, max length 20",
+                        "type": "string",
+                        "name": "job_id",
+                        "parent": "columns"
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "LAST_MODIFIED_BY",
+                        "details": {
+                          "primary_key": false,
+                          "data_type": "varchar2",
+                          "column_name": "LAST_MODIFIED_BY",
+                          "length": 100,
+                          "precision": null,
+                          "scale": null
+                        },
+                        "optional": true,
+                        "hint": "varchar2, max length 100",
+                        "type": "string",
+                        "name": "last_modified_by",
+                        "parent": "columns"
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "LOCATION",
+                        "details": {
+                          "primary_key": false,
+                          "data_type": "varchar2",
+                          "column_name": "LOCATION",
+                          "length": 20,
+                          "precision": null,
+                          "scale": null
+                        },
+                        "optional": true,
+                        "hint": "varchar2, max length 20",
+                        "type": "string",
+                        "name": "location",
+                        "parent": "columns"
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "RECIPE_ID",
+                        "details": {
+                          "primary_key": false,
+                          "data_type": "varchar2",
+                          "column_name": "RECIPE_ID",
+                          "length": 20,
+                          "precision": null,
+                          "scale": null
+                        },
+                        "optional": true,
+                        "hint": "varchar2, max length 20",
+                        "type": "string",
+                        "name": "recipe_id",
+                        "parent": "columns"
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "RECIPE_NAME",
+                        "details": {
+                          "primary_key": false,
+                          "data_type": "varchar2",
+                          "column_name": "RECIPE_NAME",
+                          "length": 100,
+                          "precision": null,
+                          "scale": null
+                        },
+                        "optional": true,
+                        "hint": "varchar2, max length 100",
+                        "type": "string",
+                        "name": "recipe_name",
+                        "parent": "columns"
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "SEVERITY_LEVEL",
+                        "details": {
+                          "primary_key": false,
+                          "data_type": "varchar2",
+                          "column_name": "SEVERITY_LEVEL",
+                          "length": 10,
+                          "precision": null,
+                          "scale": null
+                        },
+                        "optional": true,
+                        "hint": "varchar2, max length 10",
+                        "type": "string",
+                        "name": "severity_level",
+                        "parent": "columns"
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "STATUS",
+                        "details": {
+                          "primary_key": false,
+                          "data_type": "varchar2",
+                          "column_name": "STATUS",
+                          "length": 20,
+                          "precision": null,
+                          "scale": null
+                        },
+                        "optional": true,
+                        "hint": "varchar2, max length 20",
+                        "type": "string",
+                        "name": "status",
+                        "parent": "columns"
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "TRANSACTION_DESCRIPTION",
+                        "details": {
+                          "primary_key": false,
+                          "data_type": "varchar2",
+                          "column_name": "TRANSACTION_DESCRIPTION",
+                          "length": 200,
+                          "precision": null,
+                          "scale": null
+                        },
+                        "optional": true,
+                        "hint": "varchar2, max length 200",
+                        "type": "string",
+                        "name": "transaction_description",
+                        "parent": "columns"
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "TRANSACTION_TYPE",
+                        "details": {
+                          "primary_key": false,
+                          "data_type": "varchar2",
+                          "column_name": "TRANSACTION_TYPE",
+                          "length": 20,
+                          "precision": null,
+                          "scale": null
+                        },
+                        "optional": true,
+                        "hint": "varchar2, max length 20",
+                        "type": "string",
+                        "name": "transaction_type",
+                        "parent": "columns"
+                      }
+                    ],
+                    "type": "object"
+                  }
+                ],
+                "visible_config_fields": [
+                  "table",
+                  "boolean_convert",
+                  "columns.data_flow",
+                  "columns.date_time",
+                  "columns.error_code",
+                  "columns.error_description",
+                  "columns.error_message",
+                  "columns.error_stack_trace",
+                  "columns.identifier",
+                  "columns.job_id",
+                  "columns.last_modified_by",
+                  "columns.location",
+                  "columns.recipe_id",
+                  "columns.recipe_name",
+                  "columns.severity_level",
+                  "columns.status",
+                  "columns.transaction_description",
+                  "columns.transaction_type"
+                ],
+                "uuid": "431b7124-2737-458f-b560-28eba70cdcfe",
+                "skip": true
+              },
+              {
+                "number": 13,
+                "as": "220d8e0a",
+                "keyword": "catch",
+                "dynamicPickListSelection": {
+                },
+                "toggleCfg": {
+                },
+                "input": {
+                  "max_retry_count": "0",
+                  "retry_interval": "2"
+                },
+                "block": [
+                  {
+                    "number": 14,
+                    "provider": "workato_variable",
+                    "name": "update_variable",
+                    "as": "6ff07312",
+                    "keyword": "action",
+                    "dynamicPickListSelection": {
+                      "name": "fullError (step 3)"
+                    },
+                    "toggleCfg": {
+                    },
+                    "input": {
+                      "name": "a2bf1dd7-0a65-406d-b767-90abfe4141e4:fb7c0d41",
+                      "value": "#{_('data.catch.220d8e0a.type')} : #{_('data.catch.220d8e0a.message')}"
+                    },
+                    "extended_input_schema": [
+                      {
+                        "control_type": "text",
+                        "hint": "Provide a value for the variable. When the value is not supplied, the variable is not updated.<br>To clear the value, set the value to <b>nil</b> in formula mode.",
+                        "label": "Value",
+                        "name": "value",
+                        "optional": true,
+                        "sticky": true,
+                        "type": "string",
+                        "strip_interpolation": true
+                      }
+                    ],
+                    "uuid": "d6ce21fd-a0c9-4f61-b992-cf1fd8146704"
+                  },
+                  {
+                    "number": 15,
+                    "keyword": "stop",
+                    "dynamicPickListSelection": {
+                    },
+                    "toggleCfg": {
+                    },
+                    "input": {
+                      "stop_with_error": "true",
+                      "stop_reason": "Failed to write logs for #{_('data.workato_recipe_function.65a14a28.parameters.jobDetails.identifier')}"
+                    },
+                    "uuid": "1b08119d-f52b-4d61-8e3b-b4832d5a4946"
+                  }
+                ],
+                "uuid": "a9f1e0c4-def7-482f-b7e4-5d64dfe8df54"
+              }
+            ],
+            "uuid": "d22bea48-0102-4409-8eea-7612ee921bbc"
+          },
+          {
+            "number": 16,
+            "as": "5f0e7814",
+            "keyword": "catch",
+            "dynamicPickListSelection": {
+            },
+            "toggleCfg": {
+            },
+            "input": {
+              "max_retry_count": "0",
+              "retry_interval": "2"
+            },
+            "block": [
+              {
+                "number": 17,
+                "provider": "workato_recipe_function",
+                "name": "call_recipe_async",
+                "as": "546fd0b6",
+                "keyword": "action",
+                "dynamicPickListSelection": {
+                  "flow_id": "AOF | FUNC | Super Admin Error Handling"
+                },
+                "toggleCfg": {
+                },
+                "input": {
+                  "flow_id": {
+                    "zip_name": "Accelerator - Autonomous Operations Framework V3.1/Recipes/aof_func_super_admin_error_handling.recipe.json",
+                    "name": "AOF | FUNC | Super Admin Error Handling",
+                    "folder": "Accelerator - Autonomous Operations Framework V3.1/Recipes"
+                  },
+                  "parameters": {
+                    "administrationError": "#{_('data.catch.5f0e7814.message')}",
+                    "rawAdministrationError": "#{_('data.workato_variable.fb7c0d41.value')}",
+                    "jobDetails": {
+                      "identifier": "#{_('data.workato_recipe_function.65a14a28.parameters.jobDetails.identifier')}",
+                      "transactionType": "#{_('data.workato_recipe_function.65a14a28.parameters.jobDetails.transactionType')}",
+                      "transactionDescription": "#{_('data.workato_recipe_function.65a14a28.parameters.jobDetails.transactionDescription')}",
+                      "jobID": "#{_('data.workato_recipe_function.65a14a28.parameters.jobDetails.jobID')}",
+                      "recipeID": "#{_('data.workato_recipe_function.65a14a28.parameters.jobDetails.recipeID')}",
+                      "recipeName": "#{_('data.workato_recipe_function.65a14a28.parameters.jobDetails.recipeName')}",
+                      "lastModifiedBy": "#{_('data.workato_recipe_function.65a14a28.parameters.jobDetails.lastModifiedBy')}"
+                    },
+                    "originalError": {
+                      "errorCode": "#{_('data.workato_recipe_function.65a14a28.parameters.error.errorCode')}",
+                      "errorMessage": "#{_('data.workato_recipe_function.65a14a28.parameters.error.errorMessage')}",
+                      "errorDescription": "#{_('data.workato_recipe_function.65a14a28.parameters.error.errorDescription')}",
+                      "severityLevel": "#{_('data.workato_recipe_function.65a14a28.parameters.error.severityLevel')}",
+                      "dataFlow": "#{_('data.workato_recipe_function.65a14a28.parameters.error.dataFlow')}",
+                      "stackTrace": "#{_('data.workato_recipe_function.65a14a28.parameters.error.stackTrace')}"
+                    }
+                  }
+                },
+                "extended_input_schema": [
+                  {
+                    "label": "Parameters",
+                    "name": "parameters",
+                    "properties": [
+                      {
+                        "properties": [
+                          {
+                            "control_type": "text",
+                            "label": "Identifier",
+                            "name": "identifier",
+                            "type": "string",
+                            "optional": false
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Transaction type",
+                            "name": "transactionType",
+                            "type": "string",
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Transaction description",
+                            "name": "transactionDescription",
+                            "type": "string",
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Job ID",
+                            "name": "jobID",
+                            "type": "string",
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Recipe ID",
+                            "name": "recipeID",
+                            "type": "string",
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Recipe URL",
+                            "name": "recipeURL",
+                            "type": "string",
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Recipe name",
+                            "name": "recipeName",
+                            "type": "string",
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Job Created At",
+                            "name": "jobCreatedAt",
+                            "type": "string",
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Folder",
+                            "name": "recipeFolder",
+                            "type": "string",
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Last modified by",
+                            "name": "lastModifiedBy",
+                            "type": "string",
+                            "optional": true
+                          }
+                        ],
+                        "label": "Job Details",
+                        "name": "jobDetails",
+                        "type": "object",
+                        "optional": false
+                      },
+                      {
+                        "properties": [
+                          {
+                            "control_type": "text",
+                            "label": "Error code",
+                            "name": "errorCode",
+                            "type": "string",
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Error message",
+                            "name": "errorMessage",
+                            "type": "string",
+                            "sticky": true,
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Error description",
+                            "name": "errorDescription",
+                            "type": "string",
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Severity level",
+                            "name": "severityLevel",
+                            "type": "string",
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Data flow",
+                            "name": "dataFlow",
+                            "type": "string",
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Stack trace",
+                            "hint": "Raw error message",
+                            "name": "stackTrace",
+                            "type": "string",
+                            "optional": true
+                          }
+                        ],
+                        "label": "Original error",
+                        "name": "originalError",
+                        "type": "object",
+                        "of": "object",
+                        "optional": true
+                      },
+                      {
+                        "properties": [
+                          {
+                            "control_type": "text",
+                            "label": "Type",
+                            "name": "type",
+                            "type": "string",
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Receiver",
+                            "name": "receiver",
+                            "type": "string",
+                            "optional": true
+                          }
+                        ],
+                        "label": "Notification",
+                        "name": "notification",
+                        "type": "object",
+                        "of": "object",
+                        "optional": true
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "Administration error",
+                        "name": "administrationError",
+                        "type": "string",
+                        "optional": false
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "Raw administration error",
+                        "name": "rawAdministrationError",
+                        "type": "string",
+                        "optional": false
+                      }
+                    ],
+                    "type": "object"
+                  }
+                ],
+                "visible_config_fields": [
+                  "flow_id",
+                  "parameters.originalError.errorMessage",
+                  "parameters.jobDetails.transactionType",
+                  "parameters.jobDetails.transactionDescription",
+                  "parameters.jobDetails.jobID",
+                  "parameters.jobDetails.recipeID",
+                  "parameters.jobDetails.recipeURL",
+                  "parameters.jobDetails.recipeName",
+                  "parameters.jobDetails.jobCreatedAt",
+                  "parameters.jobDetails.recipeFolder",
+                  "parameters.jobDetails.lastModifiedBy",
+                  "parameters.originalError.errorCode",
+                  "parameters.originalError.errorDescription",
+                  "parameters.originalError.severityLevel",
+                  "parameters.originalError.dataFlow",
+                  "parameters.originalError.stackTrace",
+                  "parameters.notification.type",
+                  "parameters.notification.receiver"
+                ],
+                "uuid": "9932f2c7-c2b9-4451-aad3-ccb213dd3c6d"
+              },
+              {
+                "number": 18,
+                "keyword": "stop",
+                "dynamicPickListSelection": {
+                },
+                "toggleCfg": {
+                },
+                "input": {
+                  "stop_with_error": "true",
+                  "stop_reason": "#{_('data.catch.5f0e7814.message')}"
+                },
+                "uuid": "18263b23-f6ad-467d-8559-3f7867dc2b10"
+              }
+            ],
+            "uuid": "d45aa429-b91f-47d5-a036-63c7f925a0bd"
+          }
+        ],
+        "uuid": "32781a36-663c-47c9-8375-fb4ee2e3c3be"
+      }
+    ],
+    "job_report_schema": [
+      {
+        "name": "custom_column_1",
+        "label": "Identifier"
+      },
+      {
+        "name": "custom_column_2",
+        "label": "Status"
+      },
+      {
+        "name": "custom_column_3",
+        "label": "Job ID"
+      },
+      {
+        "name": "custom_column_5",
+        "label": "Error Code"
+      },
+      {
+        "name": "custom_column_4",
+        "label": "Recipe ID"
+      }
+    ],
+    "job_report_config": {
+      "custom_column_1": "#{_('data.workato_service.eb681616.request.jobDetails.identifier')}",
+      "custom_column_2": "#{_('data.workato_service.eb681616.request.status')}",
+      "custom_column_3": "=_('data.workato_service.eb681616.request.jobDetails.jobID') or _('data.workato_service.eb681616.context.calling_job_id')",
+      "custom_column_5": "#{_('data.workato_service.eb681616.request.error.errorCode')}",
+      "custom_column_4": "=_('data.workato_service.eb681616.request.jobDetails.recipeID') or _('data.workato_service.eb681616.context.calling_recipe_id')"
+    },
+    "uuid": "567b2f07-b28f-4574-ac66-b2c36b2ac746"
+  },
+  "config": [
+    {
+      "keyword": "application",
+      "provider": "workato_app",
+      "skip_validation": false,
+      "account_id": {
+        "zip_name": "Accelerator - Autonomous Operations Framework V3.1/Connections/aof_con_recipeops.connection.json",
+        "name": "AOF | CON | RecipeOps",
+        "folder": "Accelerator - Autonomous Operations Framework V3.1/Connections"
+      }
+    },
+    {
+      "keyword": "application",
+      "provider": "workato_variable",
+      "skip_validation": false,
+      "account_id": null
+    },
+    {
+      "keyword": "application",
+      "provider": "snowflake",
+      "skip_validation": false,
+      "account_id": {
+        "zip_name": "Accelerator - Autonomous Operations Framework V3.1/Connections/aof_con_snowflake.connection.json",
+        "name": "AOF | CON | Snowflake",
+        "folder": "Accelerator - Autonomous Operations Framework V3.1/Connections"
+      }
+    },
+    {
+      "keyword": "application",
+      "provider": "mssql",
+      "skip_validation": true,
+      "account_id": {
+        "zip_name": "Accelerator - Autonomous Operations Framework V3.1/Connections/aof_con_sql_server.connection.json",
+        "name": "AOF | CON | SQL Server",
+        "folder": "Accelerator - Autonomous Operations Framework V3.1/Connections"
+      }
+    },
+    {
+      "keyword": "application",
+      "provider": "oracle",
+      "skip_validation": true,
+      "account_id": {
+        "zip_name": "Accelerator - Autonomous Operations Framework V3.1/Connections/aof_con_oracle.connection.json",
+        "name": "AOF | CON | Oracle",
+        "folder": "Accelerator - Autonomous Operations Framework V3.1/Connections"
+      }
+    },
+    {
+      "keyword": "application",
+      "provider": "workato_recipe_function",
+      "skip_validation": false,
+      "account_id": null
+    }
+  ]
+}

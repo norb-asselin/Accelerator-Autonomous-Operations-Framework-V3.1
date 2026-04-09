@@ -1,0 +1,5 @@
+{
+  "name": "AOF | CON | Slack",
+  "provider": "slack",
+  "root_folder": false
+}

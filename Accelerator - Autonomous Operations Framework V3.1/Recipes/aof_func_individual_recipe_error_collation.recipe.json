@@ -1,0 +1,2826 @@
+{
+  "name": "AOF | FUNC | Individual Recipe Error Collation",
+  "description": "When there is a new call for callable recipe, do action",
+  "version": 6,
+  "private": true,
+  "concurrency": 1,
+  "code": {
+    "number": 0,
+    "provider": "workato_recipe_function",
+    "name": "execute",
+    "as": "0c9ee1df",
+    "keyword": "trigger",
+    "input": {
+      "parameters_schema_json": "[{\"control_type\":\"text\",\"label\":\"Recipe ID\",\"name\":\"recipeID\",\"type\":\"string\",\"optional\":false},{\"control_type\":\"text\",\"label\":\"Last run timestamp\",\"name\":\"lastRunTimestamp\",\"type\":\"string\",\"optional\":false},{\"control_type\":\"text\",\"label\":\"Entry ID\",\"name\":\"entryID\",\"type\":\"string\",\"optional\":false},{\"control_type\":\"text\",\"label\":\"Error identifier\",\"name\":\"errorIdentifier\",\"type\":\"string\",\"optional\":false}]"
+    },
+    "extended_output_schema": [
+      {
+        "label": "Parameters",
+        "name": "parameters",
+        "properties": [
+          {
+            "control_type": "text",
+            "label": "Recipe ID",
+            "name": "recipeID",
+            "type": "string",
+            "optional": false
+          },
+          {
+            "control_type": "text",
+            "label": "Last run timestamp",
+            "name": "lastRunTimestamp",
+            "type": "string",
+            "optional": false
+          },
+          {
+            "control_type": "text",
+            "label": "Entry ID",
+            "name": "entryID",
+            "type": "string",
+            "optional": false
+          },
+          {
+            "control_type": "text",
+            "label": "Error identifier",
+            "name": "errorIdentifier",
+            "type": "string",
+            "optional": false
+          }
+        ],
+        "type": "object"
+      }
+    ],
+    "block": [
+      {
+        "number": 1,
+        "keyword": "try",
+        "input": {
+        },
+        "block": [
+          {
+            "number": 2,
+            "provider": "workato_app",
+            "name": "list_jobs",
+            "as": "0520314d",
+            "keyword": "action",
+            "toggleCfg": {
+              "recipe_id": false
+            },
+            "input": {
+              "status": "failed",
+              "recipe_id": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_recipe_function\",\"line\":\"0c9ee1df\",\"path\":[\"parameters\",\"recipeID\"]}')}",
+              "started_at_from": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_recipe_function\",\"line\":\"0c9ee1df\",\"path\":[\"parameters\",\"lastRunTimestamp\"]}')}"
+            },
+            "extended_output_schema": [
+              {
+                "label": "Jobs",
+                "name": "jobs",
+                "of": "object",
+                "properties": [
+                  {
+                    "control_type": "text",
+                    "label": "Job ID",
+                    "type": "string",
+                    "name": "id"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Original Job ID",
+                    "type": "string",
+                    "name": "master_job_id"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Recipe ID",
+                    "parse_output": "integer_conversion",
+                    "type": "integer",
+                    "name": "recipe_id"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Calling job ID",
+                    "type": "string",
+                    "name": "calling_job_id"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Calling recipe ID",
+                    "parse_output": "integer_conversion",
+                    "type": "integer",
+                    "name": "calling_recipe_id"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Root recipe ID",
+                    "parse_output": "integer_conversion",
+                    "type": "integer",
+                    "name": "root_recipe_id"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Root job ID",
+                    "type": "string",
+                    "name": "root_job_id"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Title",
+                    "type": "string",
+                    "name": "title"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Status",
+                    "type": "string",
+                    "name": "status"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Is repeat",
+                    "render_input": "boolean_conversion",
+                    "parse_output": "boolean_conversion",
+                    "toggle_hint": "Select from option list",
+                    "toggle_field": {
+                      "label": "Is repeat",
+                      "control_type": "text",
+                      "toggle_hint": "Use custom value",
+                      "type": "boolean",
+                      "name": "is_repeat"
+                    },
+                    "type": "boolean",
+                    "name": "is_repeat"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Is test",
+                    "render_input": "boolean_conversion",
+                    "parse_output": "boolean_conversion",
+                    "toggle_hint": "Select from option list",
+                    "toggle_field": {
+                      "label": "Is test",
+                      "control_type": "text",
+                      "toggle_hint": "Use custom value",
+                      "type": "boolean",
+                      "name": "is_test"
+                    },
+                    "type": "boolean",
+                    "name": "is_test"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Started at",
+                    "render_input": "date_time_conversion",
+                    "parse_output": "date_time_conversion",
+                    "type": "date_time",
+                    "name": "started_at"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Completed at",
+                    "render_input": "date_time_conversion",
+                    "parse_output": "date_time_conversion",
+                    "type": "date_time",
+                    "name": "completed_at"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Repeat count",
+                    "parse_output": "integer_conversion",
+                    "type": "integer",
+                    "name": "repeat_count"
+                  },
+                  {
+                    "properties": [
+                      {
+                        "control_type": "text",
+                        "label": "Error ID",
+                        "type": "string",
+                        "name": "error_id"
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "Error type",
+                        "type": "string",
+                        "name": "error_type"
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "Error type ID",
+                        "optional": true,
+                        "type": "string",
+                        "name": "error_type_id"
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "Error at",
+                        "render_input": "date_time_conversion",
+                        "parse_output": "date_time_conversion",
+                        "type": "date_time",
+                        "name": "error_at"
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "Errored app",
+                        "type": "string",
+                        "name": "adapter"
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "Errored action",
+                        "type": "string",
+                        "name": "action"
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "Errored step number",
+                        "parse_output": "integer_conversion",
+                        "type": "integer",
+                        "name": "line_number"
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "Error message",
+                        "type": "string",
+                        "name": "message"
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "Inner message",
+                        "type": "string",
+                        "name": "inner_message"
+                      },
+                      {
+                        "properties": [
+                          {
+                            "control_type": "text",
+                            "label": "HTTP protocol version",
+                            "optional": true,
+                            "type": "string",
+                            "name": "protocol"
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "HTTP status code",
+                            "parse_output": "integer_conversion",
+                            "optional": true,
+                            "type": "integer",
+                            "name": "code"
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "HTTP status text (exactly as received from the server; not present for HTTP/2 or later)",
+                            "optional": true,
+                            "type": "string",
+                            "name": "raw_status_text"
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "HTTP status text (RFC normalized)",
+                            "optional": true,
+                            "type": "string",
+                            "name": "normalized_status_text"
+                          },
+                          {
+                            "label": "HTTP response headers (normalized)",
+                            "optional": true,
+                            "of": "object",
+                            "properties": [
+                              {
+                                "control_type": "text",
+                                "label": "Name",
+                                "type": "string",
+                                "name": "name"
+                              },
+                              {
+                                "control_type": "text",
+                                "label": "Value",
+                                "type": "string",
+                                "name": "value"
+                              }
+                            ],
+                            "type": "array",
+                            "name": "normalized_headers"
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "HTTP response body",
+                            "optional": true,
+                            "type": "string",
+                            "name": "body"
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Retry after (seconds)",
+                            "parse_output": "integer_conversion",
+                            "optional": true,
+                            "type": "integer",
+                            "name": "retry_after"
+                          },
+                          {
+                            "properties": [
+
+                            ],
+                            "label": "HTTP response headers",
+                            "optional": true,
+                            "type": "object",
+                            "name": "headers"
+                          }
+                        ],
+                        "label": "HTTP error",
+                        "optional": true,
+                        "type": "object",
+                        "name": "http_response"
+                      }
+                    ],
+                    "label": "Error",
+                    "type": "object",
+                    "name": "error"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Flow ID",
+                    "parse_output": "integer_conversion",
+                    "deprecated": true,
+                    "type": "integer",
+                    "name": "flow_id"
+                  }
+                ],
+                "type": "array"
+              }
+            ],
+            "uuid": "72e23062-d303-4a5f-b09b-8922cfa65143"
+          },
+          {
+            "number": 3,
+            "provider": "lookup_table",
+            "name": "update_entry",
+            "as": "5a032f30",
+            "keyword": "action",
+            "dynamicPickListSelection": {
+              "lookup_table_id": "Autonomously Handled Recipes"
+            },
+            "toggleCfg": {
+              "ignore_not_found": true
+            },
+            "input": {
+              "ignore_not_found": "false",
+              "id": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_recipe_function\",\"line\":\"0c9ee1df\",\"path\":[\"parameters\",\"entryID\"]}')}",
+              "lookup_table_id": {
+                "zip_name": "aof_lt_004_error_collation_report_scheduler.lookup_table.json",
+                "name": "AOF | LT-004 | Error Collation/Report Scheduler ",
+                "folder": ""
+              },
+              "parameters": {
+                "col9": "=now"
+              }
+            },
+            "extended_output_schema": [
+              {
+                "control_type": "number",
+                "label": "Entry ID",
+                "name": "id",
+                "parse_output": "integer_conversion",
+                "type": "integer"
+              },
+              {
+                "label": "Entry",
+                "name": "entry",
+                "properties": [
+                  {
+                    "control_type": "text",
+                    "label": "Recipe ID",
+                    "name": "col1",
+                    "sticky": true,
+                    "type": "string"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Recipe Identifier",
+                    "name": "col2",
+                    "sticky": true,
+                    "type": "string"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Schedule  Month",
+                    "name": "col3",
+                    "sticky": true,
+                    "type": "string"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Schedule  Day",
+                    "name": "col4",
+                    "sticky": true,
+                    "type": "string"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Schedule  Weekday",
+                    "name": "col5",
+                    "sticky": true,
+                    "type": "string"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Schedule Hour",
+                    "name": "col6",
+                    "sticky": true,
+                    "type": "string"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Schedule Minutes",
+                    "name": "col7",
+                    "sticky": true,
+                    "type": "string"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Logic",
+                    "name": "col8",
+                    "sticky": true,
+                    "type": "string"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Last Run Timestamp",
+                    "name": "col9",
+                    "sticky": true,
+                    "type": "string"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Report Address",
+                    "name": "col10",
+                    "sticky": true,
+                    "type": "string"
+                  }
+                ],
+                "type": "object"
+              }
+            ],
+            "extended_input_schema": [
+              {
+                "hint": "Fill the fields you want to update",
+                "label": "Entry fields",
+                "name": "parameters",
+                "properties": [
+                  {
+                    "control_type": "text",
+                    "label": "Recipe ID",
+                    "name": "col1",
+                    "sticky": true,
+                    "type": "string",
+                    "optional": true
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Recipe Identifier",
+                    "name": "col2",
+                    "sticky": true,
+                    "type": "string",
+                    "optional": true
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Schedule  Month",
+                    "name": "col3",
+                    "sticky": true,
+                    "type": "string",
+                    "optional": true
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Schedule  Day",
+                    "name": "col4",
+                    "sticky": true,
+                    "type": "string",
+                    "optional": true
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Schedule  Weekday",
+                    "name": "col5",
+                    "sticky": true,
+                    "type": "string",
+                    "optional": true
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Schedule Hour",
+                    "name": "col6",
+                    "sticky": true,
+                    "type": "string",
+                    "optional": true
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Schedule Minutes",
+                    "name": "col7",
+                    "sticky": true,
+                    "type": "string",
+                    "optional": true
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Logic",
+                    "name": "col8",
+                    "sticky": true,
+                    "type": "string",
+                    "optional": true
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Last Run Timestamp",
+                    "name": "col9",
+                    "sticky": true,
+                    "type": "string",
+                    "optional": true
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Report Address",
+                    "name": "col10",
+                    "sticky": true,
+                    "type": "string",
+                    "optional": true
+                  }
+                ],
+                "type": "object"
+              }
+            ],
+            "uuid": "7a81bf8f-37db-4bfc-a398-dee73016de6b"
+          },
+          {
+            "number": 4,
+            "provider": "workato_app",
+            "name": "get_recipe",
+            "as": "98e647db",
+            "keyword": "action",
+            "toggleCfg": {
+              "recipe_id": false
+            },
+            "input": {
+              "recipe_id": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_recipe_function\",\"line\":\"0c9ee1df\",\"path\":[\"parameters\",\"recipeID\"]}')}"
+            },
+            "uuid": "172455ca-42e2-40d6-b755-9fa80ce01d33"
+          },
+          {
+            "number": 5,
+            "provider": "workato_variable",
+            "name": "declare_list",
+            "as": "821c1850",
+            "keyword": "action",
+            "input": {
+              "name": "Error List",
+              "list_item_schema_json": "[{\"name\":\"processError\",\"type\":\"string\",\"optional\":false,\"control_type\":\"text\"},{\"name\":\"errorType\",\"type\":\"string\",\"optional\":true,\"control_type\":\"text\"},{\"name\":\"errorMessage\",\"type\":\"string\",\"optional\":true,\"control_type\":\"text\"},{\"name\":\"jobID\",\"type\":\"string\",\"optional\":false,\"control_type\":\"text\"}]"
+            },
+            "extended_output_schema": [
+              {
+                "hint": "",
+                "label": "Error List",
+                "name": "list_items",
+                "of": "object",
+                "optional": false,
+                "properties": [
+                  {
+                    "control_type": "text",
+                    "label": "Process error",
+                    "name": "processError",
+                    "type": "string",
+                    "optional": false
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Error type",
+                    "name": "errorType",
+                    "type": "string",
+                    "optional": true
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Error message",
+                    "name": "errorMessage",
+                    "type": "string",
+                    "optional": true
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Job ID",
+                    "name": "jobID",
+                    "type": "string",
+                    "optional": false
+                  }
+                ],
+                "type": "array"
+              }
+            ],
+            "extended_input_schema": [
+              {
+                "hint": "Set the initial items in the list. Defaults to an empty list if not supplied.",
+                "label": "Items",
+                "name": "list_items",
+                "of": "object",
+                "optional": true,
+                "properties": [
+                  {
+                    "control_type": "text",
+                    "label": "Process error",
+                    "name": "processError",
+                    "type": "string",
+                    "optional": false
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Error type",
+                    "name": "errorType",
+                    "type": "string",
+                    "optional": true
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Error message",
+                    "name": "errorMessage",
+                    "type": "string",
+                    "optional": true
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Job ID",
+                    "name": "jobID",
+                    "type": "string",
+                    "optional": false
+                  }
+                ],
+                "type": "array"
+              }
+            ],
+            "uuid": "08cc3813-c015-4793-b170-47308e3f6045"
+          },
+          {
+            "number": 6,
+            "as": "3d118a9c",
+            "keyword": "foreach",
+            "repeat_mode": "simple",
+            "clear_scope": "false",
+            "input": {
+            },
+            "block": [
+              {
+                "number": 7,
+                "keyword": "try",
+                "input": {
+                },
+                "block": [
+                  {
+                    "number": 8,
+                    "keyword": "if",
+                    "input": {
+                      "type": "compound",
+                      "operand": "and",
+                      "conditions": [
+                        {
+                          "operand": "equals_to",
+                          "lhs": "=_dp('{\"pill_type\":\"output\",\"provider\":\"workato_recipe_function\",\"line\":\"0c9ee1df\",\"path\":[\"parameters\",\"errorIdentifier\"]}').downcase",
+                          "rhs": "job error code",
+                          "uuid": "condition-8d3dd692-677a-4c77-b177-3892d844a2e7"
+                        }
+                      ]
+                    },
+                    "block": [
+                      {
+                        "number": 9,
+                        "keyword": "try",
+                        "input": {
+                        },
+                        "block": [
+                          {
+                            "number": 10,
+                            "provider": "workato_recipe_function",
+                            "name": "call_recipe_async",
+                            "as": "f0c60301",
+                            "keyword": "action",
+                            "dynamicPickListSelection": {
+                              "flow_id": "AOF | FUNC | Master Orchestrator"
+                            },
+                            "input": {
+                              "flow_id": "1933380",
+                              "parameters": {
+                                "errorHandlingData": {
+                                  "origin": "internal_api",
+                                  "jobDetails": {
+                                    "identifier": "=_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"3d118a9c\",\"path\":[]}')['report']['custom_column_1']['identifier']",
+                                    "transactionType": "=_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"3d118a9c\",\"path\":[]}')['report']['custom_column_1']['transactionType']",
+                                    "transactionDescription": "=_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"3d118a9c\",\"path\":[]}')['report']['custom_column_1']['transactionDescription']",
+                                    "dateTime": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_app\",\"line\":\"0520314d\",\"path\":[\"jobs\",{\"path_element_type\":\"current_item\"},\"completed_at\"]}')}",
+                                    "jobID": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"3d118a9c\",\"path\":[\"id\"]}')}",
+                                    "recipeID": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"3d118a9c\",\"path\":[\"recipe_id\"]}')}",
+                                    "recipeName": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_app\",\"line\":\"98e647db\",\"path\":[\"name\"]}')}",
+                                    "folder": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_app\",\"line\":\"98e647db\",\"path\":[\"folder\",\"path\"]}')}",
+                                    "lastModifiedBy": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_app\",\"line\":\"98e647db\",\"path\":[\"last_version\",\"user_email\"]}')}"
+                                  },
+                                  "errorDetails": {
+                                    "parentJobID": "=_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"3d118a9c\",\"path\":[]}')['report']['custom_column_1']['parentJobID']",
+                                    "errorCode": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"3d118a9c\",\"path\":[\"error\",\"error_type\"]}')}",
+                                    "errorMessage": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"3d118a9c\",\"path\":[\"error\",\"message\"]}')}"
+                                  }
+                                }
+                              }
+                            },
+                            "extended_input_schema": [
+                              {
+                                "label": "Parameters",
+                                "name": "parameters",
+                                "properties": [
+                                  {
+                                    "properties": [
+                                      {
+                                        "control_type": "text",
+                                        "label": "Origin",
+                                        "name": "origin",
+                                        "type": "string"
+                                      },
+                                      {
+                                        "properties": [
+                                          {
+                                            "control_type": "text",
+                                            "label": "Identifier",
+                                            "name": "identifier",
+                                            "hint": "Identifier value for record or data. Ex: Account ID, External ID.",
+                                            "type": "string",
+                                            "optional": false
+                                          },
+                                          {
+                                            "control_type": "text",
+                                            "label": "Transaction type",
+                                            "name": "transactionType",
+                                            "hint": "Type of action/s involved inside the catch scope. Ex: invocation, record insertion, mapping.",
+                                            "type": "string",
+                                            "optional": false
+                                          },
+                                          {
+                                            "control_type": "text",
+                                            "label": "Transaction description",
+                                            "name": "transactionDescription",
+                                            "hint": "Brief description of action/s involved in the catch scope.",
+                                            "type": "string",
+                                            "sticky": true,
+                                            "optional": true
+                                          },
+                                          {
+                                            "control_type": "text",
+                                            "label": "Job ID",
+                                            "name": "jobID",
+                                            "hint": "Not needed for logging",
+                                            "type": "string",
+                                            "optional": true
+                                          },
+                                          {
+                                            "control_type": "text",
+                                            "label": "Recipe ID",
+                                            "name": "recipeID",
+                                            "hint": "Not needed for logging",
+                                            "type": "string",
+                                            "optional": true
+                                          },
+                                          {
+                                            "control_type": "text",
+                                            "label": "Recipe name",
+                                            "name": "recipeName",
+                                            "hint": "Not needed for logging",
+                                            "type": "string",
+                                            "optional": true
+                                          },
+                                          {
+                                            "control_type": "text",
+                                            "label": "Date/Time",
+                                            "hint": "Timestamp of the action/s. Use timestamp of action or 'now' in formula mode.",
+                                            "name": "dateTime",
+                                            "type": "string",
+                                            "optional": false
+                                          },
+                                          {
+                                            "control_type": "text",
+                                            "label": "Folder",
+                                            "name": "folder",
+                                            "type": "string",
+                                            "optional": true,
+                                            "hint": "Not needed for logging"
+                                          },
+                                          {
+                                            "control_type": "text",
+                                            "label": "Last modified by",
+                                            "name": "lastModifiedBy",
+                                            "type": "string",
+                                            "optional": true,
+                                            "hint": "Not needed for logging"
+                                          },
+                                          {
+                                            "control_type": "text",
+                                            "label": "Free text",
+                                            "name": "freeText",
+                                            "type": "string",
+                                            "optional": true
+                                          }
+                                        ],
+                                        "label": "Job Details",
+                                        "name": "jobDetails",
+                                        "type": "object",
+                                        "optional": false
+                                      },
+                                      {
+                                        "properties": [
+                                          {
+                                            "control_type": "text",
+                                            "label": "Parent Job ID",
+                                            "name": "parentJobID",
+                                            "hint": "Use Properties > Parent Job ID.",
+                                            "type": "string",
+                                            "sticky": true,
+                                            "optional": true
+                                          },
+                                          {
+                                            "control_type": "text",
+                                            "label": "Error code",
+                                            "name": "errorCode",
+                                            "type": "string",
+                                            "optional": true
+                                          },
+                                          {
+                                            "control_type": "text",
+                                            "label": "Error message",
+                                            "name": "errorMessage",
+                                            "type": "string",
+                                            "optional": true
+                                          },
+                                          {
+                                            "control_type": "text",
+                                            "label": "Stack trace",
+                                            "hint": "Raw error message",
+                                            "name": "stackTrace",
+                                            "type": "string",
+                                            "optional": true
+                                          }
+                                        ],
+                                        "label": "Error Details",
+                                        "name": "errorDetails",
+                                        "type": "object",
+                                        "of": "object",
+                                        "optional": false
+                                      },
+                                      {
+                                        "properties": [
+                                          {
+                                            "name": "customFields",
+                                            "type": "array",
+                                            "of": "object",
+                                            "label": "Custom fields",
+                                            "optional": true,
+                                            "properties": [
+                                              {
+                                                "control_type": "text",
+                                                "label": "Key",
+                                                "name": "key",
+                                                "type": "string",
+                                                "optional": false
+                                              },
+                                              {
+                                                "control_type": "text",
+                                                "label": "Value",
+                                                "name": "value",
+                                                "type": "string",
+                                                "optional": false
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "name": "customArrays",
+                                            "type": "array",
+                                            "of": "object",
+                                            "label": "Custom arrays",
+                                            "optional": true,
+                                            "properties": [
+                                              {
+                                                "control_type": "text",
+                                                "label": "Array name",
+                                                "name": "arrayName",
+                                                "type": "string",
+                                                "optional": false
+                                              },
+                                              {
+                                                "name": "internalArray",
+                                                "type": "array",
+                                                "of": "object",
+                                                "label": "Internal array",
+                                                "optional": false,
+                                                "properties": [
+                                                  {
+                                                    "control_type": "text",
+                                                    "label": "Value",
+                                                    "name": "value",
+                                                    "type": "string",
+                                                    "optional": false
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        ],
+                                        "label": "Custom data",
+                                        "name": "customData",
+                                        "type": "object",
+                                        "optional": true
+                                      }
+                                    ],
+                                    "label": "Error handling data",
+                                    "name": "errorHandlingData",
+                                    "type": "object",
+                                    "optional": false
+                                  }
+                                ],
+                                "type": "object"
+                              }
+                            ],
+                            "visible_config_fields": [
+                              "flow_id",
+                              "parameters",
+                              "parameters.errorHandlingData",
+                              "parameters.errorHandlingData.origin",
+                              "parameters.errorHandlingData.jobDetails",
+                              "parameters.errorHandlingData.jobDetails.identifier",
+                              "parameters.errorHandlingData.jobDetails.transactionType",
+                              "parameters.errorHandlingData.jobDetails.transactionDescription",
+                              "parameters.errorHandlingData.errorDetails.parentJobID",
+                              "parameters.errorHandlingData.jobDetails.jobID",
+                              "parameters.errorHandlingData.jobDetails.recipeID",
+                              "parameters.errorHandlingData.jobDetails.recipeName",
+                              "parameters.errorHandlingData.jobDetails.folder",
+                              "parameters.errorHandlingData.jobDetails.lastModifiedBy",
+                              "parameters.errorHandlingData.jobDetails.freeText",
+                              "parameters.errorHandlingData.errorDetails.errorCode",
+                              "parameters.errorHandlingData.errorDetails.errorMessage",
+                              "parameters.errorHandlingData.errorDetails.stackTrace"
+                            ],
+                            "comment": "ORI fct Call customn_column_1... not existing in the spec",
+                            "uuid": "f008ab72-5982-4823-9bb7-be40a8ae328e",
+                            "skip": true
+                          },
+                          {
+                            "number": 11,
+                            "provider": "workato_recipe_function",
+                            "name": "call_recipe_async",
+                            "as": "38eeab48",
+                            "keyword": "action",
+                            "dynamicPickListSelection": {
+                              "flow_id": "AOF | FUNC | Master Orchestrator"
+                            },
+                            "toggleCfg": {
+                              "parameters.errorHandlingData.jobDetails.trigger_async": true
+                            },
+                            "input": {
+                              "flow_id": {
+                                "zip_name": "Accelerator - Autonomous Operations Framework V3.1/Recipes/aof_func_master_orchestrator.recipe.json",
+                                "name": "AOF | FUNC | Master Orchestrator",
+                                "folder": "Accelerator - Autonomous Operations Framework V3.1/Recipes"
+                              },
+                              "parameters": {
+                                "errorHandlingData": {
+                                  "origin": "internal_api",
+                                  "jobDetails": {
+                                    "identifier": "=_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"3d118a9c\",\"path\":[]}')['report']['custom_column_0']['identifier']",
+                                    "transactionType": "=_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"3d118a9c\",\"path\":[]}')['report']['custom_column_0']['transactionType']",
+                                    "transactionDescription": "=_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"3d118a9c\",\"path\":[]}')['report']['custom_column_0']['transactionDescription']",
+                                    "dateTime": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_app\",\"line\":\"0520314d\",\"path\":[\"jobs\",{\"path_element_type\":\"current_item\"},\"completed_at\"]}')}",
+                                    "jobID": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"3d118a9c\",\"path\":[\"id\"]}')}",
+                                    "recipeID": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"3d118a9c\",\"path\":[\"recipe_id\"]}')}",
+                                    "recipeName": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_app\",\"line\":\"98e647db\",\"path\":[\"name\"]}')}",
+                                    "folder": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_app\",\"line\":\"98e647db\",\"path\":[\"folder\",\"path\"]}')}",
+                                    "lastModifiedBy": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_app\",\"line\":\"98e647db\",\"path\":[\"last_version\",\"user_email\"]}')}",
+                                    "recipe_path": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_app\",\"line\":\"98e647db\",\"path\":[\"folder\",\"path\"]}')}",
+                                    "trigger_async": "true"
+                                  },
+                                  "errorDetails": {
+                                    "parentJobID": "=_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"3d118a9c\",\"path\":[]}')['report']['custom_column_0']['parentJobID']",
+                                    "errorCode": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"3d118a9c\",\"path\":[\"error\",\"error_type\"]}')}",
+                                    "errorMessage": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"3d118a9c\",\"path\":[\"error\",\"message\"]}')}"
+                                  }
+                                }
+                              }
+                            },
+                            "extended_input_schema": [
+                              {
+                                "label": "Parameters",
+                                "name": "parameters",
+                                "properties": [
+                                  {
+                                    "properties": [
+                                      {
+                                        "control_type": "text",
+                                        "label": "Origin",
+                                        "name": "origin",
+                                        "type": "string"
+                                      },
+                                      {
+                                        "properties": [
+                                          {
+                                            "control_type": "text",
+                                            "label": "Identifier",
+                                            "name": "identifier",
+                                            "hint": "Identifier value for record or data. Ex: Account ID, External ID.",
+                                            "type": "string",
+                                            "optional": false
+                                          },
+                                          {
+                                            "control_type": "text",
+                                            "label": "Transaction type",
+                                            "name": "transactionType",
+                                            "hint": "Type of action/s involved inside the catch scope. Ex: invocation, record insertion, mapping.",
+                                            "type": "string",
+                                            "optional": false
+                                          },
+                                          {
+                                            "control_type": "text",
+                                            "label": "Transaction description",
+                                            "name": "transactionDescription",
+                                            "hint": "Brief description of action/s involved in the catch scope.",
+                                            "type": "string",
+                                            "sticky": true,
+                                            "optional": true
+                                          },
+                                          {
+                                            "control_type": "text",
+                                            "label": "Job ID",
+                                            "name": "jobID",
+                                            "hint": "Not needed for logging",
+                                            "type": "string",
+                                            "optional": true
+                                          },
+                                          {
+                                            "control_type": "text",
+                                            "label": "Recipe ID",
+                                            "name": "recipeID",
+                                            "hint": "Not needed for logging",
+                                            "type": "string",
+                                            "optional": true
+                                          },
+                                          {
+                                            "control_type": "text",
+                                            "label": "Recipe name",
+                                            "name": "recipeName",
+                                            "hint": "Not needed for logging",
+                                            "type": "string",
+                                            "optional": true
+                                          },
+                                          {
+                                            "control_type": "text",
+                                            "label": "Date/Time",
+                                            "hint": "Timestamp of the action/s. Use timestamp of action or 'now' in formula mode.",
+                                            "name": "dateTime",
+                                            "type": "string",
+                                            "optional": false
+                                          },
+                                          {
+                                            "control_type": "text",
+                                            "label": "Folder",
+                                            "name": "folder",
+                                            "type": "string",
+                                            "optional": true,
+                                            "hint": "Not needed for logging"
+                                          },
+                                          {
+                                            "control_type": "text",
+                                            "label": "Last modified by",
+                                            "name": "lastModifiedBy",
+                                            "type": "string",
+                                            "optional": true,
+                                            "hint": "Not needed for logging"
+                                          },
+                                          {
+                                            "control_type": "text",
+                                            "label": "Recipe path",
+                                            "name": "recipe_path",
+                                            "type": "string",
+                                            "optional": false
+                                          },
+                                          {
+                                            "control_type": "text",
+                                            "label": "Project notifications required",
+                                            "name": "project_notifications_required",
+                                            "type": "string",
+                                            "optional": true
+                                          },
+                                          {
+                                            "control_type": "checkbox",
+                                            "label": "Trigger async",
+                                            "render_input": {
+                                            },
+                                            "parse_output": {
+                                            },
+                                            "name": "trigger_async",
+                                            "type": "boolean",
+                                            "optional": false,
+                                            "toggle_hint": "Select from option list",
+                                            "toggle_field": {
+                                              "label": "Trigger async",
+                                              "control_type": "text",
+                                              "toggle_hint": "Use custom value",
+                                              "name": "trigger_async",
+                                              "type": "boolean",
+                                              "optional": false
+                                            }
+                                          },
+                                          {
+                                            "control_type": "text",
+                                            "label": "Free text",
+                                            "name": "freeText",
+                                            "type": "string",
+                                            "optional": true
+                                          }
+                                        ],
+                                        "label": "Job Details",
+                                        "name": "jobDetails",
+                                        "type": "object",
+                                        "optional": false
+                                      },
+                                      {
+                                        "properties": [
+                                          {
+                                            "control_type": "text",
+                                            "label": "Parent Job ID",
+                                            "name": "parentJobID",
+                                            "hint": "Use Properties > Parent Job ID.",
+                                            "type": "string",
+                                            "sticky": true,
+                                            "optional": true
+                                          },
+                                          {
+                                            "control_type": "text",
+                                            "label": "Error code",
+                                            "name": "errorCode",
+                                            "type": "string",
+                                            "optional": true
+                                          },
+                                          {
+                                            "control_type": "text",
+                                            "label": "Error message",
+                                            "name": "errorMessage",
+                                            "type": "string",
+                                            "optional": true
+                                          },
+                                          {
+                                            "control_type": "text",
+                                            "label": "Stack trace",
+                                            "hint": "Raw error message",
+                                            "name": "stackTrace",
+                                            "type": "string",
+                                            "optional": true
+                                          }
+                                        ],
+                                        "label": "Error Details",
+                                        "name": "errorDetails",
+                                        "type": "object",
+                                        "of": "object",
+                                        "optional": false
+                                      },
+                                      {
+                                        "properties": [
+                                          {
+                                            "label": "Custom fields",
+                                            "name": "customFields",
+                                            "type": "array",
+                                            "optional": true,
+                                            "of": "object",
+                                            "properties": [
+                                              {
+                                                "control_type": "text",
+                                                "label": "Key",
+                                                "name": "key",
+                                                "type": "string",
+                                                "optional": false
+                                              },
+                                              {
+                                                "control_type": "text",
+                                                "label": "Value",
+                                                "name": "value",
+                                                "type": "string",
+                                                "optional": false
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "label": "Custom arrays",
+                                            "name": "customArrays",
+                                            "type": "array",
+                                            "optional": true,
+                                            "of": "object",
+                                            "properties": [
+                                              {
+                                                "control_type": "text",
+                                                "label": "Array name",
+                                                "name": "arrayName",
+                                                "type": "string",
+                                                "optional": false
+                                              },
+                                              {
+                                                "label": "Internal array",
+                                                "name": "internalArray",
+                                                "type": "array",
+                                                "optional": false,
+                                                "of": "object",
+                                                "properties": [
+                                                  {
+                                                    "control_type": "text",
+                                                    "label": "Value",
+                                                    "name": "value",
+                                                    "type": "string",
+                                                    "optional": false
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        ],
+                                        "label": "Custom data",
+                                        "name": "customData",
+                                        "type": "object",
+                                        "optional": true
+                                      }
+                                    ],
+                                    "label": "Error handling data",
+                                    "name": "errorHandlingData",
+                                    "type": "object",
+                                    "optional": false
+                                  }
+                                ],
+                                "type": "object"
+                              }
+                            ],
+                            "visible_config_fields": [
+                              "flow_id",
+                              "parameters",
+                              "parameters.errorHandlingData",
+                              "parameters.errorHandlingData.origin",
+                              "parameters.errorHandlingData.jobDetails",
+                              "parameters.errorHandlingData.jobDetails.identifier",
+                              "parameters.errorHandlingData.jobDetails.transactionType",
+                              "parameters.errorHandlingData.jobDetails.transactionDescription",
+                              "parameters.errorHandlingData.errorDetails.parentJobID",
+                              "parameters.errorHandlingData.jobDetails.jobID",
+                              "parameters.errorHandlingData.jobDetails.recipeID",
+                              "parameters.errorHandlingData.jobDetails.recipeName",
+                              "parameters.errorHandlingData.jobDetails.folder",
+                              "parameters.errorHandlingData.jobDetails.lastModifiedBy",
+                              "parameters.errorHandlingData.jobDetails.freeText",
+                              "parameters.errorHandlingData.errorDetails.errorCode",
+                              "parameters.errorHandlingData.errorDetails.errorMessage",
+                              "parameters.errorHandlingData.errorDetails.stackTrace"
+                            ],
+                            "comment": "update by NA : Custom_column_0...",
+                            "uuid": "715b1ec4-8c4e-463e-937c-9802ed4097ed",
+                            "skip": false
+                          },
+                          {
+                            "number": 12,
+                            "as": "9a7d4a1d",
+                            "keyword": "catch",
+                            "input": {
+                              "max_retry_count": "0",
+                              "retry_interval": "2"
+                            },
+                            "block": [
+                              {
+                                "number": 13,
+                                "provider": "workato_recipe_function",
+                                "name": "call_recipe_async",
+                                "as": "cc7f5a5f",
+                                "keyword": "action",
+                                "dynamicPickListSelection": {
+                                  "flow_id": "AOF | FUNC | Master Orchestrator"
+                                },
+                                "toggleCfg": {
+                                  "parameters.errorHandlingData.jobDetails.trigger_async": true
+                                },
+                                "input": {
+                                  "flow_id": {
+                                    "zip_name": "Accelerator - Autonomous Operations Framework V3.1/Recipes/aof_func_master_orchestrator.recipe.json",
+                                    "name": "AOF | FUNC | Master Orchestrator",
+                                    "folder": "Accelerator - Autonomous Operations Framework V3.1/Recipes"
+                                  },
+                                  "parameters": {
+                                    "errorHandlingData": {
+                                      "origin": "internal_api",
+                                      "jobDetails": {
+                                        "identifier": "identifier_#{_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"3d118a9c\",\"path\":[\"id\"]}')}",
+                                        "transactionType": "[non_Intrusive_handling]",
+                                        "transactionDescription": "Transaction - #{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_app\",\"line\":\"98e647db\",\"path\":[\"name\"]}')}",
+                                        "dateTime": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_app\",\"line\":\"0520314d\",\"path\":[\"jobs\",{\"path_element_type\":\"current_item\"},\"completed_at\"]}')}",
+                                        "jobID": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"3d118a9c\",\"path\":[\"id\"]}')}",
+                                        "recipeID": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"3d118a9c\",\"path\":[\"recipe_id\"]}')}",
+                                        "recipeName": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_app\",\"line\":\"98e647db\",\"path\":[\"name\"]}')}",
+                                        "folder": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_app\",\"line\":\"98e647db\",\"path\":[\"folder\",\"path\"]}')}",
+                                        "lastModifiedBy": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_app\",\"line\":\"98e647db\",\"path\":[\"last_version\",\"user_email\"]}')}",
+                                        "recipe_path": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_app\",\"line\":\"98e647db\",\"path\":[\"folder\",\"path\"]}')}",
+                                        "trigger_async": "true"
+                                      },
+                                      "errorDetails": {
+                                        "errorCode": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"3d118a9c\",\"path\":[\"error\",\"error_type\"]}')}",
+                                        "errorMessage": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"3d118a9c\",\"path\":[\"error\",\"message\"]}')}"
+                                      }
+                                    }
+                                  }
+                                },
+                                "extended_input_schema": [
+                                  {
+                                    "label": "Parameters",
+                                    "name": "parameters",
+                                    "properties": [
+                                      {
+                                        "properties": [
+                                          {
+                                            "control_type": "text",
+                                            "label": "Origin",
+                                            "name": "origin",
+                                            "type": "string"
+                                          },
+                                          {
+                                            "properties": [
+                                              {
+                                                "control_type": "text",
+                                                "label": "Identifier",
+                                                "name": "identifier",
+                                                "hint": "Identifier value for record or data. Ex: Account ID, External ID.",
+                                                "type": "string",
+                                                "optional": false
+                                              },
+                                              {
+                                                "control_type": "text",
+                                                "label": "Transaction type",
+                                                "name": "transactionType",
+                                                "hint": "Type of action/s involved inside the catch scope. Ex: invocation, record insertion, mapping.",
+                                                "type": "string",
+                                                "optional": false
+                                              },
+                                              {
+                                                "control_type": "text",
+                                                "label": "Transaction description",
+                                                "name": "transactionDescription",
+                                                "hint": "Brief description of action/s involved in the catch scope.",
+                                                "type": "string",
+                                                "sticky": true,
+                                                "optional": true
+                                              },
+                                              {
+                                                "control_type": "text",
+                                                "label": "Job ID",
+                                                "name": "jobID",
+                                                "hint": "Not needed for logging",
+                                                "type": "string",
+                                                "optional": true
+                                              },
+                                              {
+                                                "control_type": "text",
+                                                "label": "Recipe ID",
+                                                "name": "recipeID",
+                                                "hint": "Not needed for logging",
+                                                "type": "string",
+                                                "optional": true
+                                              },
+                                              {
+                                                "control_type": "text",
+                                                "label": "Recipe name",
+                                                "name": "recipeName",
+                                                "hint": "Not needed for logging",
+                                                "type": "string",
+                                                "optional": true
+                                              },
+                                              {
+                                                "control_type": "text",
+                                                "label": "Date/Time",
+                                                "hint": "Timestamp of the action/s. Use timestamp of action or 'now' in formula mode.",
+                                                "name": "dateTime",
+                                                "type": "string",
+                                                "optional": false
+                                              },
+                                              {
+                                                "control_type": "text",
+                                                "label": "Folder",
+                                                "name": "folder",
+                                                "type": "string",
+                                                "optional": true,
+                                                "hint": "Not needed for logging"
+                                              },
+                                              {
+                                                "control_type": "text",
+                                                "label": "Last modified by",
+                                                "name": "lastModifiedBy",
+                                                "type": "string",
+                                                "optional": true,
+                                                "hint": "Not needed for logging"
+                                              },
+                                              {
+                                                "control_type": "text",
+                                                "label": "Recipe path",
+                                                "name": "recipe_path",
+                                                "type": "string",
+                                                "optional": false
+                                              },
+                                              {
+                                                "control_type": "text",
+                                                "label": "Project notifications required",
+                                                "name": "project_notifications_required",
+                                                "type": "string",
+                                                "optional": true
+                                              },
+                                              {
+                                                "control_type": "checkbox",
+                                                "label": "Trigger async",
+                                                "render_input": {
+                                                },
+                                                "parse_output": {
+                                                },
+                                                "name": "trigger_async",
+                                                "type": "boolean",
+                                                "optional": false,
+                                                "toggle_hint": "Select from option list",
+                                                "toggle_field": {
+                                                  "label": "Trigger async",
+                                                  "control_type": "text",
+                                                  "toggle_hint": "Use custom value",
+                                                  "name": "trigger_async",
+                                                  "type": "boolean",
+                                                  "optional": false
+                                                }
+                                              },
+                                              {
+                                                "control_type": "text",
+                                                "label": "Free text",
+                                                "name": "freeText",
+                                                "type": "string",
+                                                "optional": true
+                                              }
+                                            ],
+                                            "label": "Job Details",
+                                            "name": "jobDetails",
+                                            "type": "object",
+                                            "optional": false
+                                          },
+                                          {
+                                            "properties": [
+                                              {
+                                                "control_type": "text",
+                                                "label": "Parent Job ID",
+                                                "name": "parentJobID",
+                                                "hint": "Use Properties > Parent Job ID.",
+                                                "type": "string",
+                                                "sticky": true,
+                                                "optional": true
+                                              },
+                                              {
+                                                "control_type": "text",
+                                                "label": "Error code",
+                                                "name": "errorCode",
+                                                "type": "string",
+                                                "optional": true
+                                              },
+                                              {
+                                                "control_type": "text",
+                                                "label": "Error message",
+                                                "name": "errorMessage",
+                                                "type": "string",
+                                                "optional": true
+                                              },
+                                              {
+                                                "control_type": "text",
+                                                "label": "Stack trace",
+                                                "hint": "Raw error message",
+                                                "name": "stackTrace",
+                                                "type": "string",
+                                                "optional": true
+                                              }
+                                            ],
+                                            "label": "Error Details",
+                                            "name": "errorDetails",
+                                            "type": "object",
+                                            "of": "object",
+                                            "optional": false
+                                          },
+                                          {
+                                            "properties": [
+                                              {
+                                                "label": "Custom fields",
+                                                "name": "customFields",
+                                                "type": "array",
+                                                "optional": true,
+                                                "of": "object",
+                                                "properties": [
+                                                  {
+                                                    "control_type": "text",
+                                                    "label": "Key",
+                                                    "name": "key",
+                                                    "type": "string",
+                                                    "optional": false
+                                                  },
+                                                  {
+                                                    "control_type": "text",
+                                                    "label": "Value",
+                                                    "name": "value",
+                                                    "type": "string",
+                                                    "optional": false
+                                                  }
+                                                ]
+                                              },
+                                              {
+                                                "label": "Custom arrays",
+                                                "name": "customArrays",
+                                                "type": "array",
+                                                "optional": true,
+                                                "of": "object",
+                                                "properties": [
+                                                  {
+                                                    "control_type": "text",
+                                                    "label": "Array name",
+                                                    "name": "arrayName",
+                                                    "type": "string",
+                                                    "optional": false
+                                                  },
+                                                  {
+                                                    "label": "Internal array",
+                                                    "name": "internalArray",
+                                                    "type": "array",
+                                                    "optional": false,
+                                                    "of": "object",
+                                                    "properties": [
+                                                      {
+                                                        "control_type": "text",
+                                                        "label": "Value",
+                                                        "name": "value",
+                                                        "type": "string",
+                                                        "optional": false
+                                                      }
+                                                    ]
+                                                  }
+                                                ]
+                                              }
+                                            ],
+                                            "label": "Custom data",
+                                            "name": "customData",
+                                            "type": "object",
+                                            "optional": true
+                                          }
+                                        ],
+                                        "label": "Error handling data",
+                                        "name": "errorHandlingData",
+                                        "type": "object",
+                                        "optional": false
+                                      }
+                                    ],
+                                    "type": "object"
+                                  }
+                                ],
+                                "visible_config_fields": [
+                                  "flow_id",
+                                  "parameters",
+                                  "parameters.errorHandlingData",
+                                  "parameters.errorHandlingData.origin",
+                                  "parameters.errorHandlingData.jobDetails",
+                                  "parameters.errorHandlingData.jobDetails.identifier",
+                                  "parameters.errorHandlingData.jobDetails.transactionType",
+                                  "parameters.errorHandlingData.jobDetails.transactionDescription",
+                                  "parameters.errorHandlingData.errorDetails.parentJobID",
+                                  "parameters.errorHandlingData.jobDetails.jobID",
+                                  "parameters.errorHandlingData.jobDetails.recipeID",
+                                  "parameters.errorHandlingData.jobDetails.recipeName",
+                                  "parameters.errorHandlingData.jobDetails.folder",
+                                  "parameters.errorHandlingData.jobDetails.lastModifiedBy",
+                                  "parameters.errorHandlingData.jobDetails.freeText",
+                                  "parameters.errorHandlingData.errorDetails.errorCode",
+                                  "parameters.errorHandlingData.errorDetails.errorMessage",
+                                  "parameters.errorHandlingData.errorDetails.stackTrace"
+                                ],
+                                "uuid": "6fa6c13c-2a05-4657-be01-3268e80efd66",
+                                "skip": false
+                              }
+                            ],
+                            "uuid": "74e7b385-5273-4161-9f67-265fdd0e9eb1"
+                          }
+                        ],
+                        "uuid": "b3d0146a-4b76-4b7c-b593-29bbf651aa3d"
+                      },
+                      {
+                        "number": 14,
+                        "keyword": "else",
+                        "input": {
+                        },
+                        "block": [
+                          {
+                            "number": 15,
+                            "keyword": "try",
+                            "input": {
+                            },
+                            "block": [
+                              {
+                                "number": 16,
+                                "provider": "workato_recipe_function",
+                                "name": "call_recipe_async",
+                                "as": "7a691c85",
+                                "keyword": "action",
+                                "dynamicPickListSelection": {
+                                  "flow_id": "AOF | FUNC | Master Orchestrator"
+                                },
+                                "toggleCfg": {
+                                  "parameters.errorHandlingData.jobDetails.trigger_async": true
+                                },
+                                "input": {
+                                  "flow_id": {
+                                    "zip_name": "Accelerator - Autonomous Operations Framework V3.1/Recipes/aof_func_master_orchestrator.recipe.json",
+                                    "name": "AOF | FUNC | Master Orchestrator",
+                                    "folder": "Accelerator - Autonomous Operations Framework V3.1/Recipes"
+                                  },
+                                  "parameters": {
+                                    "errorHandlingData": {
+                                      "origin": "internal_api",
+                                      "jobDetails": {
+                                        "identifier": "=_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"3d118a9c\",\"path\":[]}')['report']['custom_column_1']['identifier']",
+                                        "transactionType": "=_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"3d118a9c\",\"path\":[]}')['report']['custom_column_1']['transactionType']",
+                                        "transactionDescription": "=_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"3d118a9c\",\"path\":[]}')['report']['custom_column_1']['transactionDescription']",
+                                        "dateTime": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_app\",\"line\":\"0520314d\",\"path\":[\"jobs\",{\"path_element_type\":\"current_item\"},\"completed_at\"]}')}",
+                                        "jobID": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"3d118a9c\",\"path\":[\"id\"]}')}",
+                                        "recipeID": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"3d118a9c\",\"path\":[\"recipe_id\"]}')}",
+                                        "recipeName": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_app\",\"line\":\"98e647db\",\"path\":[\"name\"]}')}",
+                                        "folder": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_app\",\"line\":\"98e647db\",\"path\":[\"folder\",\"path\"]}')}",
+                                        "lastModifiedBy": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_app\",\"line\":\"98e647db\",\"path\":[\"last_version\",\"user_email\"]}')}",
+                                        "recipe_path": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_app\",\"line\":\"98e647db\",\"path\":[\"folder\",\"path\"]}')}",
+                                        "trigger_async": "true"
+                                      },
+                                      "errorDetails": {
+                                        "parentJobID": "=_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"3d118a9c\",\"path\":[]}')['report']['custom_column_1']['parentJobID']",
+                                        "errorCode": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"3d118a9c\",\"path\":[\"error\",\"error_type\"]}')}",
+                                        "errorMessage": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"3d118a9c\",\"path\":[\"error\",\"message\"]}')}",
+                                        "stackTrace": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"3d118a9c\",\"path\":[\"error\",\"error_id\"]}')}: #{_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"3d118a9c\",\"path\":[\"error\",\"error_type\"]}')}: #{_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"3d118a9c\",\"path\":[\"error\",\"message\"]}')}"
+                                      }
+                                    }
+                                  }
+                                },
+                                "extended_input_schema": [
+                                  {
+                                    "label": "Parameters",
+                                    "name": "parameters",
+                                    "properties": [
+                                      {
+                                        "properties": [
+                                          {
+                                            "control_type": "text",
+                                            "label": "Origin",
+                                            "name": "origin",
+                                            "type": "string"
+                                          },
+                                          {
+                                            "properties": [
+                                              {
+                                                "control_type": "text",
+                                                "label": "Identifier",
+                                                "name": "identifier",
+                                                "hint": "Identifier value for record or data. Ex: Account ID, External ID.",
+                                                "type": "string",
+                                                "optional": false
+                                              },
+                                              {
+                                                "control_type": "text",
+                                                "label": "Transaction type",
+                                                "name": "transactionType",
+                                                "hint": "Type of action/s involved inside the catch scope. Ex: invocation, record insertion, mapping.",
+                                                "type": "string",
+                                                "optional": false
+                                              },
+                                              {
+                                                "control_type": "text",
+                                                "label": "Transaction description",
+                                                "name": "transactionDescription",
+                                                "hint": "Brief description of action/s involved in the catch scope.",
+                                                "type": "string",
+                                                "sticky": true,
+                                                "optional": true
+                                              },
+                                              {
+                                                "control_type": "text",
+                                                "label": "Job ID",
+                                                "name": "jobID",
+                                                "hint": "Not needed for logging",
+                                                "type": "string",
+                                                "optional": true
+                                              },
+                                              {
+                                                "control_type": "text",
+                                                "label": "Recipe ID",
+                                                "name": "recipeID",
+                                                "hint": "Not needed for logging",
+                                                "type": "string",
+                                                "optional": true
+                                              },
+                                              {
+                                                "control_type": "text",
+                                                "label": "Recipe name",
+                                                "name": "recipeName",
+                                                "hint": "Not needed for logging",
+                                                "type": "string",
+                                                "optional": true
+                                              },
+                                              {
+                                                "control_type": "text",
+                                                "label": "Date/Time",
+                                                "hint": "Timestamp of the action/s. Use timestamp of action or 'now' in formula mode.",
+                                                "name": "dateTime",
+                                                "type": "string",
+                                                "optional": false
+                                              },
+                                              {
+                                                "control_type": "text",
+                                                "label": "Folder",
+                                                "name": "folder",
+                                                "type": "string",
+                                                "optional": true,
+                                                "hint": "Not needed for logging"
+                                              },
+                                              {
+                                                "control_type": "text",
+                                                "label": "Last modified by",
+                                                "name": "lastModifiedBy",
+                                                "type": "string",
+                                                "optional": true,
+                                                "hint": "Not needed for logging"
+                                              },
+                                              {
+                                                "control_type": "text",
+                                                "label": "Recipe path",
+                                                "name": "recipe_path",
+                                                "type": "string",
+                                                "optional": false
+                                              },
+                                              {
+                                                "control_type": "text",
+                                                "label": "Project notifications required",
+                                                "name": "project_notifications_required",
+                                                "type": "string",
+                                                "optional": true
+                                              },
+                                              {
+                                                "control_type": "checkbox",
+                                                "label": "Trigger async",
+                                                "render_input": {
+                                                },
+                                                "parse_output": {
+                                                },
+                                                "name": "trigger_async",
+                                                "type": "boolean",
+                                                "optional": false,
+                                                "toggle_hint": "Select from option list",
+                                                "toggle_field": {
+                                                  "label": "Trigger async",
+                                                  "control_type": "text",
+                                                  "toggle_hint": "Use custom value",
+                                                  "name": "trigger_async",
+                                                  "type": "boolean",
+                                                  "optional": false
+                                                }
+                                              },
+                                              {
+                                                "control_type": "text",
+                                                "label": "Free text",
+                                                "name": "freeText",
+                                                "type": "string",
+                                                "optional": true
+                                              }
+                                            ],
+                                            "label": "Job Details",
+                                            "name": "jobDetails",
+                                            "type": "object",
+                                            "optional": false
+                                          },
+                                          {
+                                            "properties": [
+                                              {
+                                                "control_type": "text",
+                                                "label": "Parent Job ID",
+                                                "name": "parentJobID",
+                                                "hint": "Use Properties > Parent Job ID.",
+                                                "type": "string",
+                                                "sticky": true,
+                                                "optional": true
+                                              },
+                                              {
+                                                "control_type": "text",
+                                                "label": "Error code",
+                                                "name": "errorCode",
+                                                "type": "string",
+                                                "optional": true
+                                              },
+                                              {
+                                                "control_type": "text",
+                                                "label": "Error message",
+                                                "name": "errorMessage",
+                                                "type": "string",
+                                                "optional": true
+                                              },
+                                              {
+                                                "control_type": "text",
+                                                "label": "Stack trace",
+                                                "hint": "Raw error message",
+                                                "name": "stackTrace",
+                                                "type": "string",
+                                                "optional": true
+                                              }
+                                            ],
+                                            "label": "Error Details",
+                                            "name": "errorDetails",
+                                            "type": "object",
+                                            "of": "object",
+                                            "optional": false
+                                          },
+                                          {
+                                            "properties": [
+                                              {
+                                                "label": "Custom fields",
+                                                "name": "customFields",
+                                                "type": "array",
+                                                "optional": true,
+                                                "of": "object",
+                                                "properties": [
+                                                  {
+                                                    "control_type": "text",
+                                                    "label": "Key",
+                                                    "name": "key",
+                                                    "type": "string",
+                                                    "optional": false
+                                                  },
+                                                  {
+                                                    "control_type": "text",
+                                                    "label": "Value",
+                                                    "name": "value",
+                                                    "type": "string",
+                                                    "optional": false
+                                                  }
+                                                ]
+                                              },
+                                              {
+                                                "label": "Custom arrays",
+                                                "name": "customArrays",
+                                                "type": "array",
+                                                "optional": true,
+                                                "of": "object",
+                                                "properties": [
+                                                  {
+                                                    "control_type": "text",
+                                                    "label": "Array name",
+                                                    "name": "arrayName",
+                                                    "type": "string",
+                                                    "optional": false
+                                                  },
+                                                  {
+                                                    "label": "Internal array",
+                                                    "name": "internalArray",
+                                                    "type": "array",
+                                                    "optional": false,
+                                                    "of": "object",
+                                                    "properties": [
+                                                      {
+                                                        "control_type": "text",
+                                                        "label": "Value",
+                                                        "name": "value",
+                                                        "type": "string",
+                                                        "optional": false
+                                                      }
+                                                    ]
+                                                  }
+                                                ]
+                                              }
+                                            ],
+                                            "label": "Custom data",
+                                            "name": "customData",
+                                            "type": "object",
+                                            "optional": true
+                                          }
+                                        ],
+                                        "label": "Error handling data",
+                                        "name": "errorHandlingData",
+                                        "type": "object",
+                                        "optional": false
+                                      }
+                                    ],
+                                    "type": "object"
+                                  }
+                                ],
+                                "visible_config_fields": [
+                                  "flow_id",
+                                  "parameters",
+                                  "parameters.errorHandlingData",
+                                  "parameters.errorHandlingData.origin",
+                                  "parameters.errorHandlingData.jobDetails",
+                                  "parameters.errorHandlingData.jobDetails.identifier",
+                                  "parameters.errorHandlingData.jobDetails.transactionType",
+                                  "parameters.errorHandlingData.jobDetails.transactionDescription",
+                                  "parameters.errorHandlingData.errorDetails.parentJobID",
+                                  "parameters.errorHandlingData.jobDetails.jobID",
+                                  "parameters.errorHandlingData.jobDetails.recipeID",
+                                  "parameters.errorHandlingData.jobDetails.recipeName",
+                                  "parameters.errorHandlingData.jobDetails.folder",
+                                  "parameters.errorHandlingData.jobDetails.lastModifiedBy",
+                                  "parameters.errorHandlingData.jobDetails.freeText",
+                                  "parameters.errorHandlingData.errorDetails.errorCode",
+                                  "parameters.errorHandlingData.errorDetails.errorMessage",
+                                  "parameters.errorHandlingData.errorDetails.stackTrace"
+                                ],
+                                "uuid": "03247d57-6c85-4019-ac36-2c922a3c592c",
+                                "skip": false
+                              },
+                              {
+                                "number": 17,
+                                "as": "ecffe962",
+                                "keyword": "catch",
+                                "input": {
+                                  "max_retry_count": "0",
+                                  "retry_interval": "2"
+                                },
+                                "block": [
+                                  {
+                                    "number": 18,
+                                    "provider": "workato_recipe_function",
+                                    "name": "call_recipe_async",
+                                    "as": "b6c1948d",
+                                    "keyword": "action",
+                                    "dynamicPickListSelection": {
+                                      "flow_id": "AOF | FUNC | Master Orchestrator"
+                                    },
+                                    "toggleCfg": {
+                                      "parameters.errorHandlingData.jobDetails.trigger_async": true
+                                    },
+                                    "input": {
+                                      "flow_id": {
+                                        "zip_name": "Accelerator - Autonomous Operations Framework V3.1/Recipes/aof_func_master_orchestrator.recipe.json",
+                                        "name": "AOF | FUNC | Master Orchestrator",
+                                        "folder": "Accelerator - Autonomous Operations Framework V3.1/Recipes"
+                                      },
+                                      "parameters": {
+                                        "errorHandlingData": {
+                                          "origin": "internal_api",
+                                          "jobDetails": {
+                                            "identifier": "identifier_#{_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"3d118a9c\",\"path\":[\"id\"]}')}",
+                                            "transactionType": "[non_Intrusive_handling]",
+                                            "transactionDescription": "Transaction - #{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_app\",\"line\":\"98e647db\",\"path\":[\"name\"]}')}",
+                                            "dateTime": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_app\",\"line\":\"0520314d\",\"path\":[\"jobs\",{\"path_element_type\":\"current_item\"},\"completed_at\"]}')}",
+                                            "jobID": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"3d118a9c\",\"path\":[\"id\"]}')}",
+                                            "recipeID": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"3d118a9c\",\"path\":[\"recipe_id\"]}')}",
+                                            "recipeName": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_app\",\"line\":\"98e647db\",\"path\":[\"name\"]}')}",
+                                            "folder": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_app\",\"line\":\"98e647db\",\"path\":[\"folder\",\"path\"]}')}",
+                                            "lastModifiedBy": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_app\",\"line\":\"98e647db\",\"path\":[\"last_version\",\"user_email\"]}')}",
+                                            "recipe_path": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_app\",\"line\":\"98e647db\",\"path\":[\"folder\",\"path\"]}')}",
+                                            "trigger_async": "true"
+                                          },
+                                          "errorDetails": {
+                                            "errorCode": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"3d118a9c\",\"path\":[\"error\",\"error_type\"]}')}",
+                                            "errorMessage": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"3d118a9c\",\"path\":[\"error\",\"message\"]}')}",
+                                            "stackTrace": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"3d118a9c\",\"path\":[\"error\",\"error_id\"]}')}: #{_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"3d118a9c\",\"path\":[\"error\",\"error_type\"]}')}: #{_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"3d118a9c\",\"path\":[\"error\",\"message\"]}')}"
+                                          }
+                                        }
+                                      }
+                                    },
+                                    "extended_input_schema": [
+                                      {
+                                        "label": "Parameters",
+                                        "name": "parameters",
+                                        "properties": [
+                                          {
+                                            "properties": [
+                                              {
+                                                "control_type": "text",
+                                                "label": "Origin",
+                                                "name": "origin",
+                                                "type": "string"
+                                              },
+                                              {
+                                                "properties": [
+                                                  {
+                                                    "control_type": "text",
+                                                    "label": "Identifier",
+                                                    "name": "identifier",
+                                                    "hint": "Identifier value for record or data. Ex: Account ID, External ID.",
+                                                    "type": "string",
+                                                    "optional": false
+                                                  },
+                                                  {
+                                                    "control_type": "text",
+                                                    "label": "Transaction type",
+                                                    "name": "transactionType",
+                                                    "hint": "Type of action/s involved inside the catch scope. Ex: invocation, record insertion, mapping.",
+                                                    "type": "string",
+                                                    "optional": false
+                                                  },
+                                                  {
+                                                    "control_type": "text",
+                                                    "label": "Transaction description",
+                                                    "name": "transactionDescription",
+                                                    "hint": "Brief description of action/s involved in the catch scope.",
+                                                    "type": "string",
+                                                    "sticky": true,
+                                                    "optional": true
+                                                  },
+                                                  {
+                                                    "control_type": "text",
+                                                    "label": "Job ID",
+                                                    "name": "jobID",
+                                                    "hint": "Not needed for logging",
+                                                    "type": "string",
+                                                    "optional": true
+                                                  },
+                                                  {
+                                                    "control_type": "text",
+                                                    "label": "Recipe ID",
+                                                    "name": "recipeID",
+                                                    "hint": "Not needed for logging",
+                                                    "type": "string",
+                                                    "optional": true
+                                                  },
+                                                  {
+                                                    "control_type": "text",
+                                                    "label": "Recipe name",
+                                                    "name": "recipeName",
+                                                    "hint": "Not needed for logging",
+                                                    "type": "string",
+                                                    "optional": true
+                                                  },
+                                                  {
+                                                    "control_type": "text",
+                                                    "label": "Date/Time",
+                                                    "hint": "Timestamp of the action/s. Use timestamp of action or 'now' in formula mode.",
+                                                    "name": "dateTime",
+                                                    "type": "string",
+                                                    "optional": false
+                                                  },
+                                                  {
+                                                    "control_type": "text",
+                                                    "label": "Folder",
+                                                    "name": "folder",
+                                                    "type": "string",
+                                                    "optional": true,
+                                                    "hint": "Not needed for logging"
+                                                  },
+                                                  {
+                                                    "control_type": "text",
+                                                    "label": "Last modified by",
+                                                    "name": "lastModifiedBy",
+                                                    "type": "string",
+                                                    "optional": true,
+                                                    "hint": "Not needed for logging"
+                                                  },
+                                                  {
+                                                    "control_type": "text",
+                                                    "label": "Recipe path",
+                                                    "name": "recipe_path",
+                                                    "type": "string",
+                                                    "optional": false
+                                                  },
+                                                  {
+                                                    "control_type": "text",
+                                                    "label": "Project notifications required",
+                                                    "name": "project_notifications_required",
+                                                    "type": "string",
+                                                    "optional": true
+                                                  },
+                                                  {
+                                                    "control_type": "checkbox",
+                                                    "label": "Trigger async",
+                                                    "render_input": {
+                                                    },
+                                                    "parse_output": {
+                                                    },
+                                                    "name": "trigger_async",
+                                                    "type": "boolean",
+                                                    "optional": false,
+                                                    "toggle_hint": "Select from option list",
+                                                    "toggle_field": {
+                                                      "label": "Trigger async",
+                                                      "control_type": "text",
+                                                      "toggle_hint": "Use custom value",
+                                                      "name": "trigger_async",
+                                                      "type": "boolean",
+                                                      "optional": false
+                                                    }
+                                                  },
+                                                  {
+                                                    "control_type": "text",
+                                                    "label": "Free text",
+                                                    "name": "freeText",
+                                                    "type": "string",
+                                                    "optional": true
+                                                  }
+                                                ],
+                                                "label": "Job Details",
+                                                "name": "jobDetails",
+                                                "type": "object",
+                                                "optional": false
+                                              },
+                                              {
+                                                "properties": [
+                                                  {
+                                                    "control_type": "text",
+                                                    "label": "Parent Job ID",
+                                                    "name": "parentJobID",
+                                                    "hint": "Use Properties > Parent Job ID.",
+                                                    "type": "string",
+                                                    "sticky": true,
+                                                    "optional": true
+                                                  },
+                                                  {
+                                                    "control_type": "text",
+                                                    "label": "Error code",
+                                                    "name": "errorCode",
+                                                    "type": "string",
+                                                    "optional": true
+                                                  },
+                                                  {
+                                                    "control_type": "text",
+                                                    "label": "Error message",
+                                                    "name": "errorMessage",
+                                                    "type": "string",
+                                                    "optional": true
+                                                  },
+                                                  {
+                                                    "control_type": "text",
+                                                    "label": "Stack trace",
+                                                    "hint": "Raw error message",
+                                                    "name": "stackTrace",
+                                                    "type": "string",
+                                                    "optional": true
+                                                  }
+                                                ],
+                                                "label": "Error Details",
+                                                "name": "errorDetails",
+                                                "type": "object",
+                                                "of": "object",
+                                                "optional": false
+                                              },
+                                              {
+                                                "properties": [
+                                                  {
+                                                    "label": "Custom fields",
+                                                    "name": "customFields",
+                                                    "type": "array",
+                                                    "optional": true,
+                                                    "of": "object",
+                                                    "properties": [
+                                                      {
+                                                        "control_type": "text",
+                                                        "label": "Key",
+                                                        "name": "key",
+                                                        "type": "string",
+                                                        "optional": false
+                                                      },
+                                                      {
+                                                        "control_type": "text",
+                                                        "label": "Value",
+                                                        "name": "value",
+                                                        "type": "string",
+                                                        "optional": false
+                                                      }
+                                                    ]
+                                                  },
+                                                  {
+                                                    "label": "Custom arrays",
+                                                    "name": "customArrays",
+                                                    "type": "array",
+                                                    "optional": true,
+                                                    "of": "object",
+                                                    "properties": [
+                                                      {
+                                                        "control_type": "text",
+                                                        "label": "Array name",
+                                                        "name": "arrayName",
+                                                        "type": "string",
+                                                        "optional": false
+                                                      },
+                                                      {
+                                                        "label": "Internal array",
+                                                        "name": "internalArray",
+                                                        "type": "array",
+                                                        "optional": false,
+                                                        "of": "object",
+                                                        "properties": [
+                                                          {
+                                                            "control_type": "text",
+                                                            "label": "Value",
+                                                            "name": "value",
+                                                            "type": "string",
+                                                            "optional": false
+                                                          }
+                                                        ]
+                                                      }
+                                                    ]
+                                                  }
+                                                ],
+                                                "label": "Custom data",
+                                                "name": "customData",
+                                                "type": "object",
+                                                "optional": true
+                                              }
+                                            ],
+                                            "label": "Error handling data",
+                                            "name": "errorHandlingData",
+                                            "type": "object",
+                                            "optional": false
+                                          }
+                                        ],
+                                        "type": "object"
+                                      }
+                                    ],
+                                    "visible_config_fields": [
+                                      "flow_id",
+                                      "parameters",
+                                      "parameters.errorHandlingData",
+                                      "parameters.errorHandlingData.origin",
+                                      "parameters.errorHandlingData.jobDetails",
+                                      "parameters.errorHandlingData.jobDetails.identifier",
+                                      "parameters.errorHandlingData.jobDetails.transactionType",
+                                      "parameters.errorHandlingData.jobDetails.transactionDescription",
+                                      "parameters.errorHandlingData.errorDetails.parentJobID",
+                                      "parameters.errorHandlingData.jobDetails.jobID",
+                                      "parameters.errorHandlingData.jobDetails.recipeID",
+                                      "parameters.errorHandlingData.jobDetails.recipeName",
+                                      "parameters.errorHandlingData.jobDetails.folder",
+                                      "parameters.errorHandlingData.jobDetails.lastModifiedBy",
+                                      "parameters.errorHandlingData.jobDetails.freeText",
+                                      "parameters.errorHandlingData.errorDetails.errorCode",
+                                      "parameters.errorHandlingData.errorDetails.errorMessage",
+                                      "parameters.errorHandlingData.errorDetails.stackTrace"
+                                    ],
+                                    "uuid": "ef66641e-a08e-4a81-83d5-e59ab5118a45",
+                                    "skip": false
+                                  }
+                                ],
+                                "uuid": "6fa5bd3e-50d0-4b43-aeed-14426c48295b"
+                              }
+                            ],
+                            "uuid": "0be3b573-7672-46b1-819b-c4a61a126d77"
+                          }
+                        ],
+                        "uuid": "0d37f572-8a33-4bee-9af4-db16d1e5aea6"
+                      }
+                    ],
+                    "uuid": "a596266c-d5da-483f-a752-61a938cca4ef"
+                  },
+                  {
+                    "number": 19,
+                    "as": "de6bdc51",
+                    "keyword": "catch",
+                    "input": {
+                      "max_retry_count": "0",
+                      "retry_interval": "2"
+                    },
+                    "block": [
+                      {
+                        "number": 20,
+                        "provider": "workato_variable",
+                        "name": "insert_to_list",
+                        "as": "d833a01f",
+                        "keyword": "action",
+                        "dynamicPickListSelection": {
+                          "name": "Error List (step 6)"
+                        },
+                        "input": {
+                          "location": "end",
+                          "name": "08cc3813-c015-4793-b170-47308e3f6045:821c1850",
+                          "list_item": {
+                            "processError": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"catch\",\"line\":\"de6bdc51\",\"path\":[\"type\"]}')}: #{_dp('{\"pill_type\":\"output\",\"provider\":\"catch\",\"line\":\"de6bdc51\",\"path\":[\"message\"]}')}",
+                            "errorType": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"3d118a9c\",\"path\":[\"error\",\"error_type\"]}')}",
+                            "errorMessage": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"3d118a9c\",\"path\":[\"error\",\"message\"]}')}",
+                            "jobID": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"3d118a9c\",\"path\":[\"id\"]}')}"
+                          }
+                        },
+                        "extended_input_schema": [
+                          {
+                            "hint": "",
+                            "label": "List item",
+                            "name": "list_item",
+                            "optional": false,
+                            "properties": [
+                              {
+                                "control_type": "text",
+                                "label": "Process error",
+                                "name": "processError",
+                                "type": "string",
+                                "optional": false
+                              },
+                              {
+                                "control_type": "text",
+                                "label": "Error type",
+                                "name": "errorType",
+                                "type": "string",
+                                "optional": true
+                              },
+                              {
+                                "control_type": "text",
+                                "label": "Error message",
+                                "name": "errorMessage",
+                                "type": "string",
+                                "optional": true
+                              },
+                              {
+                                "control_type": "text",
+                                "label": "Job ID",
+                                "name": "jobID",
+                                "type": "string",
+                                "optional": false
+                              }
+                            ],
+                            "type": "object"
+                          }
+                        ],
+                        "visible_config_fields": [
+                          "name",
+                          "location",
+                          "list_item.errorType",
+                          "list_item.errorMessage"
+                        ],
+                        "uuid": "04940e5d-9eb4-4169-b8c1-b69ed2e09103"
+                      }
+                    ],
+                    "uuid": "1facf36e-ad85-422d-9b30-159c255c0f2b"
+                  }
+                ],
+                "uuid": "1b3acf39-53ee-4fa2-9b8a-3f657f6b215a"
+              }
+            ],
+            "source": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_app\",\"line\":\"0520314d\",\"path\":[\"jobs\"]}')}",
+            "uuid": "2598efb6-5b9a-49bb-9b29-3d1fe8a77889"
+          },
+          {
+            "number": 21,
+            "keyword": "if",
+            "input": {
+              "type": "compound",
+              "operand": "and",
+              "conditions": [
+                {
+                  "operand": "greater_than",
+                  "lhs": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_variable\",\"line\":\"821c1850\",\"path\":[\"list_items\",{\"path_element_type\":\"size\"}]}')}",
+                  "rhs": "0"
+                }
+              ]
+            },
+            "block": [
+              {
+                "number": 22,
+                "provider": "workato_recipe_function",
+                "name": "call_recipe_async",
+                "as": "79379917",
+                "keyword": "action",
+                "dynamicPickListSelection": {
+                  "flow_id": "AOF | FUNC | Super Admin Error Handling"
+                },
+                "input": {
+                  "flow_id": {
+                    "zip_name": "Accelerator - Autonomous Operations Framework V3.1/Recipes/aof_func_super_admin_error_handling.recipe.json",
+                    "name": "AOF | FUNC | Super Admin Error Handling",
+                    "folder": "Accelerator - Autonomous Operations Framework V3.1/Recipes"
+                  },
+                  "parameters": {
+                    "jobDetails": {
+                      "identifier": "#{_dp('{\"pill_type\":\"job_context\",\"path\":[\"job_url\"]}')}"
+                    },
+                    "administrationError": "Collation Error",
+                    "rawAdministrationError": "=_dp('{\"pill_type\":\"output\",\"provider\":\"workato_variable\",\"line\":\"821c1850\",\"path\":[\"list_items\"]}')"
+                  }
+                },
+                "extended_input_schema": [
+                  {
+                    "label": "Parameters",
+                    "name": "parameters",
+                    "properties": [
+                      {
+                        "properties": [
+                          {
+                            "control_type": "text",
+                            "label": "Identifier",
+                            "name": "identifier",
+                            "type": "string",
+                            "optional": false
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Transaction type",
+                            "name": "transactionType",
+                            "type": "string",
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Transaction description",
+                            "name": "transactionDescription",
+                            "type": "string",
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Job ID",
+                            "name": "jobID",
+                            "type": "string",
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Recipe ID",
+                            "name": "recipeID",
+                            "type": "string",
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Recipe URL",
+                            "name": "recipeURL",
+                            "type": "string",
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Recipe name",
+                            "name": "recipeName",
+                            "type": "string",
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Job Created At",
+                            "name": "jobCreatedAt",
+                            "type": "string",
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Folder",
+                            "name": "recipeFolder",
+                            "type": "string",
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Last modified by",
+                            "name": "lastModifiedBy",
+                            "type": "string",
+                            "optional": true
+                          }
+                        ],
+                        "label": "Job Details",
+                        "name": "jobDetails",
+                        "type": "object",
+                        "optional": false
+                      },
+                      {
+                        "properties": [
+                          {
+                            "control_type": "text",
+                            "label": "Error code",
+                            "name": "errorCode",
+                            "type": "string",
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Error message",
+                            "name": "errorMessage",
+                            "type": "string",
+                            "sticky": true,
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Error description",
+                            "name": "errorDescription",
+                            "type": "string",
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Severity level",
+                            "name": "severityLevel",
+                            "type": "string",
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Data flow",
+                            "name": "dataFlow",
+                            "type": "string",
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Stack trace",
+                            "hint": "Raw error message",
+                            "name": "stackTrace",
+                            "type": "string",
+                            "optional": true
+                          }
+                        ],
+                        "label": "Original error",
+                        "name": "originalError",
+                        "type": "object",
+                        "of": "object",
+                        "optional": true
+                      },
+                      {
+                        "properties": [
+                          {
+                            "control_type": "text",
+                            "label": "Type",
+                            "name": "type",
+                            "type": "string",
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Receiver",
+                            "name": "receiver",
+                            "type": "string",
+                            "optional": true
+                          }
+                        ],
+                        "label": "Notification",
+                        "name": "notification",
+                        "type": "object",
+                        "of": "object",
+                        "optional": true
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "Administration error",
+                        "name": "administrationError",
+                        "type": "string",
+                        "optional": false
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "Raw administration error",
+                        "name": "rawAdministrationError",
+                        "type": "string",
+                        "optional": false
+                      }
+                    ],
+                    "type": "object"
+                  }
+                ],
+                "uuid": "1bad46d5-442c-4b24-bad8-313bd77376c5"
+              }
+            ],
+            "uuid": "f794d434-2caa-4cf5-9d89-d447f41642ab"
+          },
+          {
+            "number": 23,
+            "as": "a5d213e7",
+            "keyword": "catch",
+            "input": {
+              "max_retry_count": "0",
+              "retry_interval": "2"
+            },
+            "block": [
+              {
+                "number": 24,
+                "provider": "workato_recipe_function",
+                "name": "call_recipe_async",
+                "as": "a895913a",
+                "keyword": "action",
+                "dynamicPickListSelection": {
+                  "flow_id": "AOF | FUNC | Super Admin Error Handling"
+                },
+                "input": {
+                  "flow_id": {
+                    "zip_name": "Accelerator - Autonomous Operations Framework V3.1/Recipes/aof_func_super_admin_error_handling.recipe.json",
+                    "name": "AOF | FUNC | Super Admin Error Handling",
+                    "folder": "Accelerator - Autonomous Operations Framework V3.1/Recipes"
+                  },
+                  "parameters": {
+                    "jobDetails": {
+                      "identifier": "#{_dp('{\"pill_type\":\"job_context\",\"path\":[\"job_url\"]}')}"
+                    },
+                    "administrationError": "Collation Error",
+                    "rawAdministrationError": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"catch\",\"line\":\"a5d213e7\",\"path\":[\"type\"]}')}: #{_dp('{\"pill_type\":\"output\",\"provider\":\"catch\",\"line\":\"a5d213e7\",\"path\":[\"message\"]}')}"
+                  }
+                },
+                "extended_input_schema": [
+                  {
+                    "label": "Parameters",
+                    "name": "parameters",
+                    "properties": [
+                      {
+                        "properties": [
+                          {
+                            "control_type": "text",
+                            "label": "Identifier",
+                            "name": "identifier",
+                            "type": "string",
+                            "optional": false
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Transaction type",
+                            "name": "transactionType",
+                            "type": "string",
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Transaction description",
+                            "name": "transactionDescription",
+                            "type": "string",
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Job ID",
+                            "name": "jobID",
+                            "type": "string",
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Recipe ID",
+                            "name": "recipeID",
+                            "type": "string",
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Recipe URL",
+                            "name": "recipeURL",
+                            "type": "string",
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Recipe name",
+                            "name": "recipeName",
+                            "type": "string",
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Job Created At",
+                            "name": "jobCreatedAt",
+                            "type": "string",
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Folder",
+                            "name": "recipeFolder",
+                            "type": "string",
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Last modified by",
+                            "name": "lastModifiedBy",
+                            "type": "string",
+                            "optional": true
+                          }
+                        ],
+                        "label": "Job Details",
+                        "name": "jobDetails",
+                        "type": "object",
+                        "optional": false
+                      },
+                      {
+                        "properties": [
+                          {
+                            "control_type": "text",
+                            "label": "Error code",
+                            "name": "errorCode",
+                            "type": "string",
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Error message",
+                            "name": "errorMessage",
+                            "type": "string",
+                            "sticky": true,
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Error description",
+                            "name": "errorDescription",
+                            "type": "string",
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Severity level",
+                            "name": "severityLevel",
+                            "type": "string",
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Data flow",
+                            "name": "dataFlow",
+                            "type": "string",
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Stack trace",
+                            "hint": "Raw error message",
+                            "name": "stackTrace",
+                            "type": "string",
+                            "optional": true
+                          }
+                        ],
+                        "label": "Original error",
+                        "name": "originalError",
+                        "type": "object",
+                        "of": "object",
+                        "optional": true
+                      },
+                      {
+                        "properties": [
+                          {
+                            "control_type": "text",
+                            "label": "Type",
+                            "name": "type",
+                            "type": "string",
+                            "optional": true
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Receiver",
+                            "name": "receiver",
+                            "type": "string",
+                            "optional": true
+                          }
+                        ],
+                        "label": "Notification",
+                        "name": "notification",
+                        "type": "object",
+                        "of": "object",
+                        "optional": true
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "Administration error",
+                        "name": "administrationError",
+                        "type": "string",
+                        "optional": false
+                      },
+                      {
+                        "control_type": "text",
+                        "label": "Raw administration error",
+                        "name": "rawAdministrationError",
+                        "type": "string",
+                        "optional": false
+                      }
+                    ],
+                    "type": "object"
+                  }
+                ],
+                "uuid": "11ca688e-173d-4d3b-a6e2-c568e5a0febb"
+              }
+            ],
+            "uuid": "dc3486f9-e418-4ea9-896c-678a4c53899a"
+          }
+        ],
+        "uuid": "eef5755d-6457-48be-9e06-fb0cce6e40e6"
+      }
+    ],
+    "uuid": "15e1ea8f-f7c5-4c48-81ed-f6c9464c7a8f",
+    "format_version": 2
+  },
+  "config": [
+    {
+      "keyword": "application",
+      "provider": "workato_app",
+      "skip_validation": false,
+      "account_id": {
+        "zip_name": "Accelerator - Autonomous Operations Framework V3.1/Connections/aof_con_recipeops.connection.json",
+        "name": "AOF | CON | RecipeOps",
+        "folder": "Accelerator - Autonomous Operations Framework V3.1/Connections"
+      }
+    },
+    {
+      "keyword": "application",
+      "provider": "lookup_table",
+      "skip_validation": false,
+      "account_id": null
+    },
+    {
+      "keyword": "application",
+      "provider": "workato_variable",
+      "skip_validation": false,
+      "account_id": null
+    },
+    {
+      "keyword": "application",
+      "provider": "workato_recipe_function",
+      "skip_validation": false,
+      "account_id": null
+    }
+  ]
+}

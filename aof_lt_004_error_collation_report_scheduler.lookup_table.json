@@ -1,0 +1,76 @@
+{
+  "name": "AOF | LT-004 | Error Collation/Report Scheduler ",
+  "schema": [
+    {
+      "control_type": "text",
+      "label": "Recipe ID",
+      "name": "col1",
+      "sticky": true,
+      "type": "string"
+    },
+    {
+      "control_type": "text",
+      "label": "Recipe Identifier",
+      "name": "col2",
+      "sticky": true,
+      "type": "string"
+    },
+    {
+      "control_type": "text",
+      "label": "Schedule  Month",
+      "name": "col3",
+      "sticky": true,
+      "type": "string"
+    },
+    {
+      "control_type": "text",
+      "label": "Schedule  Day",
+      "name": "col4",
+      "sticky": true,
+      "type": "string"
+    },
+    {
+      "control_type": "text",
+      "label": "Schedule  Weekday",
+      "name": "col5",
+      "sticky": true,
+      "type": "string"
+    },
+    {
+      "control_type": "text",
+      "label": "Schedule Hour",
+      "name": "col6",
+      "sticky": true,
+      "type": "string"
+    },
+    {
+      "control_type": "text",
+      "label": "Schedule Minutes",
+      "name": "col7",
+      "sticky": true,
+      "type": "string"
+    },
+    {
+      "control_type": "text",
+      "label": "Logic",
+      "name": "col8",
+      "sticky": true,
+      "type": "string"
+    },
+    {
+      "control_type": "text",
+      "label": "Last Run Timestamp",
+      "name": "col9",
+      "sticky": true,
+      "type": "string"
+    },
+    {
+      "control_type": "text",
+      "label": "Report Address",
+      "name": "col10",
+      "sticky": true,
+      "type": "string"
+    }
+  ],
+  "max_allowed_entries_count": null
+}

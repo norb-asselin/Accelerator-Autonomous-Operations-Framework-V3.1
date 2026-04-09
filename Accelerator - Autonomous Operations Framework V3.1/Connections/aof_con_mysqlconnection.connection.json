@@ -1,0 +1,5 @@
+{
+  "name": "AOF | CON | MySQLConnection",
+  "provider": "mysql",
+  "root_folder": false
+}

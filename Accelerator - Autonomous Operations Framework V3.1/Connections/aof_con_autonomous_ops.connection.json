@@ -1,0 +1,9 @@
+{
+  "name": "AOF | CON | Autonomous Ops",
+  "provider": {
+    "zip_name": "autonomous_ops.custom_adapter.json",
+    "name": "Autonomous Ops",
+    "folder": ""
+  },
+  "root_folder": false
+}

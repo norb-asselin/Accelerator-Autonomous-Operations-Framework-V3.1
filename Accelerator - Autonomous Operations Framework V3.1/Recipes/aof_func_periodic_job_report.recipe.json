@@ -1,0 +1,1493 @@
+{
+  "name": "AOF | FUNC | Periodic Job Report",
+  "description": "When there is a trigger on a specified schedule, do action",
+  "version": 3,
+  "private": true,
+  "concurrency": 1,
+  "code": {
+    "number": 0,
+    "provider": "workato_recipe_function",
+    "name": "execute",
+    "as": "4022e8d5",
+    "keyword": "trigger",
+    "input": {
+      "parameters_schema_json": "[{\"control_type\":\"text\",\"label\":\"Recipe ID\",\"name\":\"recipeID\",\"type\":\"string\",\"optional\":false},{\"control_type\":\"text\",\"label\":\"Last run timestamp\",\"name\":\"lastRunTimestamp\",\"type\":\"string\",\"optional\":false},{\"control_type\":\"text\",\"label\":\"Recipient email\",\"name\":\"recipientEmail\",\"type\":\"string\",\"optional\":false}]"
+    },
+    "extended_output_schema": [
+      {
+        "label": "Parameters",
+        "name": "parameters",
+        "properties": [
+          {
+            "control_type": "text",
+            "label": "Recipe ID",
+            "name": "recipeID",
+            "type": "string",
+            "optional": false
+          },
+          {
+            "control_type": "text",
+            "label": "Last run timestamp",
+            "name": "lastRunTimestamp",
+            "type": "string",
+            "optional": false
+          },
+          {
+            "control_type": "text",
+            "label": "Recipient email",
+            "name": "recipientEmail",
+            "type": "string",
+            "optional": false
+          }
+        ],
+        "type": "object"
+      }
+    ],
+    "block": [
+      {
+        "number": 1,
+        "provider": "workato_variable",
+        "name": "declare_variable",
+        "as": "b85864d8",
+        "keyword": "action",
+        "input": {
+          "variables": {
+            "schema": "[{\"control_type\":\"integer\",\"label\":\"Failed_Jobs_Recovered\",\"parse_output\":\"integer_conversion\",\"name\":\"failed_jobs_recovered\",\"type\":\"integer\",\"optional\":true},{\"control_type\":\"integer\",\"label\":\"Failed_Jobs_Failed\",\"parse_output\":\"integer_conversion\",\"name\":\"failed_jobs_failed\",\"type\":\"integer\",\"optional\":true},{\"control_type\":\"integer\",\"label\":\"Successful_Jobs\",\"parse_output\":\"integer_conversion\",\"name\":\"successful_jobs\",\"type\":\"integer\",\"optional\":true},{\"control_type\":\"integer\",\"label\":\"Failed_Jobs\",\"parse_output\":\"integer_conversion\",\"name\":\"failed_jobs\",\"type\":\"integer\",\"optional\":true}]",
+            "data": {
+              "failed_jobs_recovered": "0",
+              "failed_jobs_failed": "0",
+              "successful_jobs": "0",
+              "failed_jobs": "0"
+            }
+          }
+        },
+        "extended_output_schema": [
+          {
+            "control_type": "integer",
+            "label": "Failed_Jobs_Recovered",
+            "name": "failed_jobs_recovered",
+            "optional": true,
+            "parse_output": "integer_conversion",
+            "type": "integer"
+          },
+          {
+            "control_type": "integer",
+            "label": "Failed_Jobs_Failed",
+            "name": "failed_jobs_failed",
+            "optional": true,
+            "parse_output": "integer_conversion",
+            "type": "integer"
+          },
+          {
+            "control_type": "integer",
+            "label": "Successful_Jobs",
+            "name": "successful_jobs",
+            "optional": true,
+            "parse_output": "integer_conversion",
+            "type": "integer"
+          },
+          {
+            "control_type": "integer",
+            "label": "Failed_Jobs",
+            "name": "failed_jobs",
+            "optional": true,
+            "parse_output": "integer_conversion",
+            "type": "integer"
+          }
+        ],
+        "extended_input_schema": [
+          {
+            "add_field_label": "Add a variable",
+            "control_type": "form-schema-builder",
+            "empty_schema_title": "Add variables by giving them a name, type and default value",
+            "exclude_fields": [
+              "hint"
+            ],
+            "item_label": "variable",
+            "label": "Variables",
+            "mark_as_required": true,
+            "name": "variables",
+            "ngIf": "!input.name",
+            "optional": true,
+            "properties": [
+              {
+                "control_type": "text",
+                "label": "Schema",
+                "extends_schema": true,
+                "broadcast_change_event": true,
+                "type": "string",
+                "name": "schema"
+              },
+              {
+                "properties": [
+                  {
+                    "control_type": "integer",
+                    "label": "Failed_Jobs_Recovered",
+                    "parse_output": "integer_conversion",
+                    "name": "failed_jobs_recovered",
+                    "type": "integer",
+                    "optional": true,
+                    "hint": "Defaults to nil if not supplied.",
+                    "sticky": true
+                  },
+                  {
+                    "control_type": "integer",
+                    "label": "Failed_Jobs_Failed",
+                    "parse_output": "integer_conversion",
+                    "name": "failed_jobs_failed",
+                    "type": "integer",
+                    "optional": true,
+                    "hint": "Defaults to nil if not supplied.",
+                    "sticky": true
+                  },
+                  {
+                    "control_type": "integer",
+                    "label": "Successful_Jobs",
+                    "parse_output": "integer_conversion",
+                    "name": "successful_jobs",
+                    "type": "integer",
+                    "optional": true,
+                    "hint": "Defaults to nil if not supplied.",
+                    "sticky": true
+                  },
+                  {
+                    "control_type": "integer",
+                    "label": "Failed_Jobs",
+                    "parse_output": "integer_conversion",
+                    "name": "failed_jobs",
+                    "type": "integer",
+                    "optional": true,
+                    "hint": "Defaults to nil if not supplied.",
+                    "sticky": true
+                  }
+                ],
+                "label": "Data",
+                "type": "object",
+                "name": "data"
+              }
+            ],
+            "type": "object"
+          }
+        ],
+        "visible_config_fields": [
+          "variables.data.Successful_jobs",
+          "variables",
+          "variables.schema",
+          "variables.data",
+          "variables.data.failed_jobs_recovered",
+          "variables.data.failed_jobs_failed",
+          "variables.data.successful_jobs",
+          "variables.data.failed_jobs"
+        ],
+        "uuid": "f05b2b0a-a195-46af-9939-c1de2704ab1b"
+      },
+      {
+        "number": 2,
+        "provider": "workato_app",
+        "name": "list_jobs",
+        "as": "ffaddfc3",
+        "keyword": "action",
+        "toggleCfg": {
+          "recipe_id": false
+        },
+        "input": {
+          "status": "all",
+          "recipe_id": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_recipe_function\",\"line\":\"4022e8d5\",\"path\":[\"parameters\",\"recipeID\"]}')}",
+          "started_at_from": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_recipe_function\",\"line\":\"4022e8d5\",\"path\":[\"parameters\",\"lastRunTimestamp\"]}')}"
+        },
+        "extended_output_schema": [
+          {
+            "label": "Jobs",
+            "name": "jobs",
+            "of": "object",
+            "properties": [
+              {
+                "control_type": "text",
+                "label": "Job ID",
+                "type": "string",
+                "name": "id"
+              },
+              {
+                "control_type": "text",
+                "label": "Original Job ID",
+                "type": "string",
+                "name": "master_job_id"
+              },
+              {
+                "control_type": "text",
+                "label": "Recipe ID",
+                "parse_output": "integer_conversion",
+                "type": "integer",
+                "name": "recipe_id"
+              },
+              {
+                "control_type": "text",
+                "label": "Calling job ID",
+                "type": "string",
+                "name": "calling_job_id"
+              },
+              {
+                "control_type": "text",
+                "label": "Calling recipe ID",
+                "parse_output": "integer_conversion",
+                "type": "integer",
+                "name": "calling_recipe_id"
+              },
+              {
+                "control_type": "text",
+                "label": "Title",
+                "type": "string",
+                "name": "title"
+              },
+              {
+                "control_type": "text",
+                "label": "Status",
+                "type": "string",
+                "name": "status"
+              },
+              {
+                "control_type": "text",
+                "label": "Is repeat",
+                "render_input": {
+                },
+                "parse_output": {
+                },
+                "toggle_hint": "Select from option list",
+                "toggle_field": {
+                  "label": "Is repeat",
+                  "control_type": "text",
+                  "toggle_hint": "Use custom value",
+                  "type": "boolean",
+                  "name": "is_repeat"
+                },
+                "type": "boolean",
+                "name": "is_repeat"
+              },
+              {
+                "control_type": "text",
+                "label": "Is test",
+                "render_input": {
+                },
+                "parse_output": {
+                },
+                "toggle_hint": "Select from option list",
+                "toggle_field": {
+                  "label": "Is test",
+                  "control_type": "text",
+                  "toggle_hint": "Use custom value",
+                  "type": "boolean",
+                  "name": "is_test"
+                },
+                "type": "boolean",
+                "name": "is_test"
+              },
+              {
+                "control_type": "text",
+                "label": "Started at",
+                "render_input": "date_time_conversion",
+                "parse_output": "date_time_conversion",
+                "type": "date_time",
+                "name": "started_at"
+              },
+              {
+                "control_type": "text",
+                "label": "Completed at",
+                "render_input": "date_time_conversion",
+                "parse_output": "date_time_conversion",
+                "type": "date_time",
+                "name": "completed_at"
+              },
+              {
+                "control_type": "text",
+                "label": "Repeat count",
+                "parse_output": "integer_conversion",
+                "type": "integer",
+                "name": "repeat_count"
+              },
+              {
+                "properties": [
+                  {
+                    "control_type": "text",
+                    "label": "Error ID",
+                    "type": "string",
+                    "name": "error_id"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Error type",
+                    "type": "string",
+                    "name": "error_type"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Error at",
+                    "render_input": "date_time_conversion",
+                    "parse_output": "date_time_conversion",
+                    "type": "date_time",
+                    "name": "error_at"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Adapter",
+                    "type": "string",
+                    "name": "adapter"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Action",
+                    "type": "string",
+                    "name": "action"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Line number",
+                    "parse_output": "integer_conversion",
+                    "type": "integer",
+                    "name": "line_number"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Message",
+                    "type": "string",
+                    "name": "message"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Inner message",
+                    "type": "string",
+                    "name": "inner_message"
+                  }
+                ],
+                "label": "Error",
+                "type": "object",
+                "name": "error"
+              },
+              {
+                "control_type": "text",
+                "label": "Flow ID",
+                "parse_output": "integer_conversion",
+                "deprecated": true,
+                "type": "integer",
+                "name": "flow_id"
+              }
+            ],
+            "type": "array"
+          }
+        ],
+        "uuid": "0b2aef31-f6be-407b-be00-fcc29f76a2d3",
+        "skip": false
+      },
+      {
+        "number": 3,
+        "provider": "workato_variable",
+        "name": "declare_list",
+        "as": "a8b24252",
+        "keyword": "action",
+        "input": {
+          "name": "Job Report List",
+          "list_item_schema_json": "[{\"name\":\"Job_ID\",\"type\":\"string\",\"optional\":false,\"control_type\":\"text\"},{\"name\":\"Error_Type\",\"type\":\"string\",\"optional\":false,\"control_type\":\"text\"},{\"name\":\"Error_Message\",\"type\":\"string\",\"optional\":false,\"control_type\":\"text\"},{\"name\":\"Job_Url\",\"type\":\"string\",\"optional\":false,\"control_type\":\"text\"},{\"name\":\"Job_Status\",\"type\":\"string\",\"optional\":false,\"control_type\":\"text\"}]"
+        },
+        "extended_output_schema": [
+          {
+            "hint": "",
+            "label": "Job Report List",
+            "name": "list_items",
+            "of": "object",
+            "optional": false,
+            "properties": [
+              {
+                "control_type": "text",
+                "label": "Job ID",
+                "name": "Job_ID",
+                "type": "string",
+                "optional": false
+              },
+              {
+                "control_type": "text",
+                "label": "Error type",
+                "name": "Error_Type",
+                "type": "string",
+                "optional": false
+              },
+              {
+                "control_type": "text",
+                "label": "Error message",
+                "name": "Error_Message",
+                "type": "string",
+                "optional": false
+              },
+              {
+                "control_type": "text",
+                "label": "Job URL",
+                "name": "Job_Url",
+                "type": "string",
+                "optional": false
+              },
+              {
+                "control_type": "text",
+                "label": "Job status",
+                "name": "Job_Status",
+                "type": "string",
+                "optional": false
+              }
+            ],
+            "type": "array"
+          }
+        ],
+        "extended_input_schema": [
+          {
+            "hint": "Set the initial items in the list. Defaults to an empty list if not supplied.",
+            "label": "Items",
+            "name": "list_items",
+            "of": "object",
+            "optional": true,
+            "properties": [
+              {
+                "control_type": "text",
+                "label": "Job ID",
+                "name": "Job_ID",
+                "type": "string",
+                "optional": false
+              },
+              {
+                "control_type": "text",
+                "label": "Error type",
+                "name": "Error_Type",
+                "type": "string",
+                "optional": false
+              },
+              {
+                "control_type": "text",
+                "label": "Error message",
+                "name": "Error_Message",
+                "type": "string",
+                "optional": false
+              },
+              {
+                "control_type": "text",
+                "label": "Job URL",
+                "name": "Job_Url",
+                "type": "string",
+                "optional": false
+              },
+              {
+                "control_type": "text",
+                "label": "Job status",
+                "name": "Job_Status",
+                "type": "string",
+                "optional": false
+              }
+            ],
+            "type": "array"
+          }
+        ],
+        "uuid": "9849b26d-76cc-453f-908d-6dd95e67affb"
+      },
+      {
+        "number": 4,
+        "as": "76daccf3",
+        "keyword": "foreach",
+        "repeat_mode": "simple",
+        "clear_scope": "false",
+        "input": {
+        },
+        "block": [
+          {
+            "number": 5,
+            "keyword": "if",
+            "input": {
+              "type": "compound",
+              "operand": "and",
+              "conditions": [
+                {
+                  "operand": "equals_to",
+                  "lhs": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"76daccf3\",\"path\":[\"status\"]}')}",
+                  "rhs": "succeeded"
+                }
+              ]
+            },
+            "block": [
+              {
+                "number": 6,
+                "provider": "workato_variable",
+                "name": "update_variables",
+                "as": "9d47560b",
+                "keyword": "action",
+                "dynamicPickListSelection": {
+                  "name": [
+                    {
+                      "label": "Successful_Jobs (step 3)",
+                      "value": "f05b2b0a-a195-46af-9939-c1de2704ab1b:b85864d8:successful_jobs"
+                    }
+                  ]
+                },
+                "input": {
+                  "name": "f05b2b0a-a195-46af-9939-c1de2704ab1b:b85864d8:successful_jobs",
+                  "successful_jobs": "=_dp('{\"pill_type\":\"output\",\"provider\":\"workato_variable\",\"line\":\"b85864d8\",\"path\":[\"successful_jobs\"]}') + 1"
+                },
+                "extended_input_schema": [
+                  {
+                    "control_type": "integer",
+                    "hint": "Provide a value for the variable. When the value is not supplied, the variable is not updated.<br>To clear the value, set the value to <b>nil</b> in formula mode.",
+                    "label": "Successful_Jobs",
+                    "name": "successful_jobs",
+                    "optional": true,
+                    "parse_output": "integer_conversion",
+                    "sticky": true,
+                    "type": "integer",
+                    "strip_interpolation": true
+                  }
+                ],
+                "uuid": "d1adb2be-5206-4e1c-a87c-e4960e609873"
+              },
+              {
+                "number": 7,
+                "keyword": "if",
+                "input": {
+                  "type": "compound",
+                  "operand": "and",
+                  "conditions": [
+                    {
+                      "operand": "present",
+                      "lhs": "=_dp('{\"pill_type\":\"output\",\"provider\":\"workato_app\",\"line\":\"ffaddfc3\",\"path\":[\"jobs\"]}')[_dp('{\"pill_type\":\"foreach_meta\",\"provider\":\"foreach\",\"line\":\"76daccf3\",\"key\":\"index\"}')][\"report\"][\"custom_column_1\"][\"parentJobID\"]",
+                      "rhs": null,
+                      "uuid": "condition-248d69b1-c53d-49a8-a2c1-aecf9103acb0"
+                    }
+                  ]
+                },
+                "block": [
+                  {
+                    "number": 8,
+                    "provider": "workato_variable",
+                    "name": "update_variables",
+                    "as": "a848e825",
+                    "keyword": "action",
+                    "dynamicPickListSelection": {
+                      "name": [
+                        {
+                          "label": "Failed_Jobs_Recovered (step 3)",
+                          "value": "f05b2b0a-a195-46af-9939-c1de2704ab1b:b85864d8:failed_jobs_recovered"
+                        }
+                      ]
+                    },
+                    "input": {
+                      "name": "f05b2b0a-a195-46af-9939-c1de2704ab1b:b85864d8:failed_jobs_recovered",
+                      "failed_jobs_recovered": "=_dp('{\"pill_type\":\"output\",\"provider\":\"workato_variable\",\"line\":\"b85864d8\",\"path\":[\"failed_jobs_recovered\"]}') + 1"
+                    },
+                    "extended_input_schema": [
+                      {
+                        "control_type": "integer",
+                        "hint": "Provide a value for the variable. When the value is not supplied, the variable is not updated.<br>To clear the value, set the value to <b>nil</b> in formula mode.",
+                        "label": "Failed_Jobs_Recovered",
+                        "name": "failed_jobs_recovered",
+                        "optional": true,
+                        "parse_output": "integer_conversion",
+                        "sticky": true,
+                        "type": "integer",
+                        "strip_interpolation": true
+                      }
+                    ],
+                    "uuid": "2a3129ee-0c13-4f7e-ac2c-ea6d7e66f1fb",
+                    "skip": true
+                  }
+                ],
+                "comment": "Condition ORI from Manifest",
+                "uuid": "163954f2-49e3-41aa-80bd-cbe82a466fb8",
+                "skip": true
+              },
+              {
+                "number": 9,
+                "keyword": "if",
+                "input": {
+                  "type": "compound",
+                  "operand": "and",
+                  "conditions": [
+                    {
+                      "operand": "present",
+                      "lhs": "=_dp('{\"pill_type\":\"output\",\"provider\":\"workato_app\",\"line\":\"ffaddfc3\",\"path\":[\"jobs\"]}')[_dp('{\"pill_type\":\"foreach_meta\",\"provider\":\"foreach\",\"line\":\"76daccf3\",\"key\":\"index\"}')][\"report\"][\"custom_column_0\"][\"parentJobID\"]",
+                      "rhs": null,
+                      "uuid": "condition-248d69b1-c53d-49a8-a2c1-aecf9103acb0"
+                    }
+                  ]
+                },
+                "block": [
+                  {
+                    "number": 10,
+                    "provider": "workato_variable",
+                    "name": "update_variables",
+                    "as": "c8ffca58",
+                    "keyword": "action",
+                    "dynamicPickListSelection": {
+                      "name": [
+                        {
+                          "label": "Failed_Jobs_Recovered (step 3)",
+                          "value": "f05b2b0a-a195-46af-9939-c1de2704ab1b:b85864d8:failed_jobs_recovered"
+                        }
+                      ]
+                    },
+                    "input": {
+                      "name": "f05b2b0a-a195-46af-9939-c1de2704ab1b:b85864d8:failed_jobs_recovered",
+                      "failed_jobs_recovered": "=_dp('{\"pill_type\":\"output\",\"provider\":\"workato_variable\",\"line\":\"b85864d8\",\"path\":[\"failed_jobs_recovered\"]}') + 1"
+                    },
+                    "extended_input_schema": [
+                      {
+                        "control_type": "integer",
+                        "hint": "Provide a value for the variable. When the value is not supplied, the variable is not updated.<br>To clear the value, set the value to <b>nil</b> in formula mode.",
+                        "label": "Failed_Jobs_Recovered",
+                        "name": "failed_jobs_recovered",
+                        "optional": true,
+                        "parse_output": "integer_conversion",
+                        "sticky": true,
+                        "type": "integer",
+                        "strip_interpolation": true
+                      }
+                    ],
+                    "uuid": "c7edf691-3340-40f0-9c7c-aaba1e586fb2"
+                  }
+                ],
+                "comment": "Updated condition by NA as column_1 is not on the logs traces - replaced by column_0",
+                "uuid": "2484bba2-0f54-4169-bd4a-0a5d39fd0a4d",
+                "skip": false
+              },
+              {
+                "number": 11,
+                "keyword": "else",
+                "input": {
+                },
+                "block": [
+                  {
+                    "number": 12,
+                    "provider": "workato_variable",
+                    "name": "update_variables",
+                    "as": "e209952c",
+                    "keyword": "action",
+                    "dynamicPickListSelection": {
+                      "name": [
+                        {
+                          "label": "Failed_Jobs (step 3)",
+                          "value": "f05b2b0a-a195-46af-9939-c1de2704ab1b:b85864d8:failed_jobs"
+                        }
+                      ]
+                    },
+                    "input": {
+                      "name": "f05b2b0a-a195-46af-9939-c1de2704ab1b:b85864d8:failed_jobs",
+                      "failed_jobs": "=_dp('{\"pill_type\":\"output\",\"provider\":\"workato_variable\",\"line\":\"b85864d8\",\"path\":[\"failed_jobs\"]}') + 1"
+                    },
+                    "extended_input_schema": [
+                      {
+                        "control_type": "integer",
+                        "hint": "Provide a value for the variable. When the value is not supplied, the variable is not updated.<br>To clear the value, set the value to <b>nil</b> in formula mode.",
+                        "label": "Failed_Jobs",
+                        "name": "failed_jobs",
+                        "optional": true,
+                        "parse_output": "integer_conversion",
+                        "sticky": true,
+                        "type": "integer",
+                        "strip_interpolation": true
+                      }
+                    ],
+                    "uuid": "63d8cd98-2c19-4948-a2e9-9121dd14d143"
+                  },
+                  {
+                    "number": 13,
+                    "keyword": "if",
+                    "input": {
+                      "type": "compound",
+                      "operand": "and",
+                      "conditions": [
+                        {
+                          "operand": "present",
+                          "lhs": "=_dp('{\"pill_type\":\"output\",\"provider\":\"workato_app\",\"line\":\"ffaddfc3\",\"path\":[\"jobs\"]}')[_dp('{\"pill_type\":\"foreach_meta\",\"provider\":\"foreach\",\"line\":\"76daccf3\",\"key\":\"index\"}')][\"report\"]",
+                          "rhs": null
+                        }
+                      ]
+                    },
+                    "block": [
+                      {
+                        "number": 14,
+                        "provider": "workato_variable",
+                        "name": "update_variables",
+                        "as": "d2a6e3f0",
+                        "keyword": "action",
+                        "dynamicPickListSelection": {
+                          "name": [
+                            {
+                              "label": "Failed_Jobs_Failed (step 3)",
+                              "value": "f05b2b0a-a195-46af-9939-c1de2704ab1b:b85864d8:failed_jobs_failed"
+                            }
+                          ]
+                        },
+                        "input": {
+                          "name": "f05b2b0a-a195-46af-9939-c1de2704ab1b:b85864d8:failed_jobs_failed",
+                          "failed_jobs_failed": "=_dp('{\"pill_type\":\"output\",\"provider\":\"workato_variable\",\"line\":\"b85864d8\",\"path\":[\"failed_jobs_failed\"]}') + 1"
+                        },
+                        "extended_input_schema": [
+                          {
+                            "control_type": "integer",
+                            "hint": "Provide a value for the variable. When the value is not supplied, the variable is not updated.<br>To clear the value, set the value to <b>nil</b> in formula mode.",
+                            "label": "Failed_Jobs_Failed",
+                            "name": "failed_jobs_failed",
+                            "optional": true,
+                            "parse_output": "integer_conversion",
+                            "sticky": true,
+                            "type": "integer",
+                            "strip_interpolation": true
+                          }
+                        ],
+                        "uuid": "af5a0375-ce26-432a-8d5d-083d39990e7a"
+                      }
+                    ],
+                    "uuid": "ca4093d6-b592-4e63-b9d2-f3246e2d1b22",
+                    "skip": false
+                  },
+                  {
+                    "number": 15,
+                    "provider": "workato_variable",
+                    "name": "insert_to_list",
+                    "as": "6eaeef88",
+                    "keyword": "action",
+                    "dynamicPickListSelection": {
+                      "name": "Job Report List (step 4)"
+                    },
+                    "input": {
+                      "location": "end",
+                      "name": "9849b26d-76cc-453f-908d-6dd95e67affb:a8b24252",
+                      "list_item": {
+                        "Job_ID": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"76daccf3\",\"path\":[\"id\"]}')}",
+                        "Job_Status": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"76daccf3\",\"path\":[\"status\"]}')}",
+                        "Error_Type": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"76daccf3\",\"path\":[\"error\",\"error_type\"]}')}",
+                        "Error_Message": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"76daccf3\",\"path\":[\"error\",\"message\"]}')}",
+                        "Job_Url": "https://app.workato.com/recipes/#{_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"76daccf3\",\"path\":[\"flow_id\"]}')}/job/#{_dp('{\"pill_type\":\"output\",\"provider\":\"foreach\",\"line\":\"76daccf3\",\"path\":[\"id\"]}')}"
+                      }
+                    },
+                    "extended_input_schema": [
+                      {
+                        "hint": "",
+                        "label": "List item",
+                        "name": "list_item",
+                        "optional": false,
+                        "properties": [
+                          {
+                            "control_type": "text",
+                            "label": "Job ID",
+                            "name": "Job_ID",
+                            "type": "string",
+                            "optional": false
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Error type",
+                            "name": "Error_Type",
+                            "type": "string",
+                            "optional": false
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Error message",
+                            "name": "Error_Message",
+                            "type": "string",
+                            "optional": false
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Job URL",
+                            "name": "Job_Url",
+                            "type": "string",
+                            "optional": false
+                          },
+                          {
+                            "control_type": "text",
+                            "label": "Job status",
+                            "name": "Job_Status",
+                            "type": "string",
+                            "optional": false
+                          }
+                        ],
+                        "type": "object"
+                      }
+                    ],
+                    "uuid": "2816caa2-71df-4692-a554-70088367abdb"
+                  }
+                ],
+                "uuid": "721c63fb-dcc1-4876-9e86-42a0d0a34220"
+              }
+            ],
+            "uuid": "03f124ce-f135-4090-bec6-623950fce85c"
+          }
+        ],
+        "source": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_app\",\"line\":\"ffaddfc3\",\"path\":[\"jobs\"]}')}",
+        "uuid": "0629c1aa-5e18-4b04-9f4c-3466f96c63f0"
+      },
+      {
+        "number": 16,
+        "keyword": "if",
+        "input": {
+          "type": "compound",
+          "operand": "and",
+          "conditions": [
+            {
+              "operand": "greater_than",
+              "lhs": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_variable\",\"line\":\"a8b24252\",\"path\":[\"list_items\",{\"path_element_type\":\"size\"}]}')}",
+              "rhs": "0",
+              "uuid": "condition-e12d76d9-d5e3-4253-bb67-9f7592faf8b5"
+            }
+          ]
+        },
+        "block": [
+          {
+            "number": 17,
+            "provider": "csv_parser",
+            "name": "create_csv_lines",
+            "as": "9396f243",
+            "keyword": "action",
+            "toggleCfg": {
+              "create_header_line": true,
+              "force_quotes": true
+            },
+            "input": {
+              "create_header_line": "true",
+              "column_separator": ",",
+              "force_quotes": "false",
+              "column_labels": "Job_Id\nError_Type\nError_Message\nJob_Url\nJob_Status",
+              "lines": {
+                "____source": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_variable\",\"line\":\"a8b24252\",\"path\":[\"list_items\"]}')}",
+                "column_0": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_variable\",\"line\":\"a8b24252\",\"path\":[\"list_items\",{\"path_element_type\":\"current_item\"},\"Job_ID\"]}')}",
+                "column_1": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_variable\",\"line\":\"a8b24252\",\"path\":[\"list_items\",{\"path_element_type\":\"current_item\"},\"Error_Type\"]}')}",
+                "column_2": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_variable\",\"line\":\"a8b24252\",\"path\":[\"list_items\",{\"path_element_type\":\"current_item\"},\"Error_Message\"]}')}",
+                "column_3": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_variable\",\"line\":\"a8b24252\",\"path\":[\"list_items\",{\"path_element_type\":\"current_item\"},\"Job_Url\"]}')}",
+                "column_4": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_variable\",\"line\":\"a8b24252\",\"path\":[\"list_items\",{\"path_element_type\":\"current_item\"},\"Job_Status\"]}')}"
+              }
+            },
+            "extended_input_schema": [
+              {
+                "hint": "Provide field mappings for the CSV data below.",
+                "label": "CSV data lines",
+                "name": "lines",
+                "of": "object",
+                "properties": [
+                  {
+                    "control_type": "text",
+                    "label": "Job_Id",
+                    "optional": true,
+                    "sticky": true,
+                    "type": "string",
+                    "name": "column_0"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Error_Type",
+                    "optional": true,
+                    "sticky": true,
+                    "type": "string",
+                    "name": "column_1"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Error_Message",
+                    "optional": true,
+                    "sticky": true,
+                    "type": "string",
+                    "name": "column_2"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Job_Url",
+                    "optional": true,
+                    "sticky": true,
+                    "type": "string",
+                    "name": "column_3"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Job_Status",
+                    "optional": true,
+                    "sticky": true,
+                    "type": "string",
+                    "name": "column_4"
+                  }
+                ],
+                "type": "array"
+              }
+            ],
+            "uuid": "fe546727-eabe-4e7f-9bbe-d48f74b45dc2"
+          }
+        ],
+        "uuid": "39047e5c-8755-40d4-bb1f-1ec4e4844908"
+      },
+      {
+        "number": 18,
+        "provider": "workato_variable",
+        "name": "declare_variable",
+        "as": "975a4ff3",
+        "keyword": "action",
+        "input": {
+          "variables": {
+            "schema": "[{\"name\":\"last_run\",\"type\":\"string\",\"optional\":true,\"label\":\"LastRun\",\"control_type\":\"text\"},{\"name\":\"current_time\",\"type\":\"string\",\"optional\":true,\"label\":\"CurrentTime\",\"control_type\":\"text\"}]",
+            "data": {
+              "last_run": "=_dp('{\"pill_type\":\"output\",\"provider\":\"workato_recipe_function\",\"line\":\"4022e8d5\",\"path\":[\"parameters\",\"lastRunTimestamp\"]}').to_date().strftime(\"%B %e, %l:%M%p\")",
+              "current_time": "=now.strftime(\"%B %e, %l:%M%p\")"
+            }
+          }
+        },
+        "extended_output_schema": [
+          {
+            "control_type": "text",
+            "label": "LastRun",
+            "name": "last_run",
+            "optional": true,
+            "type": "string"
+          },
+          {
+            "control_type": "text",
+            "label": "CurrentTime",
+            "name": "current_time",
+            "optional": true,
+            "type": "string"
+          }
+        ],
+        "extended_input_schema": [
+          {
+            "add_field_label": "Add a variable",
+            "control_type": "form-schema-builder",
+            "empty_schema_title": "Add variables by giving them a name, type and default value",
+            "exclude_fields": [
+              "hint"
+            ],
+            "item_label": "variable",
+            "label": "Variables",
+            "mark_as_required": true,
+            "name": "variables",
+            "ngIf": "!input.name",
+            "optional": true,
+            "properties": [
+              {
+                "control_type": "text",
+                "label": "Schema",
+                "extends_schema": true,
+                "broadcast_change_event": true,
+                "type": "string",
+                "name": "schema"
+              },
+              {
+                "properties": [
+                  {
+                    "control_type": "text",
+                    "label": "LastRun",
+                    "name": "last_run",
+                    "type": "string",
+                    "optional": true,
+                    "hint": "Defaults to nil if not supplied.",
+                    "sticky": true
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "CurrentTime",
+                    "name": "current_time",
+                    "type": "string",
+                    "optional": true,
+                    "hint": "Defaults to nil if not supplied.",
+                    "sticky": true
+                  }
+                ],
+                "label": "Data",
+                "type": "object",
+                "name": "data"
+              }
+            ],
+            "type": "object"
+          }
+        ],
+        "visible_config_fields": [
+          "variables.data.last_run",
+          "variables",
+          "variables.schema",
+          "variables.data.current_time"
+        ],
+        "uuid": "1351f0f0-7788-4220-bdc1-765f912c2eea"
+      },
+      {
+        "number": 19,
+        "provider": "lookup_table",
+        "name": "search_entries",
+        "as": "454364a2",
+        "keyword": "action",
+        "dynamicPickListSelection": {
+          "lookup_table_id": "Autonomously Handled Recipes"
+        },
+        "input": {
+          "lookup_table_id": {
+            "zip_name": "aof_lt_004_error_collation_report_scheduler.lookup_table.json",
+            "name": "AOF | LT-004 | Error Collation/Report Scheduler ",
+            "folder": ""
+          },
+          "parameters": {
+            "col1": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_recipe_function\",\"line\":\"4022e8d5\",\"path\":[\"parameters\",\"recipeID\"]}')}",
+            "col8": "Report"
+          }
+        },
+        "extended_output_schema": [
+          {
+            "label": "Entries",
+            "name": "entries",
+            "of": "object",
+            "properties": [
+              {
+                "control_type": "number",
+                "label": "Entry ID",
+                "parse_output": "integer_conversion",
+                "type": "integer",
+                "name": "id"
+              },
+              {
+                "properties": [
+                  {
+                    "control_type": "text",
+                    "label": "Recipe ID",
+                    "name": "col1",
+                    "sticky": true,
+                    "type": "string"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Recipe Identifier",
+                    "name": "col2",
+                    "sticky": true,
+                    "type": "string"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Schedule  Month",
+                    "name": "col3",
+                    "sticky": true,
+                    "type": "string"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Schedule  Day",
+                    "name": "col4",
+                    "sticky": true,
+                    "type": "string"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Schedule  Weekday",
+                    "name": "col5",
+                    "sticky": true,
+                    "type": "string"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Schedule Hour",
+                    "name": "col6",
+                    "sticky": true,
+                    "type": "string"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Schedule Minutes",
+                    "name": "col7",
+                    "sticky": true,
+                    "type": "string"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Logic",
+                    "name": "col8",
+                    "sticky": true,
+                    "type": "string"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Last Run Timestamp",
+                    "name": "col9",
+                    "sticky": true,
+                    "type": "string"
+                  },
+                  {
+                    "control_type": "text",
+                    "label": "Report Address",
+                    "name": "col10",
+                    "sticky": true,
+                    "type": "string"
+                  }
+                ],
+                "label": "Entry",
+                "type": "object",
+                "name": "entry"
+              }
+            ],
+            "type": "array"
+          }
+        ],
+        "extended_input_schema": [
+          {
+            "hint": "Provide one or more entry fields to search the entry",
+            "label": "Search by",
+            "name": "parameters",
+            "properties": [
+              {
+                "control_type": "text",
+                "label": "Recipe ID",
+                "name": "col1",
+                "sticky": true,
+                "type": "string",
+                "optional": true
+              },
+              {
+                "control_type": "text",
+                "label": "Recipe Identifier",
+                "name": "col2",
+                "sticky": true,
+                "type": "string",
+                "optional": true
+              },
+              {
+                "control_type": "text",
+                "label": "Schedule  Month",
+                "name": "col3",
+                "sticky": true,
+                "type": "string",
+                "optional": true
+              },
+              {
+                "control_type": "text",
+                "label": "Schedule  Day",
+                "name": "col4",
+                "sticky": true,
+                "type": "string",
+                "optional": true
+              },
+              {
+                "control_type": "text",
+                "label": "Schedule  Weekday",
+                "name": "col5",
+                "sticky": true,
+                "type": "string",
+                "optional": true
+              },
+              {
+                "control_type": "text",
+                "label": "Schedule Hour",
+                "name": "col6",
+                "sticky": true,
+                "type": "string",
+                "optional": true
+              },
+              {
+                "control_type": "text",
+                "label": "Schedule Minutes",
+                "name": "col7",
+                "sticky": true,
+                "type": "string",
+                "optional": true
+              },
+              {
+                "control_type": "text",
+                "label": "Logic",
+                "name": "col8",
+                "sticky": true,
+                "type": "string",
+                "optional": true
+              },
+              {
+                "control_type": "text",
+                "label": "Last Run Timestamp",
+                "name": "col9",
+                "sticky": true,
+                "type": "string",
+                "optional": true
+              },
+              {
+                "control_type": "text",
+                "label": "Report Address",
+                "name": "col10",
+                "sticky": true,
+                "type": "string",
+                "optional": true
+              }
+            ],
+            "type": "object"
+          }
+        ],
+        "uuid": "b2443a58-31f7-4ab7-a854-bd43e24bc32e"
+      },
+      {
+        "number": 20,
+        "provider": "email",
+        "name": "send_mail",
+        "as": "7b5a338a",
+        "keyword": "action",
+        "input": {
+          "email_type": "plain_text",
+          "subject": "Periodic Job Report for Recipe #{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_recipe_function\",\"line\":\"4022e8d5\",\"path\":[\"parameters\",\"recipeID\"]}')}",
+          "body": "Recipe identifier: #{_dp('{\"pill_type\":\"output\",\"provider\":\"lookup_table\",\"line\":\"454364a2\",\"path\":[\"entries\",{\"path_element_type\":\"current_item\"},\"entry\",\"col2\"]}')}\nTime period for this report : #{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_variable\",\"line\":\"975a4ff3\",\"path\":[\"last_run\"]}')} to #{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_variable\",\"line\":\"975a4ff3\",\"path\":[\"current_time\"]}')}\n\nAll successful: #{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_variable\",\"line\":\"b85864d8\",\"path\":[\"successful_jobs\"]}')}\nAll Failed: #{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_variable\",\"line\":\"b85864d8\",\"path\":[\"failed_jobs\"]}')}\nFailed Initially but recovered: #{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_variable\",\"line\":\"b85864d8\",\"path\":[\"failed_jobs_recovered\"]}')}\nFailed even though recovery was attempted: #{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_variable\",\"line\":\"b85864d8\",\"path\":[\"failed_jobs_failed\"]}')}",
+          "to": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"workato_recipe_function\",\"line\":\"4022e8d5\",\"path\":[\"parameters\",\"recipientEmail\"]}')}",
+          "attachments": [
+            {
+              "file_binary_content": "=_dp('{\"pill_type\":\"output\",\"provider\":\"csv_parser\",\"line\":\"9396f243\",\"path\":[\"csv_lines\"]}').present? ? _dp('{\"pill_type\":\"output\",\"provider\":\"csv_parser\",\"line\":\"9396f243\",\"path\":[\"csv_lines\"]}') : skip",
+              "file_name": "Period Error Report.csv"
+            }
+          ]
+        },
+        "visible_config_fields": [
+          "to",
+          "subject",
+          "email_type",
+          "body",
+          "attachments.file_name",
+          "attachments.file_binary_content"
+        ],
+        "uuid": "dfad6c48-ff4e-41d6-ba01-d6a19fe532f8"
+      },
+      {
+        "number": 21,
+        "provider": "lookup_table",
+        "name": "update_entry",
+        "as": "052ab859",
+        "keyword": "action",
+        "dynamicPickListSelection": {
+          "lookup_table_id": "Autonomously Handled Recipes"
+        },
+        "toggleCfg": {
+          "ignore_not_found": true
+        },
+        "input": {
+          "ignore_not_found": "true",
+          "id": "#{_dp('{\"pill_type\":\"output\",\"provider\":\"lookup_table\",\"line\":\"454364a2\",\"path\":[\"entries\",{\"path_element_type\":\"current_item\"},\"id\"]}')}",
+          "lookup_table_id": {
+            "zip_name": "aof_lt_004_error_collation_report_scheduler.lookup_table.json",
+            "name": "AOF | LT-004 | Error Collation/Report Scheduler ",
+            "folder": ""
+          },
+          "parameters": {
+            "col9": "=now"
+          }
+        },
+        "extended_output_schema": [
+          {
+            "control_type": "number",
+            "label": "Entry ID",
+            "name": "id",
+            "parse_output": "integer_conversion",
+            "type": "integer"
+          },
+          {
+            "label": "Entry",
+            "name": "entry",
+            "properties": [
+              {
+                "control_type": "text",
+                "label": "Recipe ID",
+                "name": "col1",
+                "sticky": true,
+                "type": "string"
+              },
+              {
+                "control_type": "text",
+                "label": "Recipe Identifier",
+                "name": "col2",
+                "sticky": true,
+                "type": "string"
+              },
+              {
+                "control_type": "text",
+                "label": "Schedule  Month",
+                "name": "col3",
+                "sticky": true,
+                "type": "string"
+              },
+              {
+                "control_type": "text",
+                "label": "Schedule  Day",
+                "name": "col4",
+                "sticky": true,
+                "type": "string"
+              },
+              {
+                "control_type": "text",
+                "label": "Schedule  Weekday",
+                "name": "col5",
+                "sticky": true,
+                "type": "string"
+              },
+              {
+                "control_type": "text",
+                "label": "Schedule Hour",
+                "name": "col6",
+                "sticky": true,
+                "type": "string"
+              },
+              {
+                "control_type": "text",
+                "label": "Schedule Minutes",
+                "name": "col7",
+                "sticky": true,
+                "type": "string"
+              },
+              {
+                "control_type": "text",
+                "label": "Logic",
+                "name": "col8",
+                "sticky": true,
+                "type": "string"
+              },
+              {
+                "control_type": "text",
+                "label": "Last Run Timestamp",
+                "name": "col9",
+                "sticky": true,
+                "type": "string"
+              },
+              {
+                "control_type": "text",
+                "label": "Report Address",
+                "name": "col10",
+                "sticky": true,
+                "type": "string"
+              }
+            ],
+            "type": "object"
+          }
+        ],
+        "extended_input_schema": [
+          {
+            "hint": "Fill the fields you want to update",
+            "label": "Entry fields",
+            "name": "parameters",
+            "properties": [
+              {
+                "control_type": "text",
+                "label": "Recipe ID",
+                "name": "col1",
+                "sticky": true,
+                "type": "string",
+                "optional": true
+              },
+              {
+                "control_type": "text",
+                "label": "Recipe Identifier",
+                "name": "col2",
+                "sticky": true,
+                "type": "string",
+                "optional": true
+              },
+              {
+                "control_type": "text",
+                "label": "Schedule  Month",
+                "name": "col3",
+                "sticky": true,
+                "type": "string",
+                "optional": true
+              },
+              {
+                "control_type": "text",
+                "label": "Schedule  Day",
+                "name": "col4",
+                "sticky": true,
+                "type": "string",
+                "optional": true
+              },
+              {
+                "control_type": "text",
+                "label": "Schedule  Weekday",
+                "name": "col5",
+                "sticky": true,
+                "type": "string",
+                "optional": true
+              },
+              {
+                "control_type": "text",
+                "label": "Schedule Hour",
+                "name": "col6",
+                "sticky": true,
+                "type": "string",
+                "optional": true
+              },
+              {
+                "control_type": "text",
+                "label": "Schedule Minutes",
+                "name": "col7",
+                "sticky": true,
+                "type": "string",
+                "optional": true
+              },
+              {
+                "control_type": "text",
+                "label": "Logic",
+                "name": "col8",
+                "sticky": true,
+                "type": "string",
+                "optional": true
+              },
+              {
+                "control_type": "text",
+                "label": "Last Run Timestamp",
+                "name": "col9",
+                "sticky": true,
+                "type": "string",
+                "optional": true
+              },
+              {
+                "control_type": "text",
+                "label": "Report Address",
+                "name": "col10",
+                "sticky": true,
+                "type": "string",
+                "optional": true
+              }
+            ],
+            "type": "object"
+          }
+        ],
+        "visible_config_fields": [
+          "ignore_not_found"
+        ],
+        "uuid": "e13208eb-72fa-4df1-9d4f-989704f7a8d6"
+      }
+    ],
+    "uuid": "bc2aa82f-4983-4bee-b7a6-05b3dd11061d",
+    "format_version": 2
+  },
+  "config": [
+    {
+      "keyword": "application",
+      "provider": "workato_app",
+      "skip_validation": false,
+      "account_id": {
+        "zip_name": "Accelerator - Autonomous Operations Framework V3.1/Connections/aof_con_recipeops.connection.json",
+        "name": "AOF | CON | RecipeOps",
+        "folder": "Accelerator - Autonomous Operations Framework V3.1/Connections"
+      }
+    },
+    {
+      "keyword": "application",
+      "provider": "workato_variable",
+      "skip_validation": false,
+      "account_id": null
+    },
+    {
+      "keyword": "application",
+      "provider": "email",
+      "skip_validation": false,
+      "account_id": null
+    },
+    {
+      "keyword": "application",
+      "provider": "lookup_table",
+      "skip_validation": false,
+      "account_id": null
+    },
+    {
+      "keyword": "application",
+      "provider": "csv_parser",
+      "skip_validation": false,
+      "account_id": null
+    },
+    {
+      "keyword": "application",
+      "provider": "workato_recipe_function",
+      "skip_validation": false,
+      "account_id": null
+    }
+  ]
+}
